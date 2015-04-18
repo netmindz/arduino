@@ -1,9 +1,10 @@
 /*
-PICCOLO is a tiny Arduino-based audio visualizer.
+Based on PICCOLO is a tiny Arduino-based audio visualizer.
+Extended by Will Tatam to support FastLED matrix
 
 Hardware requirements:
  - Most Arduino or Arduino-compatible boards (ATmega 328P or better).
- - Adafruit Bicolor LED Matrix with I2C Backpack (ID: 902)
+ - Adafruit NeoPixel LED Matrix
  - Adafruit Electret Microphone Amplifier (ID: 1063)
  - Optional: battery for portable use (else power through USB)
 Software requirements:
@@ -13,7 +14,7 @@ Connections:
  - 3.3V to mic amp+ and Arduino AREF pin <-- important!
  - GND to mic amp-
  - Analog pin 0 to mic amp output
- - +5V, GND, SDA (or analog 4) and SCL (analog 5) to I2C Matrix backpack
+ - +5V, GND, pin 6 matrix data in
 
 Written by Adafruit Industries.  Distributed under the BSD license --
 see license.txt for more information.  This paragraph must be included
@@ -28,8 +29,11 @@ ffft library is provided under its own terms -- see ffft.S for specifics.
 #include <ffft.h>
 #include <math.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_LEDBackpack.h>
+#include <FastLED.h>
+
+#define WIDTH 8
+#define HEIGHT 8
+#define DATA_PIN 6
 
 // Microphone connects to Analog Pin 0.  Corresponding ADC channel number
 // varies among boards...it's ADC0 on Uno and Mega, ADC7 on Leonardo.
@@ -106,10 +110,19 @@ static const uint8_t PROGMEM
   * const colData[]  = {
     col0data, col1data, col2data, col3data,
     col4data, col5data, col6data, col7data };
+    
+    int LED_RED = CRGB::Red;
+    int LED_YELLOW = CRGB::Yellow;
+    int LED_GREEN = CRGB::Green;
+    int LED_OFF = CRGB::Black;
 
-Adafruit_BicolorMatrix matrix = Adafruit_BicolorMatrix();
+CRGB leds[(WIDTH * HEIGHT)];
 
 void setup() {
+  Serial.begin(9600);
+  
+  FastLED.setBrightness(10);
+  
   uint8_t i, j, nBins, binNum, *data;
 
   memset(peak, 0, sizeof(peak));
@@ -125,7 +138,7 @@ void setup() {
       colDiv[i] += pgm_read_byte(&data[j]);
   }
 
-  matrix.begin(0x70);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, (WIDTH * HEIGHT));
 
   // Init ADC free-run mode; f = ( 16MHz/prescaler ) / 13 cycles/conversion 
   ADMUX  = ADC_CHANNEL; // Channel sel, right-adj, use AREF pin
@@ -162,9 +175,9 @@ void loop() {
   }
 
   // Fill background w/colors, then idle parts of columns will erase
-  matrix.fillRect(0, 0, 8, 3, LED_RED);    // Upper section
-  matrix.fillRect(0, 3, 8, 2, LED_YELLOW); // Mid
-  matrix.fillRect(0, 5, 8, 3, LED_GREEN);  // Lower section
+  fillRect(0, 0, 8, 3, LED_RED);    // Upper section
+  fillRect(0, 3, 8, 2, LED_YELLOW); // Mid
+  fillRect(0, 5, 8, 3, LED_GREEN);  // Lower section
 
   // Downsample spectrum output to 8 columns:
   for(x=0; x<8; x++) {
@@ -201,21 +214,21 @@ void loop() {
     if(c > peak[x]) peak[x] = c; // Keep dot on top
 
     if(peak[x] <= 0) { // Empty column?
-      matrix.drawLine(x, 0, x, 7, LED_OFF);
+      drawLine(x, 0, x, 7, LED_OFF);
       continue;
     } else if(c < 8) { // Partial column?
-      matrix.drawLine(x, 0, x, 7 - c, LED_OFF);
+      drawLine(x, 0, x, 7 - c, LED_OFF);
     }
 
     // The 'peak' dot color varies, but doesn't necessarily match
     // the three screen regions...yellow has a little extra influence.
     y = 8 - peak[x];
-    if(y < 2)      matrix.drawPixel(x, y, LED_RED);
-    else if(y < 6) matrix.drawPixel(x, y, LED_YELLOW);
-    else           matrix.drawPixel(x, y, LED_GREEN);
+    if(y < 2)      drawPixel(x, y, LED_RED);
+    else if(y < 6) drawPixel(x, y, LED_YELLOW);
+    else           drawPixel(x, y, LED_GREEN);
   }
 
-  matrix.writeDisplay();
+  FastLED.show();
 
   // Every third frame, make the peak pixels drop by 1:
   if(++dotCount >= 3) {
@@ -228,6 +241,43 @@ void loop() {
   if(++colCount >= 10) colCount = 0;
 }
 
+int xytopixel(int x, int y) {
+  int p = ((y -1) * WIDTH) + (x -1);
+  /*
+  Serial.print("xytopixel ");
+  Serial.print(x);
+  Serial.print(",");
+  Serial.print(y);
+  Serial.print(" = ");
+  Serial.println(p);
+  */
+  return p;
+}
+
+void drawPixel(int x, int y, int color) {
+  /*
+  Serial.print("draw ");
+  Serial.print(x);
+  Serial.print(",");
+  Serial.print(y);
+  Serial.print(",");
+  Serial.println(color);
+  */
+  leds[xytopixel(x, y)] = color;
+}
+
+void drawLine(int x, int y, int x2, int y2, int color) {
+  
+}
+
+void fillRect(int x, int y, int w, int h, int color) {
+  for(int i=0; i < w; i++) {
+    for(int j=0; j < h; j++) {
+      drawPixel((x + i), (y + j), color);
+    }
+  }
+}
+  
 ISR(ADC_vect) { // Audio-sampling interrupt
   static const int16_t noiseThreshold = 4;
   int16_t              sample         = ADC; // 0-1023
