@@ -20,7 +20,7 @@ unsigned int sample;
 
 void setup() {
   Serial.begin(9600);
-  FastLED.setBrightness(10);   
+  FastLED.setBrightness(19);   
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, (WIDTH * HEIGHT));
 }
 
@@ -45,11 +45,13 @@ void loop() {
         signalMin = sample; // save just the min levels
       }
     }
+    Serial.print("sample=");
+    Serial.println(sample); 
   }
   peakToPeak = signalMax - signalMin;
 
   // map 1v p-p level to the max scale of the display
-  int displayPeak = map(peakToPeak, 0, 1023, 1, HEIGHT);
+  int displayPeak = map(peakToPeak, 0, 1023, 0, HEIGHT);
   Serial.print("Display peak: ");
   Serial.println(displayPeak);
 
