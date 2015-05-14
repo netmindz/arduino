@@ -12,15 +12,16 @@
 
 CRGB leds[(WIDTH * HEIGHT)];
 
-CRGB LED_RED = CRGB::Red;
-CRGB LED_GREEN = CRGB::Green;
+CRGB color;
 
 const int sampleWindow = 50; // Sample window width in mS (50 mS = 20Hz)
 unsigned int sample;
+unsigned int maxPeak = 0;
+const boolean gay = true;
 
 void setup() {
   Serial.begin(9600);
-  FastLED.setBrightness(19);   
+  FastLED.setBrightness(100);   
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, (WIDTH * HEIGHT));
 }
 
@@ -45,13 +46,17 @@ void loop() {
         signalMin = sample; // save just the min levels
       }
     }
-    Serial.print("sample=");
-    Serial.println(sample); 
   }
+  Serial.print("peakToPeak=");
+  Serial.println(peakToPeak); 
   peakToPeak = signalMax - signalMin;
 
+  if(peakToPeak > maxPeak) {
+    maxPeak = peakToPeak;
+  }
+
   // map 1v p-p level to the max scale of the display
-  int displayPeak = map(peakToPeak, 0, 1023, 0, HEIGHT);
+  int displayPeak = map(peakToPeak, 0, maxPeak, 0, HEIGHT);
   Serial.print("Display peak: ");
   Serial.println(displayPeak);
 
@@ -66,8 +71,16 @@ void loop() {
     }
     else 
     {
-      int g = map(i ,1, HEIGHT, 254, 0);
-      CRGB color = CRGB(map(i ,1, HEIGHT, 0, 254), g, 0);
+
+      if(gay) {
+        unsigned int v = map(displayPeak, 1, HEIGHT, 50, 254);
+        color = CHSV(map(i, 1, HEIGHT, 230, 0), 255, v);
+      }
+      else {
+        unsigned int g = map(i, 1, HEIGHT, 254, 0);
+        color = CRGB(map(i ,1, HEIGHT, 0, 254), g, 0);
+      }
+
       drawPixel(i, 1, color);
     }
   }
@@ -94,4 +107,5 @@ void moveLeft() {
     }
   }
 }
+
 
