@@ -1,7 +1,7 @@
 //Code includes samples written by Mark Kriegsman and Andrew Tuline.  Thanks so much for all your help guys!
 
 #include <FastLED.h>
-#include <FastLED.h>
+#include "SPI.h" // SPI.h must be included as DMD is written by SPI (the IDE complains otherwise)
 #include "MSGEQ7.h"
 
 //---LED SETUP STUFF
@@ -41,7 +41,7 @@ TBlendType    currentBlending;
 
 // MODE VARIABLES -- Change these numbers to create new interesting modes
 
-int BRIGHTNESS = 155;    //0-255.  Lower number saves battery life, higher number is screamingly bright
+int BRIGHTNESS = 55;    //0-255.  Lower number saves battery life, higher number is screamingly bright
 int SATURATION = 255;    //0 is white (no color) and 255 is fully saturated with color
 int HUE = 0;             //0-255, around the color wheel
 int STEPS = 4;           //Wider or narrower bands of color
@@ -80,6 +80,13 @@ uint8_t myfade = 255;                                         // Starting bright
 //------------------SETUP------------------
 void setup()  
 {
+//  Serial.begin(9600);
+
+  Serial.print("***************** Setup *****************");
+  Serial.print("ledmode=");
+  Serial.println(ledMode); 
+
+
   delay( 2000 ); // power-up safety delay
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
@@ -89,31 +96,20 @@ void setup()
   
   MSGEQ7.begin();
   
-  Serial.begin(9600);
-
-  Serial.print("ledmode=");
-  Serial.println(ledMode);
- 
 }
 
-#define NUM_MODES 5
+#define NUM_MODES 6
 //------------------MAIN LOOP------------------
 void loop() {
   
-  fill_solid(leds, NUM_LEDS, CHSV(50, SATURATION, BRIGHTNESS));  
-  FastLED.show(); 
-
-  Serial.print("ledmode=");
-  Serial.println(ledMode);
 
     switch (ledMode) {
-      // BRIGHTNESS = 255;
        case 0:  Rainbow(); break;              //Rainbow -- Change STEPS and SPEED to modify
        case 1: sinwave_1(); break;            //Sin Wave -- Change sinwave variables to modify
        case 2: ripple(); break;               //Ripple -- Change 
-       // BRIGHTNESS=0;
        case 3: Solid(); break;  //all off -- change BRIGHTNESS to 1-255 for a solid color
        case 4: EQ(); break;                  // Show EQ
+       case 5: VU(); break;                  // Show scrolling VU
 }  
 
  // button management section
@@ -227,9 +223,6 @@ int wrap(int step) {
 // EQ ------------------------------------------------------------------------------------
 
 void EQ() {
-       leds[1] = CRGB::Green;
-
-    FastLED.show();
 
   int xpos;
   // analyze without delay
@@ -244,10 +237,10 @@ void EQ() {
       int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
       for (int i = 1; i <= WIDTH; i++) {
         if (i <= count) {
-          leds[xytopixel(xpos, i)] = CRGB::Red;
+          safeSetPixel(xytopixel(xpos, i), CRGB::Red);
         }
         else {
-          leds[xytopixel(xpos, i)] = CRGB::Black;
+          safeSetPixel(xytopixel(xpos, i) ,CRGB::Black);
         }
       }
     }
@@ -259,23 +252,110 @@ void EQ() {
       int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
       for (int i = 1; i <= WIDTH; i++) {
         if (i <= count) {
-          leds[xytopixel(xpos, i)] = CRGB::Green;
+          safeSetPixel(xytopixel(xpos, i), CRGB::Green);
         }
         else {
-          leds[xytopixel(xpos, i)] = CRGB::Black;
+          safeSetPixel(xytopixel(xpos, i), CRGB::Black);
         }
       }
     }
 
-
     FastLED.show();
   }
-   leds[50] = CRGB::Red;
-
-    FastLED.show();
 }
 int xytopixel(int x, int y) {
   return ((y - 1) * WIDTH) + (x - 1);
+}
+
+// VU -----------------------------------------------------------------------------------
+
+
+void VU() {
+  CRGB color;
+
+const boolean gay = false;
+
+  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+
+  // Led strip output
+  if (newReading) {
+
+    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+    Serial.print("Display peak: ");
+    Serial.println(displayPeakL);
+
+    moveRight();
+    int offset = round(HEIGHT / 2);
+
+    for (int i = 1; i <= HEIGHT; i++){
+        drawPixel(1, i, CRGB::Black);
+    }
+    
+    for (int i = 1; i <= HEIGHT; i++){
+        drawPixel(1, offset, CRGB::Blue);
+    }
+
+    for(int i=1; i <= displayPeakL; i++) {
+      if(gay) {
+         color = CHSV(map(i, 1, (HEIGHT/2), 0, 230), 255, 255);
+      }
+      else {
+          unsigned int g = map(i, 1, HEIGHT, 254, 0);
+          color = CRGB(map(i , 1, HEIGHT, 0, 254), g, 0);
+      }
+      drawPixel(1, (offset - i), color);
+    }
+    for(int i=1; i <= displayPeakR; i++) {
+      if(gay) {
+         color = CHSV(map(i, 1, (HEIGHT/2), 230, 0), 255, 255);
+      }
+      else {
+          unsigned int g = map(i, 1, (HEIGHT/2), 254, 0);
+          color = CRGB(map(i , 1, (HEIGHT/2), 0, 254), g, 0);
+      }
+      drawPixel(1, (offset + i), color);
+    }
+      
+    FastLED.show();
+  }
+}
+
+/*
+1,1 = 0
+1,2 = 1
+2,1 = 15
+*/
+
+int xytopixelP(int x, int y) {
+  int p = ((x - 1) * HEIGHT) + (y - 1);
+  return p;
+}
+
+void drawPixel(int x, int y, CRGB color) {
+  safeSetPixel(xytopixelP(x, y) , color);
+}
+
+void moveRight() {
+  // Update the display:
+  for (int i = HEIGHT; i >= 1; i--) {
+    for (int j = WIDTH; j >= 1; j--) {
+      int src = xytopixel((j - 1), i);
+      int dst = xytopixel(j, i);
+      leds[dst] = leds[src];
+    }
+  }
+}
+
+
+void safeSetPixel(int pos, CRGB value) {
+  if(pos > (NUM_LEDS -1)) {
+    Serial.print("IXP ");
+    Serial.println(pos);
+  }
+  else {
+    leds[pos] = value;
+  }
 }
 
 //BUTTON CONTROL STUFF
