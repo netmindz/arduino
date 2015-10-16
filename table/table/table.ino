@@ -1,22 +1,39 @@
 //Code includes samples written by Mark Kriegsman and Andrew Tuline.  Thanks so much for all your help guys!
 
 #include <FastLED.h>
+#include <FastLED.h>
+#include "MSGEQ7.h"
 
 //---LED SETUP STUFF
 #define LED_PIN 2
 #define CLOCK_PIN 6
 #define BUTTON_PIN 7 
-#define COLOR_ORDER GBR
+#define COLOR_ORDER BGR
 
-#define NUM_LEDS 120       // Change to reflect the number of LEDs you have
+#define WIDTH 15
+#define HEIGHT 8
+
+#define NUM_LEDS (WIDTH * HEIGHT)     // Change to reflect the number of LEDs you have
 
 CRGB leds[NUM_LEDS];      //naming our LED array
 
 //BUTTON SETUP STUFF
-byte prevKeyState = HIGH;        
+byte prevKeyState = HIGH;     
+
+// EQ STUFF
 
 
-int ledMode = 0;  //FIRST ACTIVE MODE
+#define pinAnalogLeft A0
+#define pinAnalogRight A1
+#define pinReset 5
+#define pinStrobe 4
+#define MSGEQ7_INTERVAL ReadsPerSecond(80)
+#define MSGEQ7_SMOOTH true
+
+int band;
+CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
+
+int ledMode = 4;  //FIRST ACTIVE MODE
 
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
@@ -70,11 +87,25 @@ void setup()
   FastLED.setBrightness(  BRIGHTNESS );
   currentBlending = BLEND;
   
+  MSGEQ7.begin();
+  
+  Serial.begin(9600);
+
+  Serial.print("ledmode=");
+  Serial.println(ledMode);
+ 
 }
 
-#define NUM_MODES 3
+#define NUM_MODES 5
 //------------------MAIN LOOP------------------
 void loop() {
+  
+  fill_solid(leds, NUM_LEDS, CHSV(50, SATURATION, BRIGHTNESS));  
+  FastLED.show(); 
+
+  Serial.print("ledmode=");
+  Serial.println(ledMode);
+
     switch (ledMode) {
       // BRIGHTNESS = 255;
        case 0:  Rainbow(); break;              //Rainbow -- Change STEPS and SPEED to modify
@@ -82,6 +113,7 @@ void loop() {
        case 2: ripple(); break;               //Ripple -- Change 
        // BRIGHTNESS=0;
        case 3: Solid(); break;  //all off -- change BRIGHTNESS to 1-255 for a solid color
+       case 4: EQ(); break;                  // Show EQ
 }  
 
  // button management section
@@ -192,7 +224,59 @@ int wrap(int step) {
   return step;
 } // wrap()
 
+// EQ ------------------------------------------------------------------------------------
 
+void EQ() {
+       leds[1] = CRGB::Green;
+
+    FastLED.show();
+
+  int xpos;
+  // analyze without delay
+  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+
+  // Led strip output
+  if (newReading) {
+    // display values of left channel on DMD
+    for ( band = 0; band < 7; band++ )
+    {
+      xpos = map((band  + 1), 1, 7, 7, 1);
+      int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
+      for (int i = 1; i <= WIDTH; i++) {
+        if (i <= count) {
+          leds[xytopixel(xpos, i)] = CRGB::Red;
+        }
+        else {
+          leds[xytopixel(xpos, i)] = CRGB::Black;
+        }
+      }
+    }
+
+    // display values of left channel on DMD
+    for ( band = 0; band < 7; band++ )
+    {
+      xpos = 7 + band  + 1;
+      int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
+      for (int i = 1; i <= WIDTH; i++) {
+        if (i <= count) {
+          leds[xytopixel(xpos, i)] = CRGB::Green;
+        }
+        else {
+          leds[xytopixel(xpos, i)] = CRGB::Black;
+        }
+      }
+    }
+
+
+    FastLED.show();
+  }
+   leds[50] = CRGB::Red;
+
+    FastLED.show();
+}
+int xytopixel(int x, int y) {
+  return ((y - 1) * WIDTH) + (x - 1);
+}
 
 //BUTTON CONTROL STUFF
 // called when button is pressed
