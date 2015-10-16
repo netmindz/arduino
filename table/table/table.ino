@@ -13,6 +13,10 @@
 #define WIDTH 15
 #define HEIGHT 8
 
+#define WIDTHP 8
+#define HEIGHTP 15
+
+
 #define NUM_LEDS (WIDTH * HEIGHT)     // Change to reflect the number of LEDs you have
 
 CRGB leds[NUM_LEDS];      //naming our LED array
@@ -33,7 +37,7 @@ byte prevKeyState = HIGH;
 int band;
 CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
 
-int ledMode = 4;  //FIRST ACTIVE MODE
+int ledMode = 5;  //FIRST ACTIVE MODE
 
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
@@ -273,48 +277,48 @@ int xytopixel(int x, int y) {
 void VU() {
   CRGB color;
 
-const boolean gay = false;
+  const boolean gay = false;
 
-  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+  bool newReading = MSGEQ7.read(ReadsPerSecond(20));
 
   // Led strip output
   if (newReading) {
 
-    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHTP / 2));
+    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHTP / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
     moveRight();
-    int offset = round(HEIGHT / 2);
+    int offset = round(HEIGHTP / 2);
 
-    for (int i = 1; i <= HEIGHT; i++){
-        drawPixel(1, i, CRGB::Black);
+    for (int i = 1; i <= HEIGHTP; i++){
+        drawPixelP(1, i, CRGB::Black);
     }
     
-    for (int i = 1; i <= HEIGHT; i++){
-        drawPixel(1, offset, CRGB::Blue);
+    for (int i = 1; i <= HEIGHTP; i++){
+        drawPixelP(1, offset, CRGB::Blue);
     }
 
     for(int i=1; i <= displayPeakL; i++) {
       if(gay) {
-         color = CHSV(map(i, 1, (HEIGHT/2), 0, 230), 255, 255);
+         color = CHSV(map(i, 1, (HEIGHTP/2), 0, 230), 255, 255);
       }
       else {
-          unsigned int g = map(i, 1, HEIGHT, 254, 0);
-          color = CRGB(map(i , 1, HEIGHT, 0, 254), g, 0);
+          unsigned int g = map(i, 1, HEIGHTP, 254, 0);
+          color = CRGB(map(i , 1, HEIGHTP, 0, 254), g, 0);
       }
-      drawPixel(1, (offset - i), color);
+      drawPixelP(1, (offset - i), color);
     }
     for(int i=1; i <= displayPeakR; i++) {
       if(gay) {
-         color = CHSV(map(i, 1, (HEIGHT/2), 230, 0), 255, 255);
+         color = CHSV(map(i, 1, (HEIGHTP/2), 230, 0), 255, 255);
       }
       else {
-          unsigned int g = map(i, 1, (HEIGHT/2), 254, 0);
-          color = CRGB(map(i , 1, (HEIGHT/2), 0, 254), g, 0);
+          unsigned int g = map(i, 1, (HEIGHTP/2), 254, 0);
+          color = CRGB(map(i , 1, (HEIGHTP/2), 0, 254), g, 0);
       }
-      drawPixel(1, (offset + i), color);
+      drawPixelP(1, (offset + i), color);
     }
       
     FastLED.show();
@@ -328,24 +332,25 @@ const boolean gay = false;
 */
 
 int xytopixelP(int x, int y) {
-  int p = ((x - 1) * HEIGHT) + (y - 1);
+  int p = ((x - 1) * HEIGHTP) + (y - 1);
   return p;
 }
 
-void drawPixel(int x, int y, CRGB color) {
-  safeSetPixel(xytopixelP(x, y) , color);
+void drawPixelP(int x, int y, CRGB color) {
+  leds[xytopixelP(x, y)] = color;
 }
 
 void moveRight() {
   // Update the display:
-  for (int i = HEIGHT; i >= 1; i--) {
-    for (int j = WIDTH; j >= 1; j--) {
-      int src = xytopixel((j - 1), i);
-      int dst = xytopixel(j, i);
+  for (int i = HEIGHTP; i >= 1; i--) {
+    for (int j = WIDTHP; j >= 1; j--) {
+      int src = xytopixelP((j - 1), i);
+      int dst = xytopixelP(j, i);
       leds[dst] = leds[src];
     }
   }
 }
+
 
 
 void safeSetPixel(int pos, CRGB value) {
