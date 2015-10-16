@@ -37,7 +37,7 @@ byte prevKeyState = HIGH;
 int band;
 CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
 
-int ledMode = 5;  //FIRST ACTIVE MODE
+int ledMode = 4;  //FIRST ACTIVE MODE
 
 CRGBPalette16 currentPalette;
 TBlendType    currentBlending;
@@ -80,6 +80,10 @@ uint8_t myfade = 255;                                         // Starting bright
 #define maxsteps 16                                           // Case statement wouldn't allow a variable.
 
 
+// EQ vars 
+
+int eq_hue = 0;
+int eq_hue_wait = 10;
 
 //------------------SETUP------------------
 void setup()  
@@ -234,6 +238,12 @@ void EQ() {
 
   // Led strip output
   if (newReading) {
+    eq_hue_wait++;
+    if(eq_hue_wait > 1) {
+      eq_hue += 10;
+      if(eq_hue > 255) eq_hue = 0;
+      eq_hue_wait = 0;
+    }
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
@@ -241,7 +251,10 @@ void EQ() {
       int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
       for (int i = 1; i <= WIDTH; i++) {
         if (i <= count) {
-          safeSetPixel(xytopixel(xpos, i), CRGB::Red);
+          // unsigned int g = map(band, 0, 6, 254, 0);
+          // CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
+          CRGB color = CHSV(eq_hue + (band * 20), 255,255);
+          safeSetPixel(xytopixel(xpos, i), color);
         }
         else {
           safeSetPixel(xytopixel(xpos, i) ,CRGB::Black);
@@ -252,11 +265,14 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      xpos = 7 + band  + 1;
+      xpos = 8 + band  + 1;
       int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
       for (int i = 1; i <= WIDTH; i++) {
         if (i <= count) {
-          safeSetPixel(xytopixel(xpos, i), CRGB::Green);
+//          unsigned int g = map(band, 0, 6, 254, 0);
+//          CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
+          CRGB color = CHSV(eq_hue + (band * 20), 255,255);
+          safeSetPixel(xytopixel(xpos, i), color);
         }
         else {
           safeSetPixel(xytopixel(xpos, i), CRGB::Black);
