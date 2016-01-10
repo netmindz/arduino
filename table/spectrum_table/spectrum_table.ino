@@ -33,7 +33,12 @@ ffft library is provided under its own terms -- see ffft.S for specifics.
 
 #define WIDTH 8
 #define HEIGHT 8
-#define DATA_PIN 6
+
+#define LED_PIN 2
+#define CLOCK_PIN 6
+
+#define COLOR_ORDER BGR
+
 
 // Microphone connects to Analog Pin 0.  Corresponding ADC channel number
 // varies among boards...it's ADC0 on Uno and Mega, ADC7 on Leonardo.
@@ -139,7 +144,7 @@ void setup() {
       colDiv[i] += pgm_read_byte(&data[j]);
   }
 
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, (WIDTH * HEIGHT));
+  FastLED.addLeds<DOTSTAR, LED_PIN, CLOCK_PIN, COLOR_ORDER>(leds, (WIDTH * HEIGHT)).setCorrection( TypicalLEDStrip );
 
   // Init ADC free-run mode; f = ( 16MHz/prescaler ) / 13 cycles/conversion 
   ADMUX  = ADC_CHANNEL; // Channel sel, right-adj, use AREF pin
