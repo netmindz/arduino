@@ -85,6 +85,11 @@ uint8_t myfade = 255;                                         // Starting bright
 int eq_hue = 0;
 int eq_hue_wait = 10;
 
+// audio check
+int scount =  0;
+int smillis = 0;
+int slastmillis = 0;
+
 //------------------SETUP------------------
 void setup()  
 {
@@ -132,6 +137,31 @@ void loop() {
     }
        
 
+boolean isSilence() {
+    smillis += (millis() - slastmillis);
+    slastmillis = millis();
+    //Only check once per second
+    if(smillis > 1000) {
+      smillis = 0;
+      Serial.println("Test");
+      int t = 0;
+      for(int b = 0; b < 7; b++) {
+        int displayPeak = MSGEQ7.get(b, 0);
+        if(displayPeak > t) t = displayPeak;
+      }
+      if(t < 50) {
+        scount++;
+      }
+      else {
+        scount = 0;
+      }
+      Serial.print("scount=");
+      Serial.println(scount);
+    }
+    boolean silence = (scount > 15);
+    if(silence) scount = 0;
+    return silence;
+ }
 
 // SOLID COLOR -------------------------------------
 void Solid()
