@@ -142,10 +142,8 @@ void snake() {
   }
   FastLED.show();
   delay(15);
-  // leds[ XY(snakeX, snakeY)]  = CRGB::Black;
-  for(int i=0; i < (kMatrixWidth * kMatrixHeight); i++) {
-    leds[i].fadeLightBy(20);
-  }
+  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 13);
+//  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20);
   snakeX += snakeRight;
   snakeY += snakeUp;
 }
