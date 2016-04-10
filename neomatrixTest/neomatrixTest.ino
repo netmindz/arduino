@@ -1,4 +1,6 @@
 #include <FastLED.h>
+#include "MSGEQ7.h"
+
 
 #define LED_PIN  6
 
@@ -9,6 +11,19 @@
 // Params for width and height
 const uint8_t kMatrixWidth = 8;
 const uint8_t kMatrixHeight = 8;
+
+// EQ STUFF
+#define pinAnalogLeft A0
+#define pinAnalogRight A1
+#define pinReset 5
+#define pinStrobe 4
+#define MSGEQ7_INTERVAL ReadsPerSecond(80)
+#define MSGEQ7_SMOOTH true
+
+int band;
+CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
+
+
 
 // Param for different pixel layouts
 const bool    kMatrixSerpentineLayout = false;
@@ -77,77 +92,6 @@ void DrawOneFrame( byte startHue8, int8_t yHueDelta8, int8_t xHueDelta8)
   }
 }
 
-int hue = 0;
-void ledtest() {
-  for (int y = 0; y < kMatrixHeight; y++) {
-    for (int x = 0; x < kMatrixWidth; x++) {
-      leds[ XY(x, y)]  = CHSV( hue, 255, 255);
-      FastLED.show();
-      delay(100);
-      leds[ XY(x, y)]  = CRGB::Black;
-      hue += 5;
-      if (hue > 255) hue = 0;
-    }
-  }
-}
-
-int snakeX = 0;
-int snakeY = 0;
-int snakeRight = 1;
-int snakeUp = 0;
-int snakeW = kMatrixWidth - 1;
-int snakeH = kMatrixHeight - 1;
-int snakeMargin = 0;
-void snake() {
-  leds[ XY(snakeX, snakeY)]  = CHSV( hue, 255, 255);
-  // End of right
-  if ((snakeX >= (snakeW - snakeMargin)) && (snakeUp == 0)) {
-    snakeUp = 1;
-    snakeRight = 0;
-    //    hue += 15;
-  }
-  // End of up
-  else if ((snakeY >= (snakeH - snakeMargin)) && (snakeUp == 1)) {
-    snakeUp = 0;
-    snakeRight = -1;
-    //    hue += 15;
-  }
-  // End of left
-  else if ((snakeX == (0 + snakeMargin)) && (snakeUp == 0 && snakeRight == -1)) {
-    snakeUp = -1;
-    snakeRight = 0;
-    //    hue += 15;
-  }
-  // End of down
-  else if ((snakeX == (0 + snakeMargin) && snakeY == (1 + snakeMargin)) && (snakeUp == -1 && snakeRight == 0)) {
-    snakeY += snakeUp;
-    snakeUp = 0;
-    snakeRight = 1;
-    hue += 15;
-    Serial.print("snakeMargin=");
-    Serial.println(snakeMargin);
-    snakeMargin++;
-    if (snakeMargin > 2) {
-      //delay(1500);
-      hue = random(0,255);
-      snakeMargin = 0;
-      snakeX = -1;
-      snakeY = 0;
-      snakeRight = 1;
-      snakeUp = 0;
-    }
-    else {
-      snakeY++;
-    }
-  }
-  FastLED.show();
-  delay(15);
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 13);
-//  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20);
-  snakeX += snakeRight;
-  snakeY += snakeUp;
-}
-
 
 // Demo that USES "XY" follows code below
 
@@ -166,19 +110,23 @@ void sample()
 }
 
 void loop() {
-  //ledtest();
+  //  ripple();
+  //  EQ();
+  //  VU();
+  //  ledtest();
   snake();
 }
 
 
 
 void setup() {
-  //Serial.begin(38400);
+  Serial.begin(38400);
   FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
   FastLED.setBrightness( BRIGHTNESS );
+  Serial.println("***** Reset *****");
 
-//  leds[ XY(0, 0)]  = CRGB::Red;
-//  leds[ XY((kMatrixWidth - 1), (kMatrixHeight - 1))]  = CRGB::Blue;
-//  FastLED.show();
-//  delay(1000);
+  //  leds[ XY(0, 0)]  = CRGB::Red;
+  //  leds[ XY((kMatrixWidth - 1), (kMatrixHeight - 1))]  = CRGB::Blue;
+  //  FastLED.show();
+  //  delay(1000);
 }
