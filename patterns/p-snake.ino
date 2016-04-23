@@ -1,57 +1,90 @@
-int snakeX = 0;
-int snakeY = 0;
-int snakeRight = 1;
-int snakeUp = 0;
-int snakeW = kMatrixWidth - 1;
-int snakeH = kMatrixHeight - 1;
-int snakeMargin = 0;
-int snakeHue;
+class Snake {
+    int x = 0;
+    int y = 0;
+    int right = 1;
+    int up = 0;
+    int w = kMatrixWidth - 1;
+    int h = kMatrixHeight - 1;
+    int margin = 0;
+    int hue;
+
+  public:
+    Snake() {
+
+    }
+
+    void snake() {
+      leds[ XY(x, y)]  = CHSV(hue, 255, 255);
+      // End of right
+      if ((x >= (w - margin)) && (up == 0)) {
+        up = 1;
+        right = 0;
+        //    snakeHue += 15;
+      }
+      // End of up
+      else if ((y >= (h - margin)) && (up == 1)) {
+        up = 0;
+        right = -1;
+        //    snakeHue += 15;
+      }
+      // End of left
+      else if ((x == (0 + margin)) && (up == 0 && right == -1)) {
+        up = -1;
+        right = 0;
+        //    snakeHue += 15;
+      }
+      // End of down
+      else if ((x == (0 + margin) && y == (1 + margin)) && (up == -1 && right == 0)) {
+        y += up;
+        up = 0;
+        right = 1;
+        hue += 15;
+        margin++;
+        y++;
+      }
+
+      // Final LED
+      if (right == 0 && up == -1 && margin == 3) {
+        //delay(1500);
+        hue = random(0, 255);
+        margin = 0;
+        x = -1;
+        y = 0;
+        right = 1;
+        up = 0;
+      }
+
+      fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 10);
+      //  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20);
+      x += right;
+      y += up;
+    }
+};
+
+#define NUM_SNAKES 3
+Snake snakes[NUM_SNAKES];
+
+int snakesStarted = 1;
+// int const snakeDelay = ((kMatrixWidth * 2) + (kMatrixHeight * 2) - 1);
+int const snakeDelay = 10;
+int snakeGap = 0;
 
 void snake() {
-  leds[ XY(snakeX, snakeY)]  = CHSV( snakeHue, 255, 255);
-  FastLED.delay(15);
-  // End of right
-  if ((snakeX >= (snakeW - snakeMargin)) && (snakeUp == 0)) {
-    snakeUp = 1;
-    snakeRight = 0;
-    //    snakeHue += 15;
-  }
-  // End of up
-  else if ((snakeY >= (snakeH - snakeMargin)) && (snakeUp == 1)) {
-    snakeUp = 0;
-    snakeRight = -1;
-    //    snakeHue += 15;
-  }
-  // End of left
-  else if ((snakeX == (0 + snakeMargin)) && (snakeUp == 0 && snakeRight == -1)) {
-    snakeUp = -1;
-    snakeRight = 0;
-    //    snakeHue += 15;
-  }
-  // End of down
-  else if ((snakeX == (0 + snakeMargin) && snakeY == (1 + snakeMargin)) && (snakeUp == -1 && snakeRight == 0)) {
-    snakeY += snakeUp;
-    snakeUp = 0;
-    snakeRight = 1;
-    snakeHue += 15;
-    snakeMargin++;
-    snakeY++;
+
+  if (snakesStarted < NUM_SNAKES) {
+    if (snakeGap == snakeDelay)  {
+      snakesStarted++;
+      snakeGap = 0;
+    }
+    else {
+      snakeGap++;
+    }
   }
 
-  // Final LED
-  if (snakeRight == 0 && snakeUp == -1 && snakeMargin == 3) {
-    //delay(1500);
-    snakeHue = random(0, 255);
-    snakeMargin = 0;
-    snakeX = -1;
-    snakeY = 0;
-    snakeRight = 1;
-    snakeUp = 0;
+  for (i = 0; i < snakesStarted; i++) {
+    snakes[i].snake();
   }
-
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 10);
-  //  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20);
-  snakeX += snakeRight;
-  snakeY += snakeUp;
+  FastLED.delay(155);
 }
+
 
