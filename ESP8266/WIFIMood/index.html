@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+	
+      <script type="text/javascript">
+//	document.getElementById('status').innerHTML = "Connecting ...";
+         var ws = new WebSocket("ws://192.168.29.245:81/");
+//         function WebSocketTest()
+  //       {
+               
+               // Let us open a web socket
+				
+               ws.onopen = function()
+               {
+                  // Web Socket is connected, send data using send()
+			document.getElementById('status').innerHTML = "Connected";
+               };
+				
+               ws.onmessage = function (evt) 
+               { 
+                  var received_msg = evt.data;
+		  document.getElementById('status').innerHTML = "Message is received";
+               };
+				
+               ws.onclose = function()
+               { 
+                  // websocket is closed.
+		  document.getElementById('status').innerHTML = "Connection is closed...";
+                  alert("Connection is closed..."); 
+               };
+            
+    //     }
+	function sendMessage() {
+		document.getElementById('status').innerHTML = "Sending message";
+		ws.send(document.getElementById('text').value);
+	}
+      </script>
+		
+   </head>
+   <body>
+	<div id="status"></div>
+     <input type="color" id="text"/><input type="button" onClick="sendMessage()"/> 
+   </body>
+</html>
