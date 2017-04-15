@@ -4,3 +4,6 @@
 [submodule "libraries/TeensyDmx"]
 	path = libraries/TeensyDmx
 	url = https://github.com/chrisstaite/TeensyDmx.git
+[submodule "libraries/DmxReceiver"]
+	path = libraries/DmxReceiver
+	url = https://github.com/jimparis/DmxReceiver.git
