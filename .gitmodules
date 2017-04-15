@@ -1,3 +1,6 @@
 [submodule "libraries/FastLED"]
 	path = libraries/FastLED
 	url = https://github.com/FastLED/FastLED.git
+[submodule "libraries/TeensyDmx"]
+	path = libraries/TeensyDmx
+	url = https://github.com/chrisstaite/TeensyDmx.git
