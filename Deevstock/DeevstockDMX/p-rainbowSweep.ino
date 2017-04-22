@@ -9,6 +9,6 @@ void rainbowSweep() {
     FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME was 70
     hue += jump;
     if (hue > 255) hue = 0;
-    fadeToBlackBy(leds, NUM_LEDS, map(SPEEDO,0,255, 0, 100));
+    fadeToBlackBy(leds, NUM_LEDS, map(STEPS,0,255, 0, 100));
   }
 }
