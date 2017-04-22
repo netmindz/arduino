@@ -62,9 +62,10 @@ void Ripple();
 void shimmer();
 void one_sin();
 void snake();
+void dsnake();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, rainbowSweep, Rainbow, RainbowWash, Ripple, shimmer, one_sin, snake  };
+SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, one_sin, snake };
 
 // **********************************************************************************************************
 
@@ -143,24 +144,29 @@ void loop()
 void nextPattern()
 {
   // add one to the current pattern number, and wrap around at the end
-  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % ( gPatternCount - 1);
+  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gPatternCount;
 }
 
 void autoRun() {
 
   gPatterns[gCurrentPatternNumber]();
+  
   // do some periodic updates
   EVERY_N_MILLISECONDS( 20 ) {
     gHue++;  // slowly cycle the "base color" through the rainbow
   }
+  
+  // change patterns periodically
   EVERY_N_SECONDS( 10 ) {
     nextPattern();
     Serial.print("Next pattern ");
     Serial.println(gCurrentPatternNumber);
-  } // change patterns periodically
+  } 
 
 }
-
+// **********************************************************************************************************
+// Matrix Helpers
+// **********************************************************************************************************
 
 uint16_t XY( uint8_t x, uint8_t y)
 {
