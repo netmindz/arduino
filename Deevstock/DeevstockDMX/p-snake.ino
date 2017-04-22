@@ -54,8 +54,9 @@ class Snake {
         up = 0;
       }
 
-      fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 10);
-      //  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20);
+     // Option toggle?
+      fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), map(SPEEDO,0,255, 0, 100)); // TWEAK ME
+      //  fadeLightBy(leds, (kMatrixWidth * kMatrixHeight), 20); 
       x += right;
       y += up;
     }
@@ -84,7 +85,7 @@ void snake() {
   for (i = 0; i < snakesStarted; i++) {
     snakes[i].snake();
   }
-  FastLED.delay(155);
+  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME was 155
 }
 
 

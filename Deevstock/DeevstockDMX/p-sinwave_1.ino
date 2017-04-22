@@ -31,7 +31,6 @@ void one_sin() {                                                                
 
 void sinwave_1() {
   one_sin();
-  FastLED.delay(loopdelay * 2.5);
-  Serial.println(LEDS.getFPS());
+  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME
 }
 

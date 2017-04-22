@@ -47,7 +47,7 @@ void Ripple() {
       break;
   } // switch step
 
-  FastLED.delay(SPEEDO * 2.5);
+  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME
 }
 
 
