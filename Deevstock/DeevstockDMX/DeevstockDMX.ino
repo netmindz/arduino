@@ -8,15 +8,15 @@
 
 // **********************************************************************************************************
 
-#define FASTLED_ALLOW_INTERRUPTS 1 // setting 0 fixes flutter, causes crash
-// #define FASTLED_INTERRUPT_RETRY_COUNT 0
+#define FASTLED_ALLOW_INTERRUPTS   1 // setting 0 fixes flutter, causes crash
+//#define FASTLED_INTERRUPT_RETRY_COUNT 0
 
 #define LED_PIN  7
 
-#define CHIPSET NEOPIXEL
+// #define CHIPSET NEOPIXEL
 
-const uint8_t kMatrixWidth = 8; // length of string
-const uint8_t kMatrixHeight = 5;
+const uint8_t kMatrixWidth = 1; // numer of strings
+const uint8_t kMatrixHeight = 50; // length of string
 
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 
@@ -39,7 +39,7 @@ CRGB leds[NUM_LEDS];
 // **********************************************************************************************************
 
 uint8_t STEPS = 4;
-uint8_t BRIGHTNESS = 5;
+uint8_t BRIGHTNESS = 255;
 uint8_t SPEEDO = 10;
 uint8_t FADE = 10;
 
@@ -90,7 +90,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  // FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  FastLED.addLeds<WS2811_PORTD, kMatrixWidth>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  
   FastLED.setBrightness(BRIGHTNESS);
   Serial.println("Setup");
   ledtest();
