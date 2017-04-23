@@ -26,13 +26,12 @@ const bool    kMatrixSerpentineLayout = false;
 
 // **********************************************************************************************************
 
-#include <DmxReceiver.h>
+#include <TeensyDmx.h>
 #include <FastLED.h>
 
 // **********************************************************************************************************
 
-DmxReceiver dmx;
-IntervalTimer dmxTimer;
+TeensyDmx Dmx(Serial1);
 
 CRGB leds[NUM_LEDS];
 
@@ -68,13 +67,6 @@ typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, one_sin, snake };
 
 // **********************************************************************************************************
-
-void dmxTimerISR(void)
-{
-  dmx.bufferService();
-}
-
-// **********************************************************************************************************
 // Setup
 // **********************************************************************************************************
 
@@ -82,11 +74,7 @@ void setup() {
   /* USB serial */
   Serial.begin(115200);
 
-  /* DMX */
-  dmx.begin();
-
-  /* Use a timer to service DMX buffers every 1ms */
-  // dmxTimer.begin(dmxTimerISR, 1000);
+  Dmx.setMode(TeensyDmx::DMX_IN);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -109,33 +97,32 @@ elapsedMillis elapsed;
 // **********************************************************************************************************
 void loop()
 {
-  dmx.bufferService();
-  /* Toggle LED on every new frame */
-  if (dmx.newFrame())
-  {
+    Dmx.loop();
+  if (Dmx.newFrame()) {
+
     led = !led;
     digitalWrite(LED_BUILTIN, led);
 
-    int b = dmx.getDimmer(1);
+    int b = Dmx.getBuffer()[1];
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
       FastLED.setBrightness(BRIGHTNESS);
     }
-    STEPS = dmx.getDimmer(2);
-    SPEEDO = dmx.getDimmer(3);
+    STEPS = Dmx.getBuffer()[2];
+    SPEEDO = Dmx.getBuffer()[3];
   }
 
-  int p = dmx.getDimmer(4);
+  int p = Dmx.getBuffer()[4];
   int pattern = map(p, 0, 255, 0, (gPatternCount - 1));
   gPatterns[pattern]();
 
-  //  EVERY_N_SECONDS( 30 ) {
-  //    Serial.print("pattern = ");
-  //    Serial.println(pattern);
-  //  }
-  //  EVERY_N_SECONDS( 10 ) {
-  //    Serial.println(LEDS.getFPS());
-  //  }
+    EVERY_N_SECONDS( 1 ) {
+      Serial.print("pattern = ");
+      Serial.println(pattern);
+    }
+    EVERY_N_SECONDS( 10 ) {
+      Serial.println(LEDS.getFPS());
+    }
 
 }
 
