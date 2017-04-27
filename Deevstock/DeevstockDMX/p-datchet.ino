@@ -1,20 +1,3 @@
-//int p = 0;
-//int hue = 0;
-//void chase() {
-//      leds[p]  = CHSV( hue, 255, 255);
-//      FastLED.show();
-//      delay(1);
-//      hue += random(0,20);
-//      if (hue > 255) hue = 0;
-//      p++;
-//      if(p > ( NUM_LEDS - 1)) p=0;
-//      for(int i = 0; i < NUM_LEDS; i++) {
-////        leds[i].fadeToBlackBy(10);
-//        leds[i].fadeLightBy(10);
-//      }
-//}
-
-
 class DSnake {
     int p = 0;
     int hue = random(0,255);
@@ -35,8 +18,8 @@ class DSnake {
     }
 };
 
-#define NUM_DSNAKES 30
-DSnake dsnakes[NUM_SNAKES];
+#define NUM_DSNAKES 40
+DSnake dsnakes[NUM_DSNAKES];
 
 int dsnakesStarted = 0;
 int const dsnakeDelay = 20;
@@ -57,8 +40,8 @@ void dsnake() {
   for (int  i = 0; i < dsnakesStarted; i++) {
     dsnakes[i].snake();
   }
-     fadeToBlackBy(leds, NUM_LEDS, map(STEPS,0,255, 0, 100));
+     fadeToBlackBy(leds, NUM_LEDS, map(FADE,0,255, 100, 1));
 //   fadeLightBy(leds, NUM_LEDS, map(STEPS,0,255, 0, 100));
-   FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME (was 40)
+   FastLED.delay(map(SPEEDO,0,255, 100, 10));  // TWEAK ME (was 40)
 }
 

@@ -23,7 +23,7 @@ void Rainbow()
 
   FillLEDsFromPaletteColors( startIndex);
     
-  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME (was 10)
+  FastLED.delay(map(SPEEDO,0,255, 200, 1));  // TWEAK ME (was 10)
 }
 
 
