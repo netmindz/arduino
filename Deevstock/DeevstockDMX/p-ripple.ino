@@ -21,7 +21,7 @@ void Ripple() {
   if (HUE > 220) {
     HUE = 140; // constrain BG hue to blues and purples
   }
-  for (int i = 0; i < NUM_LEDS; i++) leds[i] = CHSV(HUE++, 255, 50);  // Rotate background colour.
+  for (int i = 0; i < NUM_LEDS; i++) leds[i] = CHSV(HUE++, 255, map(FADE,0,255, 50, 150));  // Rotate background colour.
 
   switch (step) {
 
@@ -47,7 +47,7 @@ void Ripple() {
       break;
   } // switch step
 
-  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME
+  FastLED.delay(map(SPEEDO,0,255, 100, 20));  // TWEAK ME
 }
 
 
