@@ -1,13 +1,13 @@
 /*
   Rings pattern, controlled over E1.31
 */
+#define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 #include <ESP8266WiFi.h>
 #include <E131.h>
 
-#define NUM_PIXELS 170  /* Number of pixels */
 #define UNIVERSE 1      /* Universe to listen for */
-#define CHANNEL_START 1 /* Channel to start listening at */
+#define CHANNEL_START 0 /* Channel to start listening at */
 #define LED_PIN 12      /* Pixel output - GPIO0 */
 
 #define COLOR_ORDER GBR
@@ -17,8 +17,9 @@
 #define NUM_LEDS 100
 
 int JUMP = 15;
-int SPEED = 90;
+int SPEED = 1200;
 boolean INWARD = true;
+int BRIGHTNESS = 15;
 
 const char ssid[] = "ManstonManor";         /* Replace with your SSID */
 const char passphrase[] = "BigTitties29!";   /* Replace with your WPA2 passphrase */
@@ -34,40 +35,52 @@ void setup() {
   delay(10);
 
   /* Choose one to begin listening for E1.31 data */
-  e131.begin(ssid, passphrase);                       /* via Unicast on the default port */
-  //e131.beginMulticast(ssid, passphrase, UNIVERSE);  /* via Multicast for Universe 1 */
+  //e131.begin(ssid, passphrase);                       /* via Unicast on the default port */
+  e131.beginMulticast(ssid, passphrase, UNIVERSE);  /* via Multicast for Universe 1 */
 
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
-  FastLED.setBrightness( 5 );
+  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+  FastLED.setBrightness( BRIGHTNESS );
+
+  int h = 0;
+  for(int r=0; r < RINGS; r++) {
+    hue[r] = h;
+    h += JUMP;
+  }
 }
 
 void loop() {
   /* Parse a packet and update pixels */
   if (e131.parsePacket()) {
     if (e131.universe == UNIVERSE) {
-      FastLED.setBrightness( e131.data[(CHANNEL_START  + 0)] );
-      JUMP = map(e131.data[(CHANNEL_START  + 1)], 0, 255, 1, 50);
-      SPEED = map(e131.data[(CHANNEL_START  + 2)], 0, 255, 1000, 50);
+      BRIGHTNESS = map(e131.data[(CHANNEL_START  + 0)], 0, 255, 0, 50); // ChangeME
+      JUMP = map(e131.data[(CHANNEL_START  + 1)], 0, 255, 5, 40);
+      SPEED = map(e131.data[(CHANNEL_START  + 2)], 0, 255, 1000, 20);
       if (e131.data[(CHANNEL_START  + 3)] < 125) {
         INWARD = true;
       }
       else {
         INWARD = false;
       }
+      Serial.print("e");
+      //Serial.print(e131.data[0]);
     }
-    Serial.print("d");
   }
+  FastLED.setBrightness(BRIGHTNESS);
 
   EVERY_N_SECONDS( 2 ) {
-    Serial.print("JUMP = ");
-    Serial.println(JUMP);
+    Serial.print("BRIGHTNESS = ");
+    Serial.print(BRIGHTNESS);
 
-    Serial.print("SPEED = ");
-    Serial.println(SPEED);
+    Serial.print("  JUMP = ");
+    Serial.print(JUMP);
 
-    Serial.print("INWARD = ");
-    Serial.println(INWARD);
+    Serial.print("  SPEED = ");
+    Serial.print(SPEED);
 
+    Serial.print("  INWARD = ");
+    Serial.print(INWARD);
+
+    Serial.println();
   }
 
   rings();
