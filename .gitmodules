@@ -7,3 +7,6 @@
 [submodule "libraries/DmxReceiver"]
 	path = libraries/DmxReceiver
 	url = https://github.com/jimparis/DmxReceiver.git
+[submodule "libraries/E131"]
+	path = libraries/E131
+	url = git@github.com:forkineye/E131.git
