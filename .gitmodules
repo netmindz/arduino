@@ -10,3 +10,9 @@
 [submodule "libraries/E131"]
 	path = libraries/E131
 	url = git@github.com:forkineye/E131.git
+[submodule "libraries/ESPAsyncE131"]
+	path = libraries/ESPAsyncE131
+	url = git@github.com:forkineye/ESPAsyncE131.git
+[submodule "libraries/ESPAsyncUDP"]
+	path = libraries/ESPAsyncUDP
+	url = git@github.com:me-no-dev/ESPAsyncUDP.git
