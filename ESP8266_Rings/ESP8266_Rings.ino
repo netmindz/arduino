@@ -4,11 +4,13 @@
 #define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 #include <ESP8266WiFi.h>
-#include <E131.h>
+#include <ESPAsyncE131.h>
 
-#define UNIVERSE 1      /* Universe to listen for */
-#define CHANNEL_START 0 /* Channel to start listening at */
-#define LED_PIN 12      /* Pixel output - GPIO0 */
+#define UNIVERSE 1        // First DMX Universe to listen for
+#define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
+
+#define CHANNEL_START 1 /* Channel to start listening at */
+#define LED_PIN 12
 
 #define COLOR_ORDER GBR
 #define CHIPSET     WS2811
@@ -17,14 +19,15 @@
 #define NUM_LEDS 100
 
 int JUMP = 15;
-int SPEED = 1200;
+int SPEED = 200;
 boolean INWARD = true;
 int BRIGHTNESS = 15;
 
-const char ssid[] = "ManstonManor";         /* Replace with your SSID */
-const char passphrase[] = "BigTitties29!";   /* Replace with your WPA2 passphrase */
+const char ssid[] = "";         /* Replace with your SSID */
+const char passphrase[] = "";   /* Replace with your WPA2 passphrase */
 
-E131 e131;
+ESPAsyncE131 e131(UNIVERSE_COUNT);
+
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
 
@@ -34,39 +37,64 @@ void setup() {
   Serial.begin(115200);
   delay(10);
 
-  /* Choose one to begin listening for E1.31 data */
-  //e131.begin(ssid, passphrase);                       /* via Unicast on the default port */
-  e131.beginMulticast(ssid, passphrase, UNIVERSE);  /* via Multicast for Universe 1 */
+  // Make sure you're in station mode
+  WiFi.mode(WIFI_STA);
 
+  Serial.println("");
+  Serial.print(F("Connecting to "));
+  Serial.print(ssid);
+
+  if (passphrase != NULL)
+    WiFi.begin(ssid, passphrase);
+  else
+    WiFi.begin(ssid);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  // Choose one to begin listening for E1.31 data
+  //if (e131.begin(E131_UNICAST)) {
+  if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
+    Serial.println(F("Listening for data..."));
+  }
+  else {
+    Serial.println(F("*** e131.begin failed ***"));
+  }
   FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
   FastLED.setBrightness( BRIGHTNESS );
 
   int h = 0;
-  for(int r=0; r < RINGS; r++) {
+  for (int r = 0; r < RINGS; r++) {
     hue[r] = h;
     h += JUMP;
   }
 }
 
 void loop() {
-  /* Parse a packet and update pixels */
-  if (e131.parsePacket()) {
-    if (e131.universe == UNIVERSE) {
-      BRIGHTNESS = map(e131.data[(CHANNEL_START  + 0)], 0, 255, 0, 50); // ChangeME
-      JUMP = map(e131.data[(CHANNEL_START  + 1)], 0, 255, 5, 40);
-      SPEED = map(e131.data[(CHANNEL_START  + 2)], 0, 255, 1000, 20);
-      if (e131.data[(CHANNEL_START  + 3)] < 125) {
-        INWARD = true;
-      }
-      else {
-        INWARD = false;
-      }
-      Serial.print("e");
-      //Serial.print(e131.data[0]);
-    }
-  }
-  FastLED.setBrightness(BRIGHTNESS);
+  if (!e131.isEmpty()) {
+    e131_packet_t packet;
+    e131.pull(&packet);     // Pull packet from ring buffer
 
+//    Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
+//                  htons(packet.universe),                 // The Universe for this packet
+//                  htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
+//                  e131.stats.num_packets,                 // Packet counter
+//                  e131.stats.packet_errors,               // Packet error counter
+//                  packet.property_values[1]);             // Dimmer data for Channel 1
+
+    /* Parse a packet and update pixels */
+    BRIGHTNESS = map(packet.property_values[(CHANNEL_START  + 0)], 0, 255, 0, 255);
+    JUMP = map(packet.property_values[(CHANNEL_START  + 1)], 0, 255, 5, 40);
+    SPEED = map(packet.property_values[(CHANNEL_START  + 2)], 0, 255, 1000, 20);
+    if (packet.property_values[(CHANNEL_START  + 3)] < 125) {
+      INWARD = true;
+    }
+    else {
+      INWARD = false;
+    }
+    FastLED.setBrightness(BRIGHTNESS);
+  }
   EVERY_N_SECONDS( 2 ) {
     Serial.print("BRIGHTNESS = ");
     Serial.print(BRIGHTNESS);
