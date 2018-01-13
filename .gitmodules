@@ -16,3 +16,12 @@
 [submodule "libraries/ESPAsyncUDP"]
 	path = libraries/ESPAsyncUDP
 	url = git@github.com:me-no-dev/ESPAsyncUDP.git
+[submodule "MashedPixels"]
+	path = MashedPixels
+	url = git@github.com:alexisisaac/MashedPixels.git
+[submodule "tree"]
+	path = tree
+	url = git@github.com:evilgeniuslabs/tree.git
+[submodule "tree-v2"]
+	path = tree-v2
+	url = git@github.com:evilgeniuslabs/tree-v2.git
