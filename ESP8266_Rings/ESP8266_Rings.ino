@@ -119,35 +119,30 @@ void loop() {
 }
 
 void rings() {
-  for (int r = 2; r <= RINGS; r++) {
+  for (int r = 0; r <= RINGS; r++) {
     setRing(r, CHSV(hue[(r - 1)], 255, 255));
   }
   FastLED.delay(SPEED);
   if (INWARD) {
-    for (int r = 2; r < RINGS; r++) {
-      hue[(r - 1)] = hue[r];
+    for (int r = 1; r < RINGS; r++) { 
+      hue[(r - 1)] = hue[r]; // set ring one less to that of the outer
     }
     hue[(RINGS - 1)] += JUMP;
   }
   else {
-    for (int r = (RINGS - 1); r > 1; r--) {
-      hue[r] = hue[(r - 1)];
+    for (int r = (RINGS - 1); r >= 1; r--) {
+      hue[r] = hue[(r - 1)]; // set this ruing based on the inner
     }
-    //    if(random(0,10) > 2) {
-    hue[1] += JUMP;
-    //    }
-    //    else {
-    //      hue[1] += random(0,255);
-    //    }
+    hue[0] += JUMP;
   }
 }
 
 void setRing(int ring, CRGB colour) {
-  int offset = 1;
+  int offset = 0;
   int count = 0;
   switch (ring) {
     case 1:
-      count = 0;
+      count = 1;
       break;
     case 2:
       offset = 1;
@@ -169,9 +164,21 @@ void setRing(int ring, CRGB colour) {
       offset = 61;
       count = 32;
       break;
+    case 7:
+      offset = 93;
+      count = 40;
+      break;
+    case 8:
+      offset =133;
+      count = 48;
+      break;
+    case 9:
+      offset = 181;
+      count = 60;
+      break;
   }
   for (int i = 0; i < count; i++) {
-    leds[(offset + i - 1)] = colour;
+    leds[(offset + i)] = colour;
   }
 }
 
