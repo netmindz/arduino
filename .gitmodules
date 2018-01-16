@@ -25,3 +25,6 @@
 [submodule "tree-v2"]
 	path = tree-v2
 	url = git@github.com:evilgeniuslabs/tree-v2.git
+[submodule "libraries/MSGEQ7"]
+	path = libraries/MSGEQ7
+	url = git@github.com:NicoHood/MSGEQ7.git
