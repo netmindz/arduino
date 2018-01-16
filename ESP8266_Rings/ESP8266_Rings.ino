@@ -49,10 +49,14 @@ void setup() {
   else
     WiFi.begin(ssid);
 
+  Serial.print("Waiting on wifi ");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+    Serial.print("w");
   }
+  Serial.println("\nDone");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
   // Choose one to begin listening for E1.31 data
   //if (e131.begin(E131_UNICAST)) {
   if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
