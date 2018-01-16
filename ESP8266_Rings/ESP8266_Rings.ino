@@ -10,9 +10,9 @@
 #define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
 
 #define CHANNEL_START 1 /* Channel to start listening at */
-#define LED_PIN 12
+#define LED_PIN D4
 
-#define COLOR_ORDER GBR
+#define COLOR_ORDER GRB
 #define CHIPSET     WS2811
 
 #define RINGS 6
