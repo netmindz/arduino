@@ -1,8 +1,8 @@
 #include <FastLED.h>
 
 // Params for width and height
-const uint8_t kMatrixWidth = 50; // length of string
-const uint8_t kMatrixHeight = 10;
+const uint8_t kMatrixWidth = 30; // length of string
+const uint8_t kMatrixHeight = 30;
 
 #define LED_PIN  6
 
@@ -11,44 +11,10 @@ const uint8_t kMatrixHeight = 10;
 
 #define BRIGHTNESS 255
 
-// Helper functions for an two-dimensional XY matrix of pixels.
-// Simple 2-D demo code is included as well.
-//
-//     XY(x,y) takes x and y coordinates and returns an LED index number,
-//             for use like this:  leds[ XY(x,y) ] == CRGB::Red;
-//             No error checking is performed on the ranges of x and y.
-//
-//     XYsafe(x,y) takes x and y coordinates and returns an LED index number,
-//             for use like this:  leds[ XY(x,y) ] == CRGB::Red;
-//             Error checking IS performed on the ranges of x and y, and an
-//             index of "-1" is returned.  Special instructions below
-//             explain how to use this without having to do your own error
-//             checking every time you use this function.
-//             This is a slightly more advanced technique, and
-//             it REQUIRES SPECIAL ADDITIONAL setup, described below.
-
-
-
 // Param for different pixel layouts
 const bool    kMatrixSerpentineLayout = true;
 
-// This function will return the right 'led index number' for
-// a given set of X and Y coordinates on your matrix.
-// IT DOES NOT CHECK THE COORDINATE BOUNDARIES.
-// That's up to you.  Don't pass it bogus values.
-//
-// Use the "XY" function like this:
-//
-//    for( uint8_t x = 0; x < kMatrixWidth; x++) {
-//      for( uint8_t y = 0; y < kMatrixHeight; y++) {
-//
-//        // Here's the x, y to 'led index' in action:
-//        leds[ XY( x, y) ] = CHSV( random8(), 255, 255);
-//
-//      }
-//    }
-//
-//
+
 uint16_t XY( uint8_t x, uint8_t y)
 {
   uint16_t i;
@@ -150,8 +116,7 @@ void rainbowSweep() {
     for (int y = 0; y < kMatrixHeight; y++) {
       leds[ XY(x, y)]  = CHSV( hue, 255, 255);
     }
-    FastLED.show();
-    delay(5);
+    FastLED.delay(0);
     hue += jump;
     if (hue > 255) hue = 0;
     for (int i = 0; i < (kMatrixHeight * kMatrixWidth); i++) {
@@ -181,13 +146,13 @@ void sample() {
 
 void loop()
 {
-
-  for(int i = 0; i < 1000; i++) {
-    sample();
-  }
-  for(int i = 0; i < 100; i++) {
-    rainbowSweep();
-  }
+  snake();
+//  for(int i = 0; i < 1000; i++) {
+//    sample();
+//  }
+//  for(int i = 0; i < 100; i++) {
+//    rainbowSweep();
+//  }
 }
 
 
@@ -197,7 +162,6 @@ void ledtest() {
     for (int x = 0; x < kMatrixWidth; x++) {
       leds[ XY(x, y)]  = CHSV( hue, 255, 255);
       FastLED.show();
-      delay(10);
       leds[ XY(x, y)]  = CRGB::Black;
       hue += 5;
       if (hue > 255) hue = 0;
