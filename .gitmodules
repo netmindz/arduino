@@ -28,3 +28,6 @@
 [submodule "libraries/MSGEQ7"]
 	path = libraries/MSGEQ7
 	url = git@github.com:NicoHood/MSGEQ7.git
+[submodule "libraries/WS2812Serial"]
+	path = libraries/WS2812Serial
+	url = https://github.com/PaulStoffregen/WS2812Serial.git
