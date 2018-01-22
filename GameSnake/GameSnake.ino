@@ -35,12 +35,31 @@ uint16_t XY( uint8_t x, uint8_t y)
   return i;
 }
 
+class Point {
+  public:
+  int x;
+  int y;
+
+  public:
+    Point() {
+    }
+
+  void setXY(int newX, int newY) {
+    x = newX;
+    y = newY;
+  }
+
+
+};
 
 class GameSnake {
 
     char dir;
     int x;
     int y;
+    int l;
+    Point tail[200];
+    int d;
 
   public:
     GameSnake() {
@@ -51,10 +70,20 @@ class GameSnake {
       x = kMatrixWidth / 2;
       y = kMatrixHeight / 2;
       dir = 'L';
+      l = 0;
+      d = 600;
       Serial.println("Go!");
+      newFruit();
     }
 
     void frame() {
+      Point t = tail[l];     
+      leds[XY(t.x, t.y)] = CRGB::Black;
+      
+      for(int i = l; i >= 1; i--) {
+        tail[i] = tail[(i -1)];
+      }
+      
       switch (dir) {
         case 'U':
           y++;
@@ -83,44 +112,60 @@ class GameSnake {
       if (y < 0) {
         die();
       }
-      Serial.print(x);
-      Serial.print(",");
-      Serial.println(y);
+      if (leds[XY(x, y)].r != 0) {
+        die();
+      }
+      if (leds[XY(x, y)].g != 0) {
+        eat();
+      }
 
-      FastLED.clear();
       leds[XY(x, y)] = CRGB::White;
-      FastLED.delay(600);
+      Point h;
+      h.setXY(x,y);
+      tail[0] = h;
+      FastLED.delay(d);
     }
 
     void die() {
-      Serial.println("Dead!");
+      Serial.println("Dead");
       for (int i = 0; i < 10; i++) {
         fill_solid (leds, NUM_LEDS, CRGB::Red);
-        FastLED.delay(100);
+        FastLED.delay(90);
         fill_solid (leds, NUM_LEDS, CRGB::Black);
-        FastLED.delay(100);
+        FastLED.delay(90);
       }
+      FastLED.clear();
       init();
     }
 
     void input(int c) {
       switch (c) {
         case 117:
-          dir = 'U';
+          if (dir != 'D') dir = 'U';
           break;
         case 100:
-          dir = 'D';
+          if (dir != 'U') dir = 'D';
           break;
         case 108:
-          dir = 'L';
+          if (dir != 'R') dir = 'L';
           break;
         case 114:
-          dir = 'R';
+          if (dir != 'L') dir = 'R';
           break;
         default:
           Serial.print("Unknown input ");
           Serial.println(c);
       }
+    }
+
+    void newFruit() {
+      leds[XY(random(0, (kMatrixWidth - 1)), random(0, (kMatrixHeight - 1)))] = CRGB::Green;
+    }
+
+    void eat() {
+      l++;
+      newFruit();
+      d -= 20;
     }
 };
 
@@ -128,16 +173,13 @@ GameSnake snake;
 
 void setup() {
   Serial.begin(115200);
-  FastLED.addLeds<WS2812SERIAL, 1, GRB>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  FastLED.addLeds<WS2812SERIAL, 1, BRG>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
 }
 
 int incomingByte = 0;
 void loop() {
   if (Serial.available() > 0) {
     incomingByte = Serial.read();
-    // say what you got:
-    Serial.print("I received: ");
-    Serial.println(incomingByte);
     snake.input(incomingByte);
   }
   snake.frame();
