@@ -141,15 +141,19 @@ class GameSnake {
     void input(int c) {
       switch (c) {
         case 117:
+          Serial.println("Up");
           if (dir != 'D') dir = 'U';
           break;
         case 100:
+          Serial.println("Down");
           if (dir != 'U') dir = 'D';
           break;
         case 108:
+          Serial.println("Left");
           if (dir != 'R') dir = 'L';
           break;
         case 114:
+          Serial.println("Right");
           if (dir != 'L') dir = 'R';
           break;
         default:
@@ -173,6 +177,7 @@ GameSnake snake;
 
 void setup() {
   Serial.begin(115200);
+  Serial2.begin(115200);
   FastLED.addLeds<WS2812SERIAL, 1, BRG>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
 }
 
@@ -180,6 +185,10 @@ int incomingByte = 0;
 void loop() {
   if (Serial.available() > 0) {
     incomingByte = Serial.read();
+    snake.input(incomingByte);
+  }
+  if (Serial2.available() > 0) {
+    incomingByte = Serial2.read();
     snake.input(incomingByte);
   }
   snake.frame();
