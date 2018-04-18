@@ -31,3 +31,6 @@
 [submodule "libraries/WS2812Serial"]
 	path = libraries/WS2812Serial
 	url = https://github.com/PaulStoffregen/WS2812Serial.git
+[submodule "libraries/FastLED-GFX"]
+	path = libraries/FastLED-GFX
+	url = https://github.com/Jorgen-VikingGod/FastLED-GFX.git
