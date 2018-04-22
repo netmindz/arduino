@@ -34,3 +34,9 @@
 [submodule "libraries/FastLED-GFX"]
 	path = libraries/FastLED-GFX
 	url = https://github.com/Jorgen-VikingGod/FastLED-GFX.git
+[submodule "libraries/DMXSerial"]
+	path = libraries/DMXSerial
+	url = https://github.com/mathertel/DMXSerial.git
+[submodule "libraries/ESP-Dmx"]
+	path = libraries/ESP-Dmx
+	url = https://github.com/Rickgg/ESP-Dmx.git
