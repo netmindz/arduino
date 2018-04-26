@@ -19,6 +19,7 @@ CRGB leds[kMatrixWidth * kMatrixHeight];
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
+TBlendType    currentBlending;
 
 // can be used for palette rotation
 // "colorshift"
@@ -54,7 +55,7 @@ int button1;
 int button2;
 int button3;
 byte mode;
-byte pgm = 20;
+int pgm = 20;
 byte spd;
 byte brightness;
 byte red_level;
@@ -85,7 +86,20 @@ void setup() {
 //  leds[XY(29, 29)] = CRGB::Blue;
 //  FastLED.delay(10000);
 
-  //ledtest();
+  // ledtest();
+  
+    InitMSGEQ7();
+
+//  // Initialize our noise coordinates to some random values
+//  fx = random16();
+//  fy = random16();
+//  fz = random16();
+
+//  x2 = random16();
+//  y2 = random16();
+//  z2 = random16();
+
+ //AutoRunAudio();
   
 }
 
@@ -101,15 +115,64 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
   return result;
 }
 
+typedef void (*SimplePatternList[])();
+SimplePatternList gPatterns = {
+    MirroredNoise,
+    RedClouds,
+    Lavalamp1,
+    Lavalamp2,
+    Lavalamp3,
+    Lavalamp4,
+    Lavalamp5,
+    Constrained1,
+    RelativeMotion1,
+    Water,
+//    Bubbles,
+    TripleMotion,
+    CrossNoise,
+    CrossNoise2,
+    RandomAnimation,
+    MilliTimer,
+    Caleido1,
+    Caleido2,
+    Caleido3,
+    Caleido5,
+    vortex,
+    squares,
+    // Audio
+       MSGEQtest,
+   MSGEQtest2,
+//   MSGEQtest3,
+   MSGEQtest4,
+   AudioSpiral,
+   MSGEQtest5,
+   MSGEQtest6,
+   MSGEQtest7,
+   MSGEQtest8,
+//   MSGEQtest9,
+   CopyTest,
+   Audio1,
+   Audio2,
+   Audio3,
+   Audio4,
+   CaleidoTest1,
+   CaleidoTest2,
+   Audio5,
+   Audio6,
+
+  };
+
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+int gPatternCount = ARRAY_SIZE(gPatterns);
 
 void loop() {
-   EVERY_N_SECONDS(120) {
+   EVERY_N_SECONDS(30) {
     Serial.println("Next pattern");
-    //pgm = random(0, 19);
+    //pgm = random(0, (gPatternCount - 1));
     pgm++;
-    if (pgm > 19) pgm = 0;
+    if (pgm >= gPatternCount) pgm = 0;
   }
-
-  RunAnimationDependingOnPgm();
+//  Serial.println(gPatterns[pgm]);
+  gPatterns[pgm]();
   ShowFrame();
 }
