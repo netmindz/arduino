@@ -117,6 +117,10 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
 
 typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = {
+    EQ,
+    VU,
+    FunkyPlank,
+    DJLight,
     MirroredNoise,
     RedClouds,
     Lavalamp1,
