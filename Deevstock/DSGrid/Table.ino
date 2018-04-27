@@ -16,45 +16,6 @@ byte prevKeyState = HIGH;
 int band;
 CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
 
-int ledMode = 1;  //FIRST ACTIVE MODE
-
-// MODE VARIABLES -- Change these numbers to create new interesting modes
-
-int BRIGHTNESS = 55;    //0-255.  Lower number saves battery life, higher number is screamingly bright
-int SATURATION = 255;    //0 is white (no color) and 255 is fully saturated with color
-int HUE = 0;             //0-255, around the color wheel
-int STEPS = 4;           //Wider or narrower bands of color
-int SPEEDO = 10;         //The speed of the animation
-
-// SIN WAVE SETUP
-
-#define qsubd(x, b)  ((x>b)?wavebright:0)                   // Digital unsigned subtraction macro. if result <0, then => 0. Otherwise, take on fixed value.
-#define qsuba(x, b)  ((x>b)?x-b:0)                          // Analog Unsigned subtraction macro. if result <0, then => 0
-
-
-// SINWAVE VARIABLES -- change these numbers to modify Sinwave mode
-uint8_t wavebright = 255;                                     // You can change the brightness of the waves/bars rolling across the screen.
-uint8_t thishue = 30;                                          // You can change the starting hue value for the first wave.
-uint8_t thisrot = 1;                                          // You can change how quickly the hue rotates for this wave. 0= color stays the same
-uint8_t allsat = 255;                                         // I like 'em fully saturated with colour.
-bool thisdir = 0;                                             // You can change direction.
-int8_t thisspeed = 4;                                         // You can change the speed, and use negative values.
-uint8_t allfreq = 25;                                         // You can change the frequency, thus overall width of bars.
-int thisphase = 0;                                            // Phase change value gets calculated.
-uint8_t thiscutoff = 192;                                     // You can change the cutoff value to display this wave. Lower value = longer wave.
-int loopdelay = 4;                                           // You can change the delay. Also you can change the allspeed variable above.
-uint8_t bgclr = 0;                                            // A rotating background colour.
-uint8_t bgbright = 55;                                        // Background color brightness
-
-//RIPPLE VARIABLES
-
-uint8_t colour;                                               // Ripple colour is randomized.
-int center = 0;                                               // Center of the current ripple.
-int step = -1;                                                // -1 is the initializing step.
-uint8_t myfade = 255;                                         // Starting brightness.
-#define maxsteps 16                                           // Case statement wouldn't allow a variable.
-
-
 // EQ vars
 
 int eq_hue = 0;
@@ -64,10 +25,6 @@ int eq_hue_wait = 10;
 int scount =  0;
 int smillis = 0;
 int slastmillis = 0;
-
-// Change pattern
-uint16_t plastmillis = 0;
-
 
 
 int barWidth = (WIDTH / 7) / 2;
