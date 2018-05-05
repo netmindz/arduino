@@ -40,3 +40,12 @@
 [submodule "libraries/ESP-Dmx"]
 	path = libraries/ESP-Dmx
 	url = https://github.com/Rickgg/ESP-Dmx.git
+[submodule "libraries/OctoWS2811"]
+	path = libraries/OctoWS2811
+	url = https://github.com/PaulStoffregen/OctoWS2811.git
+[submodule "libraries/Audio"]
+	path = libraries/Audio
+	url = https://github.com/PaulStoffregen/Audio.git
+[submodule "libraries/SerialFlash"]
+	path = libraries/SerialFlash
+	url = https://github.com/PaulStoffregen/SerialFlash

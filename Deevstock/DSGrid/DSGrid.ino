@@ -1,6 +1,9 @@
+#include <TeensyDmx.h>
 #include <WS2812Serial.h>
 #define USE_WS2812SERIAL
 #include<FastLED.h>
+
+TeensyDmx Dmx(Serial2);
 
 //---LED SETUP STUFF
 #define LED_PIN 1
@@ -55,7 +58,7 @@ int button1;
 int button2;
 int button3;
 byte mode;
-int pgm = 20;
+int pgm = 0;
 byte spd;
 byte brightness;
 byte red_level;
@@ -65,6 +68,9 @@ byte blue_level;
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
+
+  Dmx.setMode(TeensyDmx::DMX_IN);
+
 
   // add the SmartMatrix controller
   int firstSectionLEDCount = (kMatrixWidth * 8);
@@ -117,66 +123,150 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
 
 typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = {
-    EQ,
-    VU,
-    FunkyPlank,
-    DJLight,
-    MirroredNoise,
-    RedClouds,
-    Lavalamp1,
-    Lavalamp2,
-    Lavalamp3,
-    Lavalamp4,
-    Lavalamp5,
-    Constrained1,
-    RelativeMotion1,
-    Water,
-//    Bubbles,
-    TripleMotion,
-    CrossNoise,
-    CrossNoise2,
-    RandomAnimation,
-    MilliTimer,
-    Caleido1,
-    Caleido2,
-    Caleido3,
-    Caleido5,
-    vortex,
-    squares,
-    // Audio
-       MSGEQtest,
-   MSGEQtest2,
-//   MSGEQtest3,
-   MSGEQtest4,
-   AudioSpiral,
-   MSGEQtest5,
-   MSGEQtest6,
-   MSGEQtest7,
-   MSGEQtest8,
-//   MSGEQtest9,
-   CopyTest,
-   Audio1,
-   Audio2,
-   Audio3,
-   Audio4,
-   CaleidoTest1,
-   CaleidoTest2,
-   Audio5,
-   Audio6,
+  autoRun,
+  EQ,
+  VU,
+  FunkyPlank,
+  DJLight,
+  MirroredNoise,
+  RedClouds,
+  Lavalamp1,
+  Lavalamp2,
+  Lavalamp3,
+  Lavalamp4,
+  Lavalamp5,
+  Constrained1,
+  RelativeMotion1,
+  Water,
+  //    Bubbles,
+  TripleMotion,
+  CrossNoise,
+  CrossNoise2,
+  RandomAnimation,
+  MilliTimer,
+  Caleido1,
+  Caleido2,
+  Caleido3,
+  Caleido5,
+  vortex,
+  squares,
 
-  };
+  //    // Audio
+  //       MSGEQtest,
+  //   MSGEQtest2,
+  ////   MSGEQtest3,
+  //   MSGEQtest4,
+  //   AudioSpiral,
+  //   MSGEQtest5,
+  //   MSGEQtest6,
+  //   MSGEQtest7,
+  //   MSGEQtest8,
+  ////   MSGEQtest9,
+  //   CopyTest,
+  //   Audio1,
+  //   Audio2,
+  //   Audio3,
+  //   Audio4,
+  //   CaleidoTest1,
+  //   CaleidoTest2,
+  //   Audio5,
+  //   Audio6,
+
+};
+
+SimplePatternList gAutoPatterns = {
+  FunkyPlank,
+  EQ,
+  VU,
+  DJLight,
+  MirroredNoise,
+  RedClouds,
+  Lavalamp1,
+  Lavalamp2,
+  Lavalamp3,
+  Lavalamp4,
+  Lavalamp5,
+  Constrained1,
+  RelativeMotion1,
+  Water,
+  //    Bubbles,
+  TripleMotion,
+  CrossNoise,
+  CrossNoise2,
+  RandomAnimation,
+  MilliTimer,
+  Caleido1,
+  Caleido2,
+  Caleido3,
+  Caleido5,
+  vortex,
+  squares,
+
+  //    // Audio
+  //       MSGEQtest,
+  //   MSGEQtest2,
+  ////   MSGEQtest3,
+  //   MSGEQtest4,
+  //   AudioSpiral,
+  //   MSGEQtest5,
+  //   MSGEQtest6,
+  //   MSGEQtest7,
+  //   MSGEQtest8,
+  ////   MSGEQtest9,
+  //   CopyTest,
+  //   Audio1,
+  //   Audio2,
+  //   Audio3,
+  //   Audio4,
+  //   CaleidoTest1,
+  //   CaleidoTest2,
+  //   Audio5,
+  //   Audio6,
+
+};
+
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
 
+int BRIGHTNESS;
 void loop() {
-   EVERY_N_SECONDS(30) {
-    Serial.println("Next pattern");
-    //pgm = random(0, (gPatternCount - 1));
-    pgm++;
-    if (pgm >= gPatternCount) pgm = 0;
+
+  Dmx.loop();
+  if (Dmx.newFrame()) {
+    Serial.println("d");
+    int b = Dmx.getBuffer()[1]; // brightness = 1
+    if (b != BRIGHTNESS) {
+      BRIGHTNESS = b;
+      FastLED.setBrightness(BRIGHTNESS);
+    }
+    int p = Dmx.getBuffer()[2]; // pattern = 5
+    pgm = map(p, 0, 255, 0, (gPatternCount - 1));
+    if (p > (gPatternCount - 1)) {
+      p = 0;
+    }
+    else {
+      pgm = p;
+    }
   }
-//  Serial.println(gPatterns[pgm]);
+
+
+
+
+  //  Serial.println(gPatterns[pgm]);
   gPatterns[pgm]();
   ShowFrame();
 }
+
+void autoRun() {
+  EVERY_N_SECONDS(90) {
+    Serial.println("Next Auto pattern");
+    pgm = random(0, (gPatternCount - 1));
+    // pgm++;
+    if (pgm >= gPatternCount) pgm = 0;
+  }
+
+  gAutoPatterns[pgm]();
+
+}
+
