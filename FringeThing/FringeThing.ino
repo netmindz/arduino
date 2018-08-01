@@ -23,7 +23,7 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 void setup() {
   Serial.begin(115200);
   FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-  FastLED.setBrightness(50);
+  FastLED.setBrightness(250);
   leds[0] = CRGB::Blue;
   FastLED.show();
 
@@ -81,6 +81,29 @@ void loop() {
 
 }
 
+uint16_t XY( uint8_t x, uint8_t y)
+{
+  uint16_t i;
+
+  if ( kMatrixSerpentineLayout == false) {
+    i = (y * kMatrixWidth) + x;
+  }
+
+  if ( kMatrixSerpentineLayout == true) {
+    if ( y & 0x01) {
+      // Odd rows run backwards
+      uint8_t reverseX = (kMatrixWidth - 1) - x;
+      i = (y * kMatrixWidth) + reverseX;
+    } else {
+      // Even rows run forwards
+      i = (y * kMatrixWidth) + x;
+    }
+  }
+
+  return i;
+}
+
+
 
 void getReceivedText()
 {
@@ -98,11 +121,14 @@ void getReceivedText()
     charsReceived++;
     charsWaiting--;
   }
-  while (charsReceived <= textBuffSize && (!(c == 0x0d || c == 0x0a)) && charsWaiting > 0);
+  while (charsReceived <= textBuffSize && (!(c == 0x0d || c == 0x0a)) && client.available() > 0);
 
   //if CR found go look at received text and execute command
   if (c == 0x0d || c == 0x0a) {
     parseReceivedText();
+    for(int x = 0; x < textBuffSize; x++) {
+      textBuff[charsReceived] = 0x00;
+    }
   }
 
   // if textBuff full without reaching a CR, print an error message
@@ -117,10 +143,20 @@ void getReceivedText()
 
 void parseReceivedText() {
   shuntUp();
+  // scroll();
   String line(textBuff);
-  Serial.print(line);
+//  Serial.print("***");
+//  Serial.print(line);
+//    Serial.print("###");
   int cmd = getValue(line, ' ', 0).toInt();
   int hue = cmd;
+  int server = getValue(line, ' ', 1).toInt();
+  String tmp = getValue(line, ' ', 2);
+  tmp.replace("s","");
+  float duration = tmp.toFloat();
+  long d = duration * 1000; // s -> ms
+  uint8_t bright = map(d, 0, 60000, 30, 255);
+  Serial.printf("CMD:%i  Server:%i  Duration:%f  Bright:%i\n", cmd, server, duration, bright);
 
   if (cmd == 10) hue = 0;
   if (cmd == 100) hue = 3;
@@ -207,7 +243,12 @@ void parseReceivedText() {
   Serial.println(hue);
   if (hue == 72) hue = 150;
   if (hue == 71) hue = 100;
-  leds[0] = CHSV(hue, 255, 255);
+  if (hue == 69) hue = 120;
+  
+  /*for(int n = 0; n > kMatrixWidth; n++) {
+    leds[XY(0,n)] = CHSV(hue, 255, 255); 
+  }*/
+  leds[0] = CHSV(hue, 255, bright);
   FastLED.show();
 }
 
@@ -216,6 +257,15 @@ void shuntUp() {
     leds[i] = leds[(i - 1)];
   }
 }
+
+void scroll() {
+  for(int i = (kMatrixHeight - 1); i > 0; i--) {
+    for(int n = 0; n < 4; n++) {
+      leds[XY(i,(n + 1))] =  leds[XY(i,n)];
+    }
+  }
+}
+
 
 String getValue(String data, char separator, int index)
 {
