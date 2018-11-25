@@ -2,7 +2,7 @@
 
 #define PIN 6
 
-#define BRIGHTNESS 255
+#define BRIGHTNESS 20
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -23,16 +23,17 @@ void setup() {
   Serial.begin(9600);
   strip.show(); // Initialize all pixels to 'off'
   strip.setBrightness(BRIGHTNESS);
+      Serial.print("Setup");
 }
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  colorWipe(strip.Color(255, 0, 0), 170); // Red
-  theaterChase(strip.Color(  0,   0, 127), 170); // Blue
-  colorWipe(strip.Color(0, 255, 0), 170); // Green
-  theaterChase(strip.Color(127,   0,   0), 170); // Red
-  colorWipe(strip.Color(0, 0, 255), 70); // Blue
-  theaterChase(strip.Color(127, 127, 127), 170); // White
+//    colorWipe(strip.Color(255, 0, 0), 70); // Red
+//  theaterChase(strip.Color(  0,   0, 127), 70); // Blue
+//  colorWipe(strip.Color(0, 255, 0), 70); // Green
+//  theaterChase(strip.Color(127,   0,   0), 70); // Red
+//  colorWipe(strip.Color(0, 0, 255), 70); // Blue
+//  theaterChase(strip.Color(127, 127, 127), 70); // White
   // Send a theater pixel chase in...
 //  brightness();
 /*
@@ -44,25 +45,32 @@ void loop() {
       rainbow(20,3);
   }
 */
-    rainbowCycle(20);
+//    rainbowCycle(20);
 
-      rainbow(20,3);
 
-    theaterChaseRainbowOld(100, 5);
-      rainbowCycle(20);
+//    theaterChaseRainbowOld(50, 5);
+ //     rainbowCycle(50);
+  
+    for(int x=4; x <= 20; x++) {
+      theaterChaseRainbowOld(30, x);
+      Serial.print("\ntheaterChaseRainbow=");
+      Serial.print(x);
+      Serial.print("\n");
+    }
     
-    for(int x=1; x <= 20; x++) {
-      theaterChaseRainbowOld(100, x);
+  //    rainbow(50,3);
+  //    rainbowCycle(50);
+    for(int x=3; x <= 20; x++) {
+      theaterChaseRainbow(30, x);
       Serial.print("\ntheaterChaseRainbow=");
       Serial.print(x);
       Serial.print("\n");
     }
-    for(int x=1; x <= 20; x++) {
-      theaterChaseRainbow(100, x);
-      Serial.print("\ntheaterChaseRainbow=");
-      Serial.print(x);
-      Serial.print("\n");
-    }
+/*
+      rainbow(50,5);
+      rainbowCycle(150);
+      rainbow(20,1);
+      */
 
 /*    rainbow(30,18);
     rainbow(40,9);
@@ -127,7 +135,9 @@ void fadeExp(float fade) {
     strip.setPixelColor(p, r, g ,b);
  }
 }
-void fade(int fade) {
+void fade(int f) {
+  int fade = fade / (BRIGHTNESS / 255);
+  
   for(uint16_t p=0; p < strip.numPixels(); p++) {
     uint32_t current = strip.getPixelColor(p);
     uint8_t r = (uint8_t)(current >> 16);
