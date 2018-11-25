@@ -123,12 +123,11 @@ void fadeRangeExp(float current, float total) {
 // Esponential fade
 void fadeExp(float fade) {
   for(uint16_t p=0; p < NUM_LEDS; p++) {
-    uint32_t current = 0;// strip.getPixelColor(p);
-    uint8_t r = (uint8_t)(current >> 16);
+    uint8_t r = leds[p].r;
     r = r * fade;
-    uint8_t g = (uint8_t)(current >>  8);
+    uint8_t g = leds[p].g;
     g = g * fade;
-    uint8_t b = (uint8_t) current;
+    uint8_t b = leds[p].b;
     b = b * fade;
     setPixelColor(p, r, g ,b);
  }
@@ -137,22 +136,21 @@ void fade(int f) {
   int fade = fade / (BRIGHTNESS / 255);
   
   for(uint16_t p=0; p < NUM_LEDS; p++) {
-    uint32_t current = 0; // strip.getPixelColor(p);
-    uint8_t r = (uint8_t)(current >> 16);
+    uint8_t r = leds[p].r;
     if(r <= fade) {
         r = 0;
     }
     else {
       r -= fade;
     }
-    uint8_t g = (uint8_t)(current >>  8);
+    uint8_t g = leds[p].g;
     if(g <= fade) {
         g = 0;
     }
     else {
       g -= fade;
     }
-    uint8_t b = (uint8_t) current;
+    uint8_t b = leds[p].b;
     if(b <= fade) {
         b = 0;
     }
@@ -212,7 +210,6 @@ void theaterChase(uint32_t c, uint8_t wait) {
       for (int i=0; i < NUM_LEDS; i=i+3) {
         setPixelColor(i+q, 0);        //turn every third pixel off
       }
-*/
     }
   }
 }
