@@ -71,7 +71,7 @@ class GameSnake {
       y = kMatrixHeight / 2;
       dir = 'L';
       l = 0;
-      d = 600;
+      d = 400;
       Serial.println("Go!");
       newFruit();
     }
