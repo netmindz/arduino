@@ -163,13 +163,20 @@ class GameSnake {
     }
 
     void newFruit() {
-      leds[XY(random(0, (kMatrixWidth - 1)), random(0, (kMatrixHeight - 1)))] = CRGB::Green;
+      int i = XY(random(0, (kMatrixWidth - 1)), random(0, (kMatrixHeight - 1)));
+      if(leds[i].g != 0) {
+        Serial.print("Fruit inside, retry");
+        newFruit();
+      }
+      else {
+        leds[i] = CRGB::Green;
+      }
     }
 
     void eat() {
       l++;
       newFruit();
-      d -= 20;
+      d -= 15;
     }
 };
 
