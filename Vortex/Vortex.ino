@@ -1,20 +1,18 @@
-#include <WS2812Serial.h>
-#define USE_WS2812SERIAL
 #include <FastLED.h>
 
 // Params for width and height
-const uint8_t kMatrixWidth = 8; // length of string
-const uint8_t kMatrixHeight = 8;
+const uint8_t kMatrixWidth = 30;
+const uint8_t kMatrixHeight = 30;
 
 #define LED_PIN  1
 
 #define COLOR_ORDER RGB
-#define CHIPSET     WS2812SERIAL
+#define CHIPSET     WS2812
 
-#define BRIGHTNESS 255
+#define BRIGHTNESS 55
 
 // Param for different pixel layouts
-const bool    kMatrixSerpentineLayout = false;
+const bool    kMatrixSerpentineLayout = true;
 
 
 uint16_t XY( uint8_t x, uint8_t y)
@@ -90,7 +88,8 @@ void ledtest() {
 }
 
 void setup() {
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+//  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  FastLED.addLeds<APA102, 7, 14, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
   FastLED.setBrightness( BRIGHTNESS );
-  ledtest();
+ // ledtest();
 }
