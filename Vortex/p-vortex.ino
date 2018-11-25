@@ -62,12 +62,12 @@ class Vortex {
 };
 
 #define SNAKE_GAP 30
-#define NUM_SNAKES (NUM_LEDS / SNAKE_GAP) 
+#define NUM_SNAKES ((NUM_LEDS / SNAKE_GAP) / 2)
 Vortex vortexs[NUM_SNAKES];
 
 int vortexsStarted = 1;
 //int const vortexDelay = ((kMatrixWidth * 2) + (kMatrixHeight * 2) - 1);
-int const vortexDelay = SNAKE_GAP;
+int const vortexDelay = SNAKE_GAP * 2;
 int vortexGap = 0;
 
 void vortex() {
@@ -85,8 +85,8 @@ void vortex() {
   for (int  i = 0; i < vortexsStarted; i++) {
     vortexs[i].vortex();
   }
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 25); // TWEAK ME
-  FastLED.delay(100);
+  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 55); // TWEAK ME
+  FastLED.delay(20);
   EVERY_N_SECONDS(10) {
     Serial.println(FastLED.getFPS());
   }
