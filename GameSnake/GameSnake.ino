@@ -91,10 +91,10 @@ class GameSnake {
         case 'D':
           y--;
           break;
-        case 'L':
+        case 'R':
           x--;
           break;
-        case 'R':
+        case 'L':
           x++;
           break;
       }
