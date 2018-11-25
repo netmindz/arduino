@@ -49,3 +49,6 @@
 [submodule "libraries/SerialFlash"]
 	path = libraries/SerialFlash
 	url = https://github.com/PaulStoffregen/SerialFlash
+[submodule "FunkyNoise"]
+	path = FunkyNoise
+	url = https://github.com/netmindz/FunkyNoise.git
