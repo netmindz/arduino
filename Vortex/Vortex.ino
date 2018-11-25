@@ -42,29 +42,6 @@ uint16_t XY( uint8_t x, uint8_t y)
 CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
 CRGB* const leds( leds_plus_safety_pixel + 1);
 
-uint16_t XYsafe( uint8_t x, uint8_t y)
-{
-  if ( x >= kMatrixWidth) return -1;
-  if ( y >= kMatrixHeight) return -1;
-  return XY(x, y);
-}
-
-
-// Demo that USES "XY" follows code below
-
-void DrawOneFrame( byte startHue8, int8_t yHueDelta8, int8_t xHueDelta8)
-{
-  byte lineStartHue = startHue8;
-  for ( byte y = 0; y < kMatrixHeight; y++) {
-    lineStartHue += yHueDelta8;
-    byte pixelHue = lineStartHue;
-    for ( byte x = 0; x < kMatrixWidth; x++) {
-      pixelHue += xHueDelta8;
-      leds[ XY(x, y)]  = CHSV( pixelHue, 255, 255);
-    }
-  }
-}
-
 
 void loop()
 {
