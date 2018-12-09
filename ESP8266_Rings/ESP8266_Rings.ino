@@ -15,8 +15,8 @@
 #define COLOR_ORDER GRB
 #define CHIPSET     WS2811
 
-#define RINGS 6
-#define NUM_LEDS 100
+#define RINGS 9
+#define NUM_LEDS 241
 
 int JUMP = 15;
 int SPEED = 200;
