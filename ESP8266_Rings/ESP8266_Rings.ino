@@ -23,8 +23,14 @@ int SPEED = 200;
 boolean INWARD = true;
 int BRIGHTNESS = 15;
 
-const char ssid[] = "";         /* Replace with your SSID */
-const char passphrase[] = "";   /* Replace with your WPA2 passphrase */
+#include "wifi.h"
+// Create file with the following
+// *************************************************************************
+// #define SECRET_SSID "";  /* Replace with your SSID */
+// #define SECRET_PSK "";   /* Replace with your WPA2 passphrase */
+// *************************************************************************
+const char ssid[] = SECRET_SSID;         /* Replace with your SSID */
+const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 
