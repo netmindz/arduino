@@ -68,7 +68,8 @@ byte blue_level;
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
-
+  
+  Serial.println("Setup");
   Dmx.setMode(TeensyDmx::DMX_IN);
 
 
@@ -81,32 +82,32 @@ void setup() {
   // switch dithering off to avoid flicking at low fps
   FastLED.setDither(0);
 
-  FastLED.setBrightness(20);
+  FastLED.setBrightness(255);
 
-//  leds[XY(0,0)] = CRGB::White;
-//  leds[XY(29,0)] = CRGB::Blue;
-//  leds[XY(29,8)] = CRGB::Yellow;
-//  leds[XY(0, 9)] = CRGB::Green;
-//  leds[XY(0, 28)] = CRGB::Green;
-//  leds[XY(0, 29)] = CRGB::Red;
-//  leds[XY(29, 29)] = CRGB::Blue;
-//  FastLED.delay(10000);
+  //  leds[XY(0,0)] = CRGB::White;
+  //  leds[XY(29,0)] = CRGB::Blue;
+  //  leds[XY(29,8)] = CRGB::Yellow;
+  //  leds[XY(0, 9)] = CRGB::Green;
+  //  leds[XY(0, 28)] = CRGB::Green;
+  //  leds[XY(0, 29)] = CRGB::Red;
+  //  leds[XY(29, 29)] = CRGB::Blue;
+  //  FastLED.delay(10000);
 
-  // ledtest();
-  
-    InitMSGEQ7();
+  //  ledtest();
 
-//  // Initialize our noise coordinates to some random values
-//  fx = random16();
-//  fy = random16();
-//  fz = random16();
+  InitMSGEQ7();
 
-//  x2 = random16();
-//  y2 = random16();
-//  z2 = random16();
+  //  // Initialize our noise coordinates to some random values
+  //  fx = random16();
+  //  fy = random16();
+  //  fz = random16();
 
- //AutoRunAudio();
-  
+  //  x2 = random16();
+  //  y2 = random16();
+  //  z2 = random16();
+
+  //AutoRunAudio();
+
 }
 
 // basically beatsin16 with an additional phase
@@ -151,41 +152,43 @@ SimplePatternList gPatterns = {
   vortex,
   squares,
 
-  //    // Audio
-  //       MSGEQtest,
-  //   MSGEQtest2,
-  ////   MSGEQtest3,
-  //   MSGEQtest4,
-  //   AudioSpiral,
-  //   MSGEQtest5,
-  //   MSGEQtest6,
-  //   MSGEQtest7,
-  //   MSGEQtest8,
-  ////   MSGEQtest9,
-  //   CopyTest,
-  //   Audio1,
-  //   Audio2,
-  //   Audio3,
-  //   Audio4,
-  //   CaleidoTest1,
-  //   CaleidoTest2,
-  //   Audio5,
-  //   Audio6,
+//      // Audio
+//         MSGEQtest,
+//     MSGEQtest2,
+//  //   MSGEQtest3,
+//     MSGEQtest4,
+//     AudioSpiral,
+//     MSGEQtest5,
+//     MSGEQtest6,
+//     MSGEQtest7,
+//     MSGEQtest8,
+//  //   MSGEQtest9,
+//     CopyTest,
+//     Audio1,
+//     Audio2,
+//     Audio3,
+//     Audio4,
+//     CaleidoTest1,
+//     CaleidoTest2,
+//     Audio5,
+//     Audio6,
 
 };
 
 SimplePatternList gAutoPatterns = {
-  FunkyPlank,
-  EQ,
-  VU,
+  squares,
   DJLight,
+  VU,
+ FunkyPlank,
+  EQ,
+  vortex,
   MirroredNoise,
-  RedClouds,
-  Lavalamp1,
-  Lavalamp2,
-  Lavalamp3,
-  Lavalamp4,
-  Lavalamp5,
+///  RedClouds,
+//  Lavalamp1,
+//  Lavalamp2,
+//  Lavalamp3,
+//  Lavalamp4,
+//  Lavalamp5,
   Constrained1,
   RelativeMotion1,
   Water,
@@ -199,35 +202,16 @@ SimplePatternList gAutoPatterns = {
   Caleido2,
   Caleido3,
   Caleido5,
+  
   vortex,
   squares,
-
-  //    // Audio
-  //       MSGEQtest,
-  //   MSGEQtest2,
-  ////   MSGEQtest3,
-  //   MSGEQtest4,
-  //   AudioSpiral,
-  //   MSGEQtest5,
-  //   MSGEQtest6,
-  //   MSGEQtest7,
-  //   MSGEQtest8,
-  ////   MSGEQtest9,
-  //   CopyTest,
-  //   Audio1,
-  //   Audio2,
-  //   Audio3,
-  //   Audio4,
-  //   CaleidoTest1,
-  //   CaleidoTest2,
-  //   Audio5,
-  //   Audio6,
-
+  vortex,
+  squares,
 };
 
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-int gPatternCount = ARRAY_SIZE(gPatterns);
+int gPatternCount = ARRAY_SIZE(gAutoPatterns);
 
 int BRIGHTNESS;
 void loop() {
@@ -250,23 +234,21 @@ void loop() {
     }
   }
 
-
-
-
   //  Serial.println(gPatterns[pgm]);
   gPatterns[pgm]();
   ShowFrame();
 }
 
+int autopgm = 0;
 void autoRun() {
   EVERY_N_SECONDS(90) {
     Serial.println("Next Auto pattern");
-    pgm = random(0, (gPatternCount - 1));
-    // pgm++;
-    if (pgm >= gPatternCount) pgm = 0;
+    autopgm = random(0, (gPatternCount - 1));
+   // autopgm++;
+    if (autopgm >= gPatternCount) autopgm = 0;
   }
 
-  gAutoPatterns[pgm]();
+  gAutoPatterns[autopgm]();
 
 }
 

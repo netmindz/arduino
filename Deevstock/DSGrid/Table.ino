@@ -10,7 +10,7 @@ byte prevKeyState = HIGH;
 #define pinAnalogRight A1
 #define pinReset 5
 #define pinStrobe 4
-#define MSGEQ7_INTERVAL ReadsPerSecond(60)
+#define MSGEQ7_INTERVAL ReadsPerSecond(30)
 #define MSGEQ7_SMOOTH true
 
 int band;
@@ -65,7 +65,7 @@ void EQ() {
             // unsigned int g = map(band, 0, 6, 254, 0);
             // CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
-            CRGB color = CHSV((band * 25), 255, 255);
+            CRGB color = CHSV((band * 35), 255, 255);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
@@ -89,7 +89,7 @@ void EQ() {
             //          CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
             //          CRGB color = CHSV(map(count,0, HEIGHT, 0, 255) , 255,255);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
-            CRGB color = CHSV((band * 25), 255, 255);
+            CRGB color = CHSV((band * 35), 255, 255);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
@@ -121,15 +121,15 @@ int getTotal(int input) {
 void VU() {
   CRGB color;
 
-  const boolean gay = false;
+  const boolean gay = true;
 
-  bool newReading = MSGEQ7.read(ReadsPerSecond(30));
+  bool newReading = MSGEQ7.read(ReadsPerSecond(60));
 
   // Led strip output
   if (newReading) {
 
-    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0) - 20, 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1) - 20, 0, 255, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
@@ -277,7 +277,7 @@ void DJLight() {
       leds[i] = leds[i + 1];
     }
    
-    fade_down(1);
+    fade_down(0.5);
   }
 }
 
