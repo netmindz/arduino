@@ -94,9 +94,9 @@ void loop() {
                   packet.property_values[1]);             // Dimmer data for Channel 1
 
     /* Parse a packet and update pixels */
-    BRIGHTNESS = map(packet.property_values[(CHANNEL_START  + 0)], 0, 255, 0, 255);
-    JUMP = map(packet.property_values[(CHANNEL_START  + 1)], 0, 255, 5, 40);
-    SPEED = map(packet.property_values[(CHANNEL_START  + 2)], 0, 255, 200, 0);
+    BRIGHTNESS = getValue(packet, 1, 0, 255);
+    JUMP = getValue(packet, 2, 5, 40);
+    SPEED = getValue(packet, 3, 200, 0);
     if (packet.property_values[(CHANNEL_START  + 3)] < 125) {
       INWARD = true;
     }
@@ -188,3 +188,7 @@ void setRing(int ring, CRGB colour) {
   }
 }
 
+
+int getValue(e131_packet_t packet, int chan, int minV, int maxV) {
+  return map(packet.property_values[(CHANNEL_START + (chan - 1))], 0, 255, minV, maxV);
+}
