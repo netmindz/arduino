@@ -28,8 +28,8 @@ int FADE = 220;
 // #define SECRET_SSID "";  /* Replace with your SSID */
 // #define SECRET_PSK "";   /* Replace with your WPA2 passphrase */
 // *************************************************************************
-const char ssid[] = SECRET_SSID;         /* Replace with your SSID */
-const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
+const char ssid[] = SECRET_SSID;
+const char passphrase[] = SECRET_PSK;
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 // Define the array of leds
