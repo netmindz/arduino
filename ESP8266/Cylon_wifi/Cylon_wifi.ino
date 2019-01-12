@@ -98,24 +98,29 @@ void loop() {
 }
 
 void readDMX() {
-    if (!e131.isEmpty()) {
+  if (!e131.isEmpty()) {
     e131_packet_t packet;
     e131.pull(&packet);     // Pull packet from ring buffer
-
-    Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
-                  htons(packet.universe),                 // The Universe for this packet
-                  htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
-                  e131.stats.num_packets,                 // Packet counter
-                  e131.stats.packet_errors,               // Packet error counter
-                  packet.property_values[1]);             // Dimmer data for Channel 1
+    EVERY_N_SECONDS( 2 ) {
+      Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
+                    htons(packet.universe),                 // The Universe for this packet
+                    htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
+                    e131.stats.num_packets,                 // Packet counter
+                    e131.stats.packet_errors,               // Packet error counter
+                    packet.property_values[1]);             // Dimmer data for Channel 1
+    }
 
     /* Parse a packet and update pixels */
-    BRIGHTNESS = map(packet.property_values[(CHANNEL_START  + 0)], 0, 255, 0, 255);
-    JUMP = map(packet.property_values[(CHANNEL_START  + 1)], 0, 255, 1, 40);
-    SPEED = map(packet.property_values[(CHANNEL_START  + 2)], 0, 255, 200, 0);
-    FADE = map(packet.property_values[(CHANNEL_START  + 3)], 0, 255, 0, 255);
-    
+    BRIGHTNESS = getValue(packet, 1, 0, 255);
+    JUMP = getValue(packet, 2, 1, 40);
+    SPEED = getValue(packet, 3, 200, 0);
+    FADE = getValue(packet, 4, 70, 255);
+
     FastLED.setBrightness(BRIGHTNESS);
   }
+}
+
+int getValue(e131_packet_t packet, int chan, int minV, int maxV) {
+  return map(packet.property_values[(CHANNEL_START + (chan - 1))], 0, 255, minV, maxV);
 }
 
