@@ -35,6 +35,12 @@ ESPAsyncE131 e131(UNIVERSE_COUNT);
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
+CRGBPalette16 currentPalette = PartyColors_p;
+TBlendType    currentBlending = LINEARBLEND;
+
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+CRGBPalette16 palettes[] = {RainbowColors_p, OceanColors_p, RainbowStripeColors_p, CloudColors_p, LavaColors_p, ForestColors_p, PartyColors_p};
+
 void setup() {
   Serial.begin(115200);
   Serial.println("resetting");
@@ -69,15 +75,15 @@ void loop() {
   for (int i = 0; i < NUM_LEDS; i++) {
     // Set the i'th led to red
     hue += JUMP;
-    leds[i] = CHSV(hue, 255, 255);
+    leds[i] = ColorFromPalette(currentPalette, hue, 255, currentBlending);
     // Show the leds
     FastLED.show();
     // now that we've shown the leds, reset the i'th led to black
     // leds[i] = CRGB::Black;
     fadeall();
     // Wait a little bit before we loop around and do it again
-    delay(SPEED);
     readDMX();
+    delay(SPEED);
   }
   Serial.print("x");
 
@@ -85,15 +91,15 @@ void loop() {
   for (int i = (NUM_LEDS) - 1; i >= 0; i--) {
     // Set the i'th led to red
     hue += JUMP;
-    leds[i] = CHSV(hue, 255, 255);
+    leds[i] = ColorFromPalette(currentPalette, hue, 255, currentBlending);
     // Show the leds
     FastLED.show();
     // now that we've shown the leds, reset the i'th led to black
     // leds[i] = CRGB::Black;
     fadeall();
     // Wait a little bit before we loop around and do it again
-    delay(SPEED);
     readDMX();
+    delay(SPEED);
   }
 }
 
@@ -115,6 +121,7 @@ void readDMX() {
     JUMP = getValue(packet, 2, 1, 40);
     SPEED = getValue(packet, 3, 200, 0);
     FADE = getValue(packet, 4, 70, 255);
+    currentPalette = palettes[getValue(packet, 5, 0, (ARRAY_SIZE(palettes) - 1))];
 
     FastLED.setBrightness(BRIGHTNESS);
   }
