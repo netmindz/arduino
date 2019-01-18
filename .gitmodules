@@ -52,3 +52,7 @@
 [submodule "FunkyNoise"]
 	path = FunkyNoise
 	url = https://github.com/netmindz/FunkyNoise.git
+[submodule "FastLED-Demos"]
+	path = FastLED-Demos
+	url = https://github.com/atuline/FastLED-Demos.git
+	branch = .
