@@ -16,8 +16,8 @@
 
 // #define CHIPSET NEOPIXEL
 
-const uint8_t kMatrixWidth = 1; // numer of strings
-const uint8_t kMatrixHeight = 50; // length of string
+const uint8_t kMatrixWidth = 50; // length of string
+const uint8_t kMatrixHeight = 16; // number of strings
 #define NUM_LEDS_PER_STRIP 50
 #define NUM_STRIPS 8
 
