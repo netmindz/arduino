@@ -1,3 +1,5 @@
+// Looks like oil on water
+
 void DrawOneFrame( byte startHue8, int8_t yHueDelta8, int8_t xHueDelta8)
 {
   byte lineStartHue = startHue8;
