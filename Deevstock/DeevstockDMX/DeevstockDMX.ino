@@ -164,27 +164,38 @@ void loop()
 
     led = !led;
     digitalWrite(LED_BUILTIN, led);
-
-    int b = Dmx.getBuffer()[1];
+    int b = Dmx.getBuffer()[1]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
       FastLED.setBrightness(BRIGHTNESS);
     }
-    STEPS = Dmx.getBuffer()[2];
-    SPEEDO = Dmx.getBuffer()[3];
+    STEPS = Dmx.getBuffer()[2]; // steps = 2
+    SPEEDO = Dmx.getBuffer()[3]; //speed = 3
+    FADE = Dmx.getBuffer()[4]; // fade = 4
+    int p = Dmx.getBuffer()[5]; // pattern = 5
+    pattern = map(p, 0, 255, 0, (gPatternCount - 1));
+    if(p > (gPatternCount - 1)) { 
+      p = 0;
+    }
+    else {
+      pattern = p;
+    }
   }
 
-  int p = Dmx.getBuffer()[4];
-  int pattern = map(p, 0, 255, 0, (gPatternCount - 1));
-  gPatterns[pattern]();
-
-    EVERY_N_SECONDS( 1 ) {
+    EVERY_N_SECONDS( 2 ) {
       Serial.print("pattern = ");
       Serial.println(pattern);
     }
     EVERY_N_SECONDS( 10 ) {
       Serial.println(LEDS.getFPS());
     }
+  gPatterns[pattern]();
+
+  // do some periodic updates
+  EVERY_N_MILLISECONDS( 20 ) {
+    gHue++;  // slowly cycle the "base color" through the rainbow
+  }
+
 
 }
 
