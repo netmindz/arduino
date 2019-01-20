@@ -25,6 +25,8 @@ const bool    kMatrixSerpentineLayout = false;
 #define FRAMES_PER_SECOND  120
 
 // **********************************************************************************************************
+#define USE_OCTOWS2811
+#include<OctoWS2811.h>
 
 #include <TeensyDmx.h>
 #include <FastLED.h>
@@ -79,7 +81,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 
   // FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
-  FastLED.addLeds<WS2811_PORTD, kMatrixWidth>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  LEDS.addLeds<OCTOWS2811, RGB>(leds, NUM_LEDS_PER_STRIP);
   
   FastLED.setBrightness(BRIGHTNESS);
   Serial.println("Setup");
