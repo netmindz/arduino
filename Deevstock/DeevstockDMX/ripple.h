@@ -15,18 +15,18 @@ void ripple() {                                                                 
   
   if (samplepeak == 1) {step = -1;}                                             // Trigger a new ripple if we have a peak.
   
-  fadeToBlackBy(leds, NUM_LEDS, 64);                                            // Fade the strand, where 1 = slow, 255 = fast
+  fadeToBlackBy(ledsAudio, NUM_AUDIO_LEDS, 64);                                            // Fade the strand, where 1 = slow, 255 = fast
 
   switch (step) {
 
     case -1:                                                                    // Initialize ripple variables. By Andrew Tuline.
-      center = random(NUM_LEDS);
+      center = random(NUM_AUDIO_LEDS);
       colour = (oldsample) % 255;                                               // More peaks/s = higher the hue colour.
       step = 0;
       break;
 
     case 0:
-      leds[center] += ColorFromPalette(currentPalette, colour, 255, currentBlending); // Display the first pixel of the ripple.
+      ledsAudio[center] += ColorFromPalette(currentPalette, colour, 255, currentBlending); // Display the first pixel of the ripple.
       step ++;
       break;
 
@@ -36,8 +36,8 @@ void ripple() {                                                                 
 
     default:                                                                    // Middle of the ripples.
 
-      leds[(center + step + NUM_LEDS) % NUM_LEDS] += ColorFromPalette(currentPalette, colour, 255/step*2, currentBlending);  // A spreading and fading pattern up the strand.
-      leds[(center - step + NUM_LEDS) % NUM_LEDS] += ColorFromPalette(currentPalette, colour, 255/step*2, currentBlending);  // A spreading and fading pattern down the strand.
+      ledsAudio[(center + step + NUM_AUDIO_LEDS) % NUM_AUDIO_LEDS] += ColorFromPalette(currentPalette, colour, 255/step*2, currentBlending);  // A spreading and fading pattern up the strand.
+      ledsAudio[(center - step + NUM_AUDIO_LEDS) % NUM_AUDIO_LEDS] += ColorFromPalette(currentPalette, colour, 255/step*2, currentBlending);  // A spreading and fading pattern down the strand.
       step ++;                                                                  // Next step.
       break;  
       
@@ -45,7 +45,7 @@ void ripple() {                                                                 
 
 
   addGlitter(sampleavg);                                                        // Add glitter baesd on sampleavg.
-  
+  showSegments();  
 } // ripple()
 
 #endif

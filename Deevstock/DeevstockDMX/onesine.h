@@ -27,14 +27,14 @@ void onesine() {
   
   colorIndex = millis() >> 4;                                                   // millis() can be used for so many things.
   
-  for (int k=0; k<NUM_LEDS; k++) {                                            // For each of the LED's in the strand, set a brightness based on a wave as follows:
+  for (int k=0; k<NUM_AUDIO_LEDS; k++) {                                            // For each of the LED's in the strand, set a brightness based on a wave as follows:
     int thisbright = qsuba(cubicwave8((k*allfreq)+thisphase), thiscutoff);      // qsub sets a minimum value called thiscutoff. If < thiscutoff, then bright = 0. Otherwise, bright = 128 (as defined in qsub)..
-    leds[k] = ColorFromPalette( currentPalette, colorIndex, thisbright, currentBlending);    // Let's now add the foreground colour. By Andrew Tuline.
+    ledsAudio[k] = ColorFromPalette( currentPalette, colorIndex, thisbright, currentBlending);    // Let's now add the foreground colour. By Andrew Tuline.
     colorIndex +=3;
   }
   
   addGlitter(sampleavg/2);                                                      // Add glitter based on sampleavg. By Andrew Tuline.
-  
+  showSegments();  
 } // onesine()
 
 #endif

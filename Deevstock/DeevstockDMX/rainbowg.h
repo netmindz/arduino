@@ -10,13 +10,13 @@ void rainbowg() {                                                               
 
 //  currentPalette = PartyColors_p;
   
-  for (int i=0; i < NUM_LEDS; i++) {
-    int colorIndex = (beatA+beatB+beatC)/3 * i * 4 / NUM_LEDS;
-    leds[i] = ColorFromPalette( currentPalette, colorIndex, sampleavg, currentBlending); // Variable brightness 
+  for (int i=0; i < NUM_AUDIO_LEDS; i++) {
+    int colorIndex = (beatA+beatB+beatC)/3 * i * 4 / NUM_AUDIO_LEDS;
+    ledsAudio[i] = ColorFromPalette( currentPalette, colorIndex, sampleavg, currentBlending); // Variable brightness 
   }
 
   addGlitter(sampleavg);                                                        // Add glitter baesd on sampleavg. By Andrew Tuline.
-
+  showSegments();
 } // rainbowg()
 
 #endif

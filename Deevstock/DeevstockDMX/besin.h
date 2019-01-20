@@ -13,19 +13,20 @@ void besin() {                                                             // Ad
 
 
 // This works.
-  leds[NUM_LEDS/2] = ColorFromPalette(currentPalette, millis(), sampleavg, NOBLEND);
-  leds[NUM_LEDS/2-1] = ColorFromPalette(currentPalette, millis(), sampleavg, NOBLEND);
+  ledsAudio[NUM_AUDIO_LEDS/2] = ColorFromPalette(currentPalette, millis(), sampleavg, NOBLEND);
+  ledsAudio[NUM_AUDIO_LEDS/2-1] = ColorFromPalette(currentPalette, millis(), sampleavg, NOBLEND);
 
 
-//  leds[NUM_LEDS/2] = ColorFromPalette(currentPalette, sampleavg, beatsin8(sampleavg,0,255), NOBLEND);
-//  leds[NUM_LEDS/2-1] = ColorFromPalette(currentPalette, sampleavg, beatsin8(sampleavg,0,255), NOBLEND);
+//  ledsAudio[NUM_AUDIO_LEDS/2] = ColorFromPalette(currentPalette, sampleavg, beatsin8(sampleavg,0,255), NOBLEND);
+//  ledsAudio[NUM_AUDIO_LEDS/2-1] = ColorFromPalette(currentPalette, sampleavg, beatsin8(sampleavg,0,255), NOBLEND);
 
 
   waveit();                                                                     // Move the pixels to the left/right, but not too fast.
 
-//  fadeToBlackBy(leds+NUM_LEDS/2-1, 2, 128);                                     // Fade the center, while waveit moves everything out to the edges.
-  fadeToBlackBy(leds, NUM_LEDS, 2);                                                                                 
+//  fadeToBlackBy(ledsAudio+NUM_AUDIO_LEDS/2-1, 2, 128);                                     // Fade the center, while waveit moves everything out to the edges.
+  fadeToBlackBy(ledsAudio, NUM_AUDIO_LEDS, 2);                                                                                 
 
+  showSegments();
 } // besin()
 
 #endif

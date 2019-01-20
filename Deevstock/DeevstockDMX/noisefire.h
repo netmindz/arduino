@@ -17,14 +17,14 @@ void noisefire() {                                                              
                                  CRGB::DarkOrange,CRGB::DarkOrange, CRGB::Orange, CRGB::Orange,
                                  CRGB::Yellow, CRGB::Orange, CRGB::Yellow, CRGB::Yellow);
   
-  for(int i = 0; i < NUM_LEDS; i++) {
-    index = inoise8(i*xscale,millis()*yscale*NUM_LEDS/255);                     // X location is constant, but we move along the Y at the rate of millis(). By Andrew Tuline.
+  for(int i = 0; i < NUM_AUDIO_LEDS; i++) {
+    index = inoise8(i*xscale,millis()*yscale*NUM_AUDIO_LEDS/255);                     // X location is constant, but we move along the Y at the rate of millis(). By Andrew Tuline.
 
-    index = (255 - i*256/NUM_LEDS) * index/128;                                 // Now we need to scale index so that it gets blacker as we get close to one of the ends
+    index = (255 - i*256/NUM_AUDIO_LEDS) * index/128;                                 // Now we need to scale index so that it gets blacker as we get close to one of the ends
                                                                                 // This is a simple y=mx+b equation that's been scaled. index/128 is another scaling.
-    leds[i] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
+    ledsAudio[i] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
   }                                                                             // The higher the value of i => the higher up the palette index (see palette definition).
-                                                                                                     
+  showSegments();                                                                                                     
 } // noisefire()
 
 #endif

@@ -19,28 +19,28 @@ void noisepal() {                                                          // Cr
 */
 
   
-  for(int i = 0; i < NUM_LEDS; i++) {
+  for(int i = 0; i < NUM_AUDIO_LEDS; i++) {
 
 //    Serial.print(i);
 //    Serial.print("  ");
-    index = inoise8(i*xscale,millis()*yscale*NUM_LEDS/255);                     // X location is constant, but we move along the Y at the rate of millis(). By Andrew Tuline.
+    index = inoise8(i*xscale,millis()*yscale*NUM_AUDIO_LEDS/255);                     // X location is constant, but we move along the Y at the rate of millis(). By Andrew Tuline.
 //    Serial.print(index);
 //    Serial.print("  ");
 
-//    index = (255 - *i*128/NUM_LEDS);                                            // Now we need to scale index so that it gets blacker as we get close to one of the ends
+//    index = (255 - *i*128/NUM_AUDIO_LEDS);                                            // Now we need to scale index so that it gets blacker as we get close to one of the ends
 
-    index = (255 - i*256/NUM_LEDS) * index / 128;                                 // Now we need to scale index so that it gets blacker as we get close to one of the ends
+    index = (255 - i*256/NUM_AUDIO_LEDS) * index / 128;                                 // Now we need to scale index so that it gets blacker as we get close to one of the ends
     
     
 //    Serial.print(index);
 //    Serial.println(" ");
                                                                                 
                                                                                 
-    leds[NUM_LEDS/2-i/2+1] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
-    leds[NUM_LEDS/2+i/2-1] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
+    ledsAudio[NUM_AUDIO_LEDS/2-i/2+1] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
+    ledsAudio[NUM_AUDIO_LEDS/2+i/2-1] = ColorFromPalette(currentPalette, index, sampleavg, NOBLEND);      // With that value, look up the 8 bit colour palette value and assign it to the current LED. 
     
   }                                                                             // The higher the value of i => the higher up the palette index (see palette definition).
-
+  showSegments();
 
 } // noisepalt()
 

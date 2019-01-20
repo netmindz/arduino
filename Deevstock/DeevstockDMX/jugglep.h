@@ -11,10 +11,10 @@ void jugglep() {                                                                
 
   curhue = curhue + 4;                                                          // Change the hue pretty quickly, so that the juggle changes colours on the fly.
   
-  fadeToBlackBy(leds, NUM_LEDS, 12);                                            // Fade the strand.
+  fadeToBlackBy(ledsAudio, NUM_AUDIO_LEDS, 12);                                            // Fade the strand.
   
-  leds[beatsin16(thistime,0,NUM_LEDS-1, 0, 0)] += ColorFromPalette( currentPalette, curhue, sampleavg, currentBlending);
-  leds[beatsin16(thistime-3,0,NUM_LEDS-1, 0, 0)] += ColorFromPalette( currentPalette, curhue, sampleavg, currentBlending);
+  ledsAudio[beatsin16(thistime,0,NUM_AUDIO_LEDS-1, 0, 0)] += ColorFromPalette( currentPalette, curhue, sampleavg, currentBlending);
+  ledsAudio[beatsin16(thistime-3,0,NUM_AUDIO_LEDS-1, 0, 0)] += ColorFromPalette( currentPalette, curhue, sampleavg, currentBlending);
   
 
   EVERY_N_MILLISECONDS(250) {
@@ -22,7 +22,7 @@ void jugglep() {                                                                
   }
 
   addGlitter(sampleavg/2);                                                      // Add glitter based on sampleavg.
-  
+  showSegments();  
 }
 
 #endif

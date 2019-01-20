@@ -10,13 +10,13 @@ void pixels() {
   
   currLED = beatsin8(16,0,10);
 
-  for (int i=0; i<NUM_LEDS; i++) {
+  for (int i=0; i<NUM_AUDIO_LEDS; i++) {
 
     CRGB newcolour = ColorFromPalette(currentPalette, oldsample+i*8, sampleavg, currentBlending);   // Colour of the LED will be based on oldsample, while brightness is based on sampleavg.
-    nblend(leds[(i+currLED)%NUM_LEDS], newcolour, 192);                                             // Blend the old value and the new value for a gradual transitioning.
+    nblend(ledsAudio[(i+currLED)%NUM_AUDIO_LEDS], newcolour, 192);                                             // Blend the old value and the new value for a gradual transitioning.
   
 }
-
+  showSegments();
 } // pixels()
 
 #endif
