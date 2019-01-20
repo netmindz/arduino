@@ -67,6 +67,8 @@ void dsnake();
 
 typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, one_sin, snake };
+// shimmer, confetti, sinelon,
+SimplePatternList gAutoPatterns = { rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm };
 
 // **********************************************************************************************************
 // Setup
@@ -90,6 +92,7 @@ void setup() {
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
+int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
 
 int led = 0;
 elapsedMillis elapsed;
@@ -97,6 +100,7 @@ elapsedMillis elapsed;
 // **********************************************************************************************************
 // Main
 // **********************************************************************************************************
+int pattern = 0;
 void loop()
 {
     Dmx.loop();
