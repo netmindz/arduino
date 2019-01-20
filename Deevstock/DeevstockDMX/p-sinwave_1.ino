@@ -31,6 +31,6 @@ void one_sin() {                                                                
 
 void sinwave_1() {
   one_sin();
-  FastLED.delay(map(SPEEDO,0,255, 0, 1000));  // TWEAK ME
+  FastLED.delay(map(SPEEDO,0,255, 50, 0));  // TWEAK ME
 }
 
