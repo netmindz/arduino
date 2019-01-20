@@ -39,12 +39,12 @@ CRGB leds[NUM_LEDS];
 
 // **********************************************************************************************************
 
-uint8_t STEPS = 4;
+uint8_t STEPS = 150;
 uint8_t BRIGHTNESS = 255;
-uint8_t SPEEDO = 10;
-uint8_t FADE = 10;
+uint8_t SPEEDO = 180;
+uint8_t FADE = 180;
 
-uint8_t gCurrentPatternNumber = 5; // Index number of which pattern is current
+uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
 // **********************************************************************************************************
