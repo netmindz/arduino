@@ -12,15 +12,21 @@
 //#define FASTLED_INTERRUPT_RETRY_COUNT 0
 
 #define LED_PIN  7
+#define MIC_PIN  A0
 
 // #define CHIPSET NEOPIXEL
 
 const uint8_t kMatrixWidth = 1; // numer of strings
 const uint8_t kMatrixHeight = 50; // length of string
+#define NUM_LEDS_PER_STRIP 50
+#define NUM_STRIPS 8
 
-#define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 
-const bool    kMatrixSerpentineLayout = false;
+#define NUM_AUDIO_LEDS NUM_LEDS_PER_STRIP // should same as length of string
+
+#define NUM_LEDS (NUM_STRIPS * NUM_LEDS_PER_STRIP)
+
+const bool    kMatrixSerpentineLayout = true;
 
 #define FRAMES_PER_SECOND  120
 
@@ -36,6 +42,7 @@ const bool    kMatrixSerpentineLayout = false;
 TeensyDmx Dmx(Serial1);
 
 CRGB leds[NUM_LEDS];
+CRGB ledsAudio[NUM_AUDIO_LEDS];
 
 // **********************************************************************************************************
 
@@ -65,9 +72,56 @@ void sinwave_1();
 void snake();
 void dsnake();
 
+// ***********************
+// Audio values
+// ***********************
+
+// Global timer value
+uint8_t timeval = 20;                                                           // Currently 'delay' value. No, I don't use delays, I use EVERY_N_MILLIS_I instead.
+uint16_t loops = 0;                                                             // Our loops per second counter.
+
+// Global sound variables used in other routines.
+uint16_t oldsample = 0;                                                         // Previous sample is used for peak detection and for 'on the fly' values.
+bool     samplepeak = 0;                                                        // The oldsample is well above the average, and is a 'peak'.
+uint16_t sampleavg = 0;                                                         // Average of the last 64 samples.
+
+
+// Global visual variables used in display and other routines.
+bool thisdir = 0;
+
+#include "soundmems.h"                                                          // Sample the sounds and provide a current sample, average of last 64 samples and boolean peak (for twinkles).
+#include "support.h"                                                            // A few extra routines for good luck.
+
+// Use qsuba for smooth pixel filtering and qsubd for digital pixel filtering.
+#define qsubd(x, b)  ((x>b)?b:0)                                                // Digital unsigned subtraction macro. if result <0, then => 0. Otherwise, take on fixed value.
+#define qsuba(x, b)  ((x>b)?x-b:0)                                              // Analog Unsigned subtraction macro. if result <0, then => 0. By Andrew Tuline.
+
+// Main sound reactive routines
+#include "pixels.h"         // Long line of colours
+#include "fillnoise.h"      // Center to edges with base color and twinkle
+#include "jugglep.h"        // Long line of sinewaves
+#include "ripple.h"         // Juggle with twinkles
+#include "pixel.h"          // Long line of colours
+#include "matrix.h"         // Start to end with twinkles
+#include "onesine.h"        // Long line of shortlines
+#include "noisefire.h"      // Start to end
+#include "rainbowbit.h"     // Long line of short lines with twinkles
+#include "noisefiretest.h"  // Center to edges
+#include "rainbowg.h"       // Long line with flashes
+#include "noisewide.h"      // Center to edges
+#include "plasma.h"         // Long line of short lines
+#include "besin.h"          // center to edges with black
+#include "noisepal.h"       // Long line
+
+
+// *************
+// End audio
+// *************
+
+
 typedef void (*SimplePatternList[])();
 // snake, 
-SimplePatternList gPatterns = { autoRun, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, sinwave_1, rainbow, confetti, sinelon, juggle, bpm, rainbowWithGlitter
+SimplePatternList gPatterns = { autoRun, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, sinwave_1, rainbow, confetti, sinelon, juggle, bpm, rainbowWithGlitter, pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal, pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal
 };
 // shimmer, confetti, sinelon,
 SimplePatternList gAutoPatterns = { rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm };
