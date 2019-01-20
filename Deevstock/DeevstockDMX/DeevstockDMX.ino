@@ -61,12 +61,14 @@ void Rainbow();
 void RainbowWash();
 void Ripple();
 void shimmer();
-void one_sin();
+void sinwave_1();
 void snake();
 void dsnake();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, one_sin, snake };
+// snake, 
+SimplePatternList gPatterns = { autoRun, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, sinwave_1, rainbow, confetti, sinelon, juggle, bpm, rainbowWithGlitter
+};
 // shimmer, confetti, sinelon,
 SimplePatternList gAutoPatterns = { rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm };
 
