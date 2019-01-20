@@ -13,14 +13,6 @@ void rainbowWithGlitter()
   demoShow();
 }
 
-void addGlitter( fract8 chanceOfGlitter) 
-{
-  if( random8() < chanceOfGlitter) {
-    leds[ random16(NUM_LEDS) ] += CRGB::White;
-  }
-  demoShow();
-}
-
 void confetti() 
 {
   // random colored speckles that blink in and fade smoothly
