@@ -1,7 +1,7 @@
 void rainbow() 
 {
   // FastLED's built-in rainbow generator
-  fill_rainbow( leds, NUM_LEDS, gHue, 7);
+  fill_rainbow( leds, NUM_LEDS, gHue, map(SPEEDO,0,255, 1, 100));
   demoShow();
 }
 
@@ -24,7 +24,7 @@ void addGlitter( fract8 chanceOfGlitter)
 void confetti() 
 {
   // random colored speckles that blink in and fade smoothly
-  fadeToBlackBy( leds, NUM_LEDS, map(SPEEDO,0,255, 1, 100));
+  fadeToBlackBy( leds, NUM_LEDS, map(STEPS,0,255, 1, 100));
   int pos = random16(NUM_LEDS);
   leds[pos] += CHSV( gHue + random8(64), 200, 255);
   demoShow();
@@ -33,7 +33,7 @@ void confetti()
 void sinelon()
 {
   // a colored dot sweeping back and forth, with fading trails
-  fadeToBlackBy( leds, NUM_LEDS, map(SPEEDO,0,255, 1, 100));
+  fadeToBlackBy( leds, NUM_LEDS, map(STEPS,0,255, 100, 1));
   int pos = beatsin16( 13, 0, NUM_LEDS-1 );
   leds[pos] += CHSV( gHue, 255, 192);
   demoShow();
@@ -53,7 +53,7 @@ void bpm()
 
 void juggle() {
   // eight colored dots, weaving in and out of sync with each other
-  fadeToBlackBy( leds, NUM_LEDS, map(SPEEDO,0,255, 1, 100));
+  fadeToBlackBy( leds, NUM_LEDS, map(STEPS,0,255, 1, 100));
   byte dothue = 0;
   for( int i = 0; i < 8; i++) {
     leds[beatsin16( i+7, 0, NUM_LEDS-1 )] |= CHSV(dothue, 200, 255);
@@ -66,6 +66,7 @@ void demoShow() {
    // send the 'leds' array out to the actual LED strip
   FastLED.show();  
   // insert a delay to keep the framerate modest
-  FastLED.delay(1000/FRAMES_PER_SECOND);
+  //FastLED.delay(1000/FRAMES_PER_SECOND);
+  FastLED.delay(map(SPEEDO,0,255, 200, 0));
 }
 
