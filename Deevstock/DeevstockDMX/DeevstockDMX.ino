@@ -133,22 +133,21 @@ void loop()
 void nextPattern()
 {
   // add one to the current pattern number, and wrap around at the end
-  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gPatternCount;
+//  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gAutoPatternCount;
+  gCurrentPatternNumber++;
+  if(gCurrentPatternNumber >= gAutoPatternCount) gCurrentPatternNumber = 0;
 }
 
 void autoRun() {
 
-  gPatterns[gCurrentPatternNumber]();
+  gAutoPatterns[gCurrentPatternNumber]();
   
-  // do some periodic updates
-  EVERY_N_MILLISECONDS( 20 ) {
-    gHue++;  // slowly cycle the "base color" through the rainbow
-  }
   
   // change patterns periodically
-  EVERY_N_SECONDS( 10 ) {
+//  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
+  EVERY_N_SECONDS(20) {
     nextPattern();
-    Serial.print("Next pattern ");
+    Serial.print("Swapping to pattern ");
     Serial.println(gCurrentPatternNumber);
   } 
 
