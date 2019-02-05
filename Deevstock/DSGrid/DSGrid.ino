@@ -1,13 +1,10 @@
-#include <TeensyDmx.h>
 #include <WS2812Serial.h>
 #define USE_WS2812SERIAL
 #include<FastLED.h>
 
-TeensyDmx Dmx(Serial2);
-
 //---LED SETUP STUFF
-#define LED_PIN 1
-#define LED_PIN_ALT 8
+
+#define COLOR_ORDER BGR
 
 // the size of your matrix
 #define kMatrixWidth  30
@@ -65,13 +62,23 @@ byte red_level;
 byte green_level;
 byte blue_level;
 
+int BRIGHTNESS;
+
+
+#if defined(CORE_TEENSY)
+#include "control_tdmx.h"
+#else
+//#include "control_null.h"
+#include "control_esp.h"
+#endif
+
+
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
   
   Serial.println("Setup");
-  Dmx.setMode(TeensyDmx::DMX_IN);
-
+  controlSetup();
 
   // add the SmartMatrix controller
   int firstSectionLEDCount = (kMatrixWidth * 8);
