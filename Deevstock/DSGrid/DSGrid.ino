@@ -1,5 +1,3 @@
-#include <WS2812Serial.h>
-#define USE_WS2812SERIAL
 #include<FastLED.h>
 
 //---LED SETUP STUFF
@@ -80,16 +78,12 @@ void setup() {
   Serial.println("Setup");
   controlSetup();
 
-  // add the SmartMatrix controller
-  int firstSectionLEDCount = (kMatrixWidth * 8);
-  FastLED.addLeds<WS2812, LED_PIN_ALT, GRB>(leds, 0, firstSectionLEDCount).setCorrection( TypicalLEDStrip );
-  // should be (firstSectionLEDCount - 1) bit i'm skipping an LED
-  FastLED.addLeds<WS2812SERIAL, LED_PIN, BRG>(leds, (firstSectionLEDCount + 1), (NUM_LEDS - firstSectionLEDCount)).setCorrection( TypicalLEDStrip );
+  FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
 
   // switch dithering off to avoid flicking at low fps
   FastLED.setDither(0);
 
-  FastLED.setBrightness(255);
+  FastLED.setBrightness(55);
 
   //  leds[XY(0,0)] = CRGB::White;
   //  leds[XY(29,0)] = CRGB::Blue;
