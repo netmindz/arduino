@@ -214,26 +214,9 @@ SimplePatternList gAutoPatterns = {
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gAutoPatterns);
 
-int BRIGHTNESS;
 void loop() {
 
-  Dmx.loop();
-  if (Dmx.newFrame()) {
-    Serial.println("d");
-    int b = Dmx.getBuffer()[1]; // brightness = 1
-    if (b != BRIGHTNESS) {
-      BRIGHTNESS = b;
-      FastLED.setBrightness(BRIGHTNESS);
-    }
-    int p = Dmx.getBuffer()[2]; // pattern = 5
-    pgm = map(p, 0, 255, 0, (gPatternCount - 1));
-    if (p > (gPatternCount - 1)) {
-      p = 0;
-    }
-    else {
-      pgm = p;
-    }
-  }
+  controlLoop();
 
   //  Serial.println(gPatterns[pgm]);
   gPatterns[pgm]();
