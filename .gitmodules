@@ -56,3 +56,10 @@
 	path = FastLED-Demos
 	url = https://github.com/atuline/FastLED-Demos.git
 	branch = .
+[submodule "Lumos-Board-Audio"]
+	path = Lumos-Board-Audio
+	url = https://github.com/zombodotcom/Lumos-Board-Audio.git
+	branch = master
+[submodule "libraries/StringSplitter"]
+	path = libraries/StringSplitter
+	url = https://github.com/aharshac/StringSplitter.git
