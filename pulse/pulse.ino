@@ -57,7 +57,7 @@ void setup() {
   for (int i = 0; i < NUM_LEDS; i++) {
     pixels[i].set(i);
   }
-  fill_rainbow(leds, NUM_LEDS, 0);
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -82,10 +82,13 @@ void pulse() {
   }
   else {
 
-    // set colour
-    while(true) {
-      int p = random(0, (NUM_LEDS - 1));
-      if(pixels[p].isLocked()) {
+    frame = 0;
+
+    int sanity = 0;
+    while (sanity < 10000) {
+      sanity++;
+      int p = random(0, NUM_LEDS);
+      if (pixels[p].isLocked()) {
         continue;
       }
       else {
@@ -94,7 +97,6 @@ void pulse() {
       }
     }
 
-    frame = 0;
     // Are we all locked
     boolean allLocked = true;
     for (int i = 0; i < NUM_LEDS; i++) {
@@ -103,15 +105,16 @@ void pulse() {
         break;
       }
     }
+    Serial.println("End of loop");
     if (allLocked) {
+      Serial.println("Reset");
       for (int i = 0; i < NUM_LEDS; i++) {
         pixels[i].rst();
       }
     }
-
     for (int i = 0; i < NUM_LEDS; i++) {
       pixels[i].setV(0);
-      pixels[i].hue(random(0,255));
+      pixels[i].hue(random(0, 255));
     }
 
   }
