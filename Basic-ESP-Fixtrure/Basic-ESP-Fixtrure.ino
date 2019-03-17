@@ -34,11 +34,11 @@ ESPAsyncE131 e131(UNIVERSE_COUNT);
 int brightness  = 50;
 int pattern = 0;
 
+#include "demo.h";
 void autoRun();
-void rainbow();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, rainbow };
+SimplePatternList gPatterns = { autoRun, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm  };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
@@ -77,6 +77,7 @@ void setup() {
 void loop() {
   readDMX();
   gPatterns[pattern]();
+  FastLED.show();
 }
 
 
@@ -110,6 +111,8 @@ void autoRun() {
 
   gPatterns[autoPattern]();
 
+  EVERY_N_MILLISECONDS( 20 ) { gHue++; } // slowly cycle the "base color" through the rainbow
+
   EVERY_N_SECONDS(60) {
     nextPattern();
     Serial.print("Swapping to pattern ");
@@ -123,8 +126,4 @@ void nextPattern() {
   if (autoPattern >= gPatternCount) autoPattern = 1;
 }
 
-void rainbow() {
-  fill_rainbow(leds, NUM_LEDS, 0, 7);
-  FastLED.show();
-}
 
