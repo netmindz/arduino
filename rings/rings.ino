@@ -1,16 +1,18 @@
 #include <FastLED.h>
 
-#define LED_PIN  6
+// Basic test of Rings
+
+#define LED_PIN  D4
 
 #define COLOR_ORDER GBR
 #define CHIPSET     WS2811
 
-#define RINGS 6
+#define RINGS 9
 
 #define JUMP 20
 #define SPEED 80
 
-#define NUM_LEDS 100
+#define NUM_LEDS 241
 
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
@@ -30,7 +32,7 @@ void loop() {
 }
 
 void rings() {
-  for(int r=2; r<= RINGS; r++) {
+  for(int r=1; r<= RINGS; r++) {
     setRing(r, CHSV(hue[(r - 1)], 255,255));
   }
   FastLED.delay(SPEED);
@@ -54,11 +56,11 @@ void rings() {
 }
 
 void setRing(int ring, CRGB colour) {
-  int offset = 1;
+  int offset = 0;
   int count = 0;
-  switch(ring) {
+  switch (ring) {
     case 1:
-      count = 0;
+      count = 1;
       break;
     case 2:
       offset = 1;
@@ -80,9 +82,21 @@ void setRing(int ring, CRGB colour) {
       offset = 61;
       count = 32;
       break;
+    case 7:
+      offset = 93;
+      count = 40;
+      break;
+    case 8:
+      offset =133;
+      count = 48;
+      break;
+    case 9:
+      offset = 181;
+      count = 60;
+      break;
   }
-  for(int i=0; i < count; i++) {
-    leds[(offset + i - 1)] = colour;
+  for (int i = 0; i < count; i++) {
+    leds[(offset + i)] = colour;
   }
 }
 
