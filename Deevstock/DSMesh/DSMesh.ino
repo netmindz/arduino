@@ -4,10 +4,21 @@
 #define LED_PIN D4
 #define COLOR_ORDER BGR
 #define NUM_LEDS 100
+// the size of your matrix
+#define kMatrixWidth  10
+#define kMatrixHeight 10
+const bool    kMatrixSerpentineLayout = true;
+
+// used in FillNoise for central zooming
+byte CentreX =  (kMatrixWidth / 2) - 1;
+byte CentreY = (kMatrixHeight / 2) - 1;
+
+// a place to store the color palette
+CRGBPalette16 currentPalette;
 
 CRGB leds[NUM_LEDS];
 
-CRGBPalette16 gCurrentPalette(CRGB::Black);
+CRGBPalette16 gCurrentPalette = RainbowColors_p;
 
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
@@ -41,10 +52,11 @@ int pattern = 0;
 #include "colorWaves.h";
 #include "pride.h"
 #include "datchet.h";
+#include "funkynoise.h";
 void autoRun();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, colorWaves, chase, datchet, pride, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm  };
+SimplePatternList gPatterns = { autoRun, colorWaves, chase, datchet, pride, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, MirroredNoise, RedClouds, Lavalamp1, Lavalamp2, Lavalamp3, Lavalamp4, Lavalamp5, Constrained1, RelativeMotion1, Water, Bubbles1, TripleMotion, CrossNoise, CrossNoise2, Caleido1, Caleido2, Caleido3, Caleido4, Caleido5, Caleido6, Caleido7  };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
@@ -78,6 +90,8 @@ void setup() {
 
   FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness(brightness);
+
+  Serial.printf("gPatternCount = %u\n", gPatternCount);
 }
 
 void loop() {
