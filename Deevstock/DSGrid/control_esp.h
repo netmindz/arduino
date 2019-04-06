@@ -55,10 +55,20 @@ void controlSetup() {
   else
     WiFi.begin(ssid);
 
-  Serial.println(F("Connected to wifi "));
   e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT);
 
-  pgm = 2;
+  int sanity = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    sanity++;
+    if(sanity > 10) break;
+  }
+  Serial.println(F("Connected to wifi "));
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  pgm = 0;
 
 }
 
@@ -80,12 +90,14 @@ void readDMX() {
                     packet.property_values[1]);             // Dimmer data for Channel 1
     }
 
-    int gPatternCount = 27;
+    int gPatternCount = 32; // FIXME
 
     BRIGHTNESS = getValue(packet, 1, 0, 255);
     FastLED.setBrightness(BRIGHTNESS);
 
-    pgm = getValue(packet, 2, 0, (gPatternCount - 1));
+    pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
+    SPEED = getValue(3, 0, 255); // speed = 3
+    FADE = getValue(4, 0, 255);  // fade = 4 
 
   }
 }
