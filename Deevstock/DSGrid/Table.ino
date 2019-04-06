@@ -5,16 +5,11 @@ byte prevKeyState = HIGH;
 
 // EQ STUFF
 
-
-#define pinAnalogLeft A0
-#define pinAnalogRight A1
-#define pinReset 5
-#define pinStrobe 4
 #define MSGEQ7_INTERVAL ReadsPerSecond(30)
 #define MSGEQ7_SMOOTH true
 
 int band;
-CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
+CMSGEQ7<MSGEQ7_SMOOTH, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
 
 // EQ vars
 
@@ -212,7 +207,7 @@ void safeSetPixel(int pos, CRGB value) {
 
 void FunkyPlank() {
 
-  bool newReading = MSGEQ7.read(ReadsPerSecond(30));
+  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
 
   int offset = 8;
   // Led strip output
