@@ -52,7 +52,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7.get(band)), 0, 255, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
       for (int b = 0; b < barWidth; b++) {
         xpos = blockWidth - (barWidth * band) - b;
@@ -78,7 +78,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(MSGEQ7.get(band), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7.get(band)), 0, 255, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
 
       for (int b = 0; b < barWidth; b++) {
