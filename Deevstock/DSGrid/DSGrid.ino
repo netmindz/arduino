@@ -176,43 +176,8 @@ SimplePatternList gPatterns = {
 
 };
 
-SimplePatternList gAutoPatterns = {
-  squares,
-  DJLight,
-  VU,
- FunkyPlank,
-  EQ,
-  vortex,
-  MirroredNoise,
-///  RedClouds,
-//  Lavalamp1,
-//  Lavalamp2,
-//  Lavalamp3,
-//  Lavalamp4,
-//  Lavalamp5,
-  Constrained1,
-  RelativeMotion1,
-  Water,
-  //    Bubbles,
-  TripleMotion,
-  CrossNoise,
-  CrossNoise2,
-  RandomAnimation,
-  MilliTimer,
-  Caleido1,
-  Caleido2,
-  Caleido3,
-  Caleido5,
-  
-  vortex,
-  squares,
-  vortex,
-  squares,
-};
-
-
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-int gPatternCount = ARRAY_SIZE(gAutoPatterns);
+int gPatternCount = ARRAY_SIZE(gPatterns);
 
 void loop() {
 
@@ -223,16 +188,16 @@ void loop() {
   ShowFrame();
 }
 
-int autopgm = 0;
+int autopgm = random(1, (gPatternCount - 1));
 void autoRun() {
   EVERY_N_SECONDS(90) {
-    Serial.println("Next Auto pattern");
-    autopgm = random(0, (gPatternCount - 1));
-   // autopgm++;
-    if (autopgm >= gPatternCount) autopgm = 0;
+    autopgm = random(1, (gPatternCount - 1));
+    // autopgm++;
+    Serial.printf("Next Auto pattern %u\n", autopgm);
+    if (autopgm >= gPatternCount) autopgm = 1;
   }
 
-  gAutoPatterns[autopgm]();
+  gPatterns[autopgm]();
 
 }
 
