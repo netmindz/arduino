@@ -198,38 +198,6 @@ void loop()
  -------------------------------------------------------------------
  */
 
-// translates from x, y into an index into the LED array and
-// finds the right index for a S shaped matrix
-int XY(int x, int y) {
- /* 
-  if(y > HEIGHT) { 
-    y = HEIGHT; 
-  }
-  if(y < 0) { 
-    y = 0; 
-  }
-  if(x > WIDTH) { 
-    x = WIDTH;
-  } 
-  if(x < 0) { 
-    x = 0; 
-  }
-  // for a serpentine layout reverse every 2nd row:
-  if(x % 2 == 1) {  
-    return (x * (WIDTH) + (HEIGHT - y -1));   
-  } 
-  else { 
-    // use that line only, if you have all rows beginning at the same side
-    return (x * (WIDTH) + y); 
-  }
-  */
-  // WT: my matrix is 15x15 with order that is left to right on all rows
-  int pixel = ((y) * 15) + (x);
-  if(pixel > (NUM_LEDS -1)) pixel = 0;
-  if(pixel < 0) pixel = 0;
-  return pixel;
-}
-
 // Bresenham line algorythm based on 2 coordinates
 void Line(int x0, int y0, int x1, int y1, byte color) {
   int dx = abs(x1-x0), sx = x0 < x1 ? 1 : -1;
@@ -590,47 +558,6 @@ void RainbowTriangle() {
  -------------------------------------------------------------------
  */
 
-// all examples together
-void AutoRun() {
-  // all oscillator based:
-//  Serial.println("Dot1");
-//   for(int i = 0; i < 300; i++) {Dots1();}
-  Serial.println("Dot2");
-   for(int i = 0; i < 300; i++) {Dots2();}
-
-  Serial.println("SlowMandala");
-   SlowMandala();
-
-  Serial.println("SlowMandala2");
-   SlowMandala2();
-   
-  Serial.println("SlowMandala3");
-   SlowMandala3();
-
-  Serial.println("Mandala8");
-   for(int i = 0; i < 300; i++) {Mandala8();}
-   
-   AutoRunAudio();
-   /*
-   for(int i = 0; i < 500; i++) {
-   NoiseExample1();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample2();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample3();
-   }
-   //SpeedTest();
-   for(int i = 0; i < 500; i++) {
-   NoiseExample4();
-   }
-   for(int i = 0; i < 500; i++) {NoiseExample5();}
-   
-  NoiseExample6();
-  NoiseExample7();
-  */
-}
 
 void AutoRunAudio() {
      // all MSGEQ7 based:
