@@ -19,7 +19,7 @@
 #define NUM_LEDS 241
 
 int JUMP = 15;
-int SPEED = 200;
+int SPEED = 100;
 boolean INWARD = true;
 int BRIGHTNESS = 15;
 
@@ -37,7 +37,12 @@ ESPAsyncE131 e131(UNIVERSE_COUNT);
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
 
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p };
 
+CRGBPalette16 currentPalette = palettes[0];
+TBlendType    currentBlending =  LINEARBLEND;
+
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 void setup() {
   Serial.begin(115200);
@@ -56,9 +61,12 @@ void setup() {
     WiFi.begin(ssid);
 
   Serial.print("Waiting on wifi ");
+  int sanity = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print("w");
+    sanity++;
+    if(sanity > 20) break;
   }
   Serial.println("\nDone");
   Serial.print("IP address: ");
@@ -76,7 +84,7 @@ void setup() {
 
   int h = 0;
   for (int r = 0; r < RINGS; r++) {
-    hue[r] = h;
+    hue[r] = ColorFromPalette(currentPalette, h, 255, currentBlending);
     h += JUMP;
   }
 }
@@ -103,6 +111,7 @@ void loop() {
     else {
       INWARD = false;
     }
+    currentPalette = palettes[getValue(packet, 5,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
     FastLED.setBrightness(BRIGHTNESS);
   }
   EVERY_N_SECONDS( 2 ) {
@@ -126,7 +135,7 @@ void loop() {
 
 void rings() {
   for (int r = 0; r <= RINGS; r++) {
-    setRing(r, CHSV(hue[(r - 1)], 255, 255));
+    setRing(r, ColorFromPalette(currentPalette, hue[(r - 1)], 255, currentBlending));
   }
   FastLED.delay(SPEED);
   if (INWARD) {
