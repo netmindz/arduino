@@ -221,9 +221,10 @@ void FunkyPlank() {
     for ( band = 0; band < 7; band++ )
     {
       int hue = MSGEQ7.get(band, 0);
+      int v = map(MSGEQ7.get(band, 0), 0, 255, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int  xpos = blockWidth - (barWidth * band) - b;
-        drawPixel(xpos, 0, CHSV(hue, 255, 255));
+        drawPixel(xpos, 0, CHSV(hue, 255, v));
         //      drawPixel((offset + band + 1), 0, CHSV(hue, 255, 255));
       }
     }
@@ -232,9 +233,10 @@ void FunkyPlank() {
     for ( band = 0; band < 7; band++ )
     {
       int hue = MSGEQ7.get(band, 1);
+      int v = map(MSGEQ7.get(band, 1), 0, 255, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int xpos = blockWidth + 1 + (barWidth * band) + b;
-        drawPixel(xpos, 0, CHSV(hue, 255, 255));
+        drawPixel(xpos, 0, CHSV(hue, 255, v));
       }
     }
 
