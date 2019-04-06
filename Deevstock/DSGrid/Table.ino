@@ -121,24 +121,25 @@ int getTotal(int input) {
 void VU() {
   CRGB color;
 
-  const boolean gay = true;
+  const boolean gay = false;
 
-  bool newReading = MSGEQ7.read(ReadsPerSecond(60));
+  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
 
   // Led strip output
   if (newReading) {
+    //fill_solid(leds, kMatrixWidth, CRGB::Black);
 
-    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0) - 20, 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1) - 20, 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
     moveUp();
     int offset = round(HEIGHT / 2);
 
-    //    for (int i = 1; i <= HEIGHT; i++){
-    //        drawPixel(0, i, CRGB::Black);
-    //    }
+        for (int i = 1; i <= HEIGHT; i++){
+            drawPixel(0, i, CRGB::Black);
+        }
 
     for (int i = 0; i < HEIGHT; i++) {
       drawPixel(offset, i, CRGB::Blue);
