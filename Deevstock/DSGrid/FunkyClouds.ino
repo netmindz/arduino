@@ -34,10 +34,6 @@ TODO:
  added more comments
  alpha version released
  
- 
-/*
- 
-/*
  Funky Clouds Compendium (alpha version)
  by Stefan Petrick. Extended by Will Tatam
  
@@ -56,39 +52,13 @@ TODO:
  WT: Does run now on Uno after trimming a bit
  */
 
-#include <FastLED.h>
-
-// define your LED hardware setup here
-#define LED_PIN     2
-#define CLOCK_PIN   6
-#define COLOR_ORDER BGR
-
-// set master brightness 0-255 here to adjust power consumption
-// and light intensity
-#define BRIGHTNESS  255
-
 
 #define LOOP_COUNT 3000
 
-
-// MSGEQ7 wiring on spectrum analyser shield
-#define MSGEQ7_STROBE_PIN 4
-#define MSGEQ7_RESET_PIN  5
-#define AUDIO_LEFT_PIN    A0
-#define AUDIO_RIGHT_PIN   A1
-
 // all 2D effects will be calculated in this matrix size
 // do not touch
-const uint8_t WIDTH  = 15;
-const uint8_t HEIGHT = 15;
-
-// number of LEDs based on fixed calculation matrix size
-// do not touch
-#define NUM_LEDS (WIDTH * HEIGHT)
-
-// the rendering buffer (15*15)
-// do not touch
-CRGB leds[NUM_LEDS];
+const uint8_t WIDTH  = kMatrixWidth;
+const uint8_t HEIGHT = kMatrixHeight;
 
 // the oscillators: linear ramps 0-255
 // modified only by MoveOscillators()
@@ -107,8 +77,6 @@ int right[7];
 uint16_t speed = 10;
 uint16_t scale = 50;
 uint16_t scale2 = 30;
-const uint8_t kMatrixWidth = 15;
-const uint8_t kMatrixHeight = 15;
 #define MAX_DIMENSION ((kMatrixWidth>kMatrixHeight) ? kMatrixWidth : kMatrixHeight)
 uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
 uint8_t noise2[MAX_DIMENSION][MAX_DIMENSION];
@@ -119,69 +87,10 @@ static uint16_t x2;
 static uint16_t y2;
 static uint16_t z2;
 //palette stuff
-CRGBPalette16 currentPalette;
-TBlendType    currentBlending;
+
 extern CRGBPalette16 myRedWhiteBluePalette;
 extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
-/*
--------------------------------------------------------------------
- Init Inputs and Outputs: LEDs and MSGEQ7
- -------------------------------------------------------------------
- */
-void setup() {
-  // use the following line only when working with a 15*15
-  // and delete everything in the function RenderCustomMatrix() 
-  // at the end of the code; edit XY() to change your matrix layout
-  // right now it is doing a serpentine mapping
-  // FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds+5, NUM_LEDS-5);
-
-  FastLED.addLeds<DOTSTAR, LED_PIN, CLOCK_PIN, COLOR_ORDER>(leds, HEIGHT * WIDTH).setCorrection( TypicalLEDStrip );;
-  delay( 2000 ); // power-up safety delay
-
-  FastLED.setBrightness(BRIGHTNESS);
-  FastLED.setDither(0);
-  // just for debugging:
-  //Serial.begin(9600);
-  Serial.begin(38400);
-  Serial.println("Setup running");
-  InitMSGEQ7();
-  // Initialize our noise coordinates to some random values
-  x = random16();
-  y = random16();
-  z = random16();
-
-  x2 = random16();
-  y2 = random16();
-  z2 = random16();
-  
-  fill_solid(leds, NUM_LEDS, CHSV(155, 255, 55));  
-  Line(1,1, WIDTH, HEIGHT, 200);
-  FastLED.show(); 
-  delay( 5000 ); // power-up safety delay
-  Serial.println("Setup Complete");
-
-}
-
-
-/*
--------------------------------------------------------------------
- The main program
- -------------------------------------------------------------------
- */
-void loop()
-{
-  AutoRunAudio();
-///  AutoRun();
-  // Comment AutoRun out and test examples seperately here
-
-// SlowMandala(); //    red slow
-// Dots1(); //          2 arround one
-// Dots2(); //          stacking sines
-// SlowMandala2(); //   just nice and soft
-// SlowMandala3(); //   just nice and soft
-// Mandala8(); //       copy one triangle all over
-}
 
 /*
 -------------------------------------------------------------------
