@@ -53,10 +53,12 @@ int pattern = 0;
 #include "pride.h"
 #include "datchet.h";
 #include "funkynoise.h";
+#include "stars.h"
 void autoRun();
+void fill();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, colorWaves, chase, datchet, pride, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, MirroredNoise, RedClouds, Lavalamp1, Lavalamp2, Lavalamp3, Lavalamp4, Lavalamp5, Constrained1, RelativeMotion1, Water, Bubbles1, TripleMotion, CrossNoise, CrossNoise2, Caleido1, Caleido2, Caleido3, Caleido4, Caleido5, Caleido6, Caleido7  };
+SimplePatternList gPatterns = { autoRun, showStars, fill, colorWaves, chase, datchet, pride, rainbow, rainbowWithGlitter, confetti, sinelon, juggle, bpm, MirroredNoise, RedClouds, Lavalamp1, Lavalamp2, Lavalamp3, Lavalamp4, Lavalamp5, Constrained1, RelativeMotion1, Water, Bubbles1, TripleMotion, CrossNoise, CrossNoise2, Caleido1, Caleido2, Caleido3, Caleido4, Caleido5, Caleido6, Caleido7  };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
@@ -146,4 +148,13 @@ void nextPattern() {
   if (autoPattern >= gPatternCount) autoPattern = 1;
 }
 
+void fill() {
+//  uint8_t paletteQuantityLength = 128 / NUM_LEDS;
+  static uint8_t index = 0;
+  index++;
+  //fill_palette(leds, NUM_LEDS, index, 10, currentPalette, 10, currentBlending);
+  //fill_rainbow(leds, NUM_LEDS, 0, 50);
+  fill_solid(leds, NUM_LEDS, CRGB::Red);
+  FastLED.delay(50);
+}
 

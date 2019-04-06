@@ -72,6 +72,7 @@ int FADE = 50;
 #include "control_esp.h"
 #endif
 
+#include "stars.h"
 
 void setup() {
   // enable debugging info output
@@ -127,14 +128,15 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
 
 typedef void (*SimplePatternList[])();
 SimplePatternList gPatterns = {
-  autoRun,
+  autoRun, // must be first
+  showStars,
   EQ,
   VU,
   FunkyPlank,
   DJLight,
   MirroredNoise,
-  RedClouds,
-  Lavalamp1,
+//  RedClouds,
+//  Lavalamp1,
   Lavalamp2,
   Lavalamp3,
   Lavalamp4,
