@@ -60,7 +60,9 @@ byte red_level;
 byte green_level;
 byte blue_level;
 
-int BRIGHTNESS;
+int BRIGHTNESS = 15;
+int SPEED = 50;
+int FADE = 50;
 
 
 #if defined(CORE_TEENSY)
