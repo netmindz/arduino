@@ -1,3 +1,6 @@
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+
 #define LED_PIN D4
 #define CLOCK_PIN D3
 
@@ -7,7 +10,20 @@
 #define AUDIO_LEFT_PIN    A0
 #define AUDIO_RIGHT_PIN   A0
 
-#include <ESP8266WiFi.h>
+#else
+#include <WiFi.h>
+
+#define LED_PIN 27
+#define CLOCK_PIN 33
+
+// MSGEQ7 wiring on spectrum analyser shield
+#define MSGEQ7_STROBE_PIN 32
+#define MSGEQ7_RESET_PIN  15
+#define AUDIO_LEFT_PIN    A0
+#define AUDIO_RIGHT_PIN   A1
+
+#endif
+
 #include <ESPAsyncE131.h>
 
 #define UNIVERSE 1        // First DMX Universe to listen for
