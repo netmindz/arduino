@@ -268,8 +268,12 @@ void DJLight() {
 
 
 
-    leds[mid] = CRGB(bands[6], bands[5] / 8, bands[1] / 2);
-    leds[mid].fadeToBlackBy(bands[3] / 12);
+//    leds[mid] = CRGB(bands[6], bands[5] / 8, bands[1] / 2);
+//    leds[mid].fadeToBlackBy(bands[3] / 12);
+
+    leds[mid] = CRGB(bands[5]/2, bands[2]/2, bands[0]/2);
+    leds[mid].fadeToBlackBy((map(bands[1], 0, 255, 255, 10)));
+    
     //move to the left
     for (int i = NUM_LEDS - 1; i > mid; i--) {
       leds[i] = leds[i - 1];
@@ -278,8 +282,10 @@ void DJLight() {
     for (int i = 0; i < mid; i++) {
       leds[i] = leds[i + 1];
     }
-   
-    fade_down(0.5);
+
+   EVERY_N_MILLISECONDS(300) {
+    fade_down(10); // TODO: map to fade
+   }
   }
 }
 
