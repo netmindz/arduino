@@ -5,11 +5,13 @@
 
 #define UNIVERSE 1        // First DMX Universe to listen for
 #define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
+#define CHANNELS 512
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 
-const char ssid[] = "";         /* Replace with your SSID */
-const char passphrase[] = "";   /* Replace with your WPA2 passphrase */
+#include "wifi.h"
+const char ssid[] = SECRET_SSID;
+const char passphrase[] = SECRET_PSK;
 
 DMXESPSerial dmx;
 
@@ -36,6 +38,7 @@ void setup() {
   Serial.println("\nDone");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+  delay(2000);
   // Choose one to begin listening for E1.31 data
   //if (e131.begin(E131_UNICAST)) {
   if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
@@ -44,23 +47,31 @@ void setup() {
   else {
     Serial.println(F("*** e131.begin failed ***"));
   }
-  dmx.init(512);
+  dmx.init(CHANNELS);
+
+  pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
 }
 
+int led = 0;
 void loop() {
   if (!e131.isEmpty()) {
+    led = !led;
+    digitalWrite(LED_BUILTIN, led);
+
     e131_packet_t packet;
     e131.pull(&packet);     // Pull packet from ring buffer
 
-    Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
-                  htons(packet.universe),                 // The Universe for this packet
-                  htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
-                  e131.stats.num_packets,                 // Packet counter
-                  e131.stats.packet_errors,               // Packet error counter
-                  packet.property_values[1]);             // Dimmer data for Channel 1
+//    EVERY_N_SECONDS( 2 ) {
+      Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
+                    htons(packet.universe),                 // The Universe for this packet
+                    htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
+                    e131.stats.num_packets,                 // Packet counter
+                    e131.stats.packet_errors,               // Packet error counter
+                    packet.property_values[1]);             // Dimmer data for Channel 1
+    //}
 
     /* Parse a packet and update pixels */
-    for (int i = 1; i <= 512; i++) {
+    for (int i = 1; i <= CHANNELS; i++) {
       int v = packet.property_values[i];
       dmx.write(i, v);
     }
