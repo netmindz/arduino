@@ -6,13 +6,10 @@
 
 #include <FastLED.h>
 
-#define COLS_LEDs 30  // all of the following params need to be adjusted for screen size
-#define ROWS_LEDs 30  // LED_LAYOUT assumed 0 if ROWS_LEDs > 8
-
 #define kMatrixWidth  30
 #define kMatrixHeight 30
 
-#define NUM_LEDS (COLS_LEDs * ROWS_LEDs)
+#define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 CRGB leds[NUM_LEDS];      //naming our LED array
 const bool    kMatrixSerpentineLayout = true;
 
@@ -62,8 +59,8 @@ void loop()
     uint16_t t2 = fastCosineCalc((35 * frameCount)/100); 
     uint16_t t3 = fastCosineCalc((38 * frameCount)/100);
 
-    for (uint8_t y = 0; y < ROWS_LEDs; y++) {      
-      for (uint8_t x = 0; x < COLS_LEDs ; x++) {
+    for (uint8_t y = 0; y < kMatrixWidth; y++) {
+      for (uint8_t x = 0; x < kMatrixHeight ; x++) {
         //Calculate 3 seperate plasma waves, one for each color channel
         uint8_t r = fastCosineCalc(((x << 3) + (t >> 1) + fastCosineCalc((t2 + (y << 3)))));
         uint8_t g = fastCosineCalc(((y << 3) + t + fastCosineCalc(((t3 >> 2) + (x << 3)))));
