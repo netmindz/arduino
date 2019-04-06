@@ -2,19 +2,19 @@
 //Edmund "Skorn" Horn
 //March 4,2013
 //Version 1.0 adapted for OctoWS2811Lib (tested, working...)
+// Will Tatam - Updated to use regular FastLED
 
+#include <FastLED.h>
 
-#include <OctoWS2811.h>
+#define COLS_LEDs 30  // all of the following params need to be adjusted for screen size
+#define ROWS_LEDs 30  // LED_LAYOUT assumed 0 if ROWS_LEDs > 8
 
-//OctoWS2811 Defn. Stuff
-#define COLS_LEDs 60  // all of the following params need to be adjusted for screen size
-#define ROWS_LEDs 16  // LED_LAYOUT assumed 0 if ROWS_LEDs > 8
-#define LEDS_PER_STRIP (COLS_LEDs * (ROWS_LEDs / 8))
+#define kMatrixWidth  30
+#define kMatrixHeight 30
 
-DMAMEM int displayMemory[LEDS_PER_STRIP*6];
-int drawingMemory[LEDS_PER_STRIP*6];
-const int config = WS2811_GRB | WS2811_800kHz;
-OctoWS2811 leds(LEDS_PER_STRIP, displayMemory, drawingMemory, config);
+#define NUM_LEDS (COLS_LEDs * ROWS_LEDs)
+CRGB leds[NUM_LEDS];      //naming our LED array
+const bool    kMatrixSerpentineLayout = true;
 
 //Byte val 2PI Cosine Wave, offset by 1 PI 
 //supports fast trig calcs and smooth LED fading/pulsing.
@@ -48,9 +48,8 @@ uint8_t const exp_gamma[256] PROGMEM =
 
 void setup()
 {
-  pinMode(13, OUTPUT);
-  leds.begin();
-  leds.show();
+  FastLED.addLeds<APA102, 7, 14, RGB, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  FastLED.setBrightness(25);
 }
 
 
@@ -63,34 +62,41 @@ void loop()
     uint16_t t2 = fastCosineCalc((35 * frameCount)/100); 
     uint16_t t3 = fastCosineCalc((38 * frameCount)/100);
 
-    for (uint8_t y = 0; y < ROWS_LEDs; y++) {
-      int left2Right, pixelIndex;
-      if (((y % (ROWS_LEDs/8)) & 1) == 0) {
-        left2Right = 1;
-        pixelIndex = y * COLS_LEDs;
-      } else {
-        left2Right = -1;
-        pixelIndex = (y + 1) * COLS_LEDs - 1;
-      }
+    for (uint8_t y = 0; y < ROWS_LEDs; y++) {      
       for (uint8_t x = 0; x < COLS_LEDs ; x++) {
         //Calculate 3 seperate plasma waves, one for each color channel
         uint8_t r = fastCosineCalc(((x << 3) + (t >> 1) + fastCosineCalc((t2 + (y << 3)))));
         uint8_t g = fastCosineCalc(((y << 3) + t + fastCosineCalc(((t3 >> 2) + (x << 3)))));
         uint8_t b = fastCosineCalc(((y << 3) + t2 + fastCosineCalc((t + x + (g >> 2)))));
-        //uncomment the following to enable gamma correction
-        //r=pgm_read_byte_near(exp_gamma+r);  
-        //g=pgm_read_byte_near(exp_gamma+g);
-        //b=pgm_read_byte_near(exp_gamma+b);
-        leds.setPixel(pixelIndex, ((r << 16) | (g << 8) | b));
-	pixelIndex += left2Right;
+        int pixelIndex = XY(x,y);
+        leds[pixelIndex] = CRGB(r, g, b);
       }
     }
-    digitalWrite(13, HIGH);
-    leds.show();  // not sure if this function is needed  to update each frame
-    digitalWrite(13, LOW);
+    FastLED.show();  // not sure if this function is needed  to update each frame
   }
 }
 
+uint16_t XY( uint8_t x, uint8_t y)
+{
+  uint16_t i;
+
+  if ( kMatrixSerpentineLayout == false) {
+    i = (y * kMatrixWidth) + x;
+  }
+
+  if ( kMatrixSerpentineLayout == true) {
+    if ( y & 0x01) {
+      // Odd rows run backwards
+      uint8_t reverseX = (kMatrixWidth - 1) - x;
+      i = (y * kMatrixWidth) + reverseX;
+    } else {
+      // Even rows run forwards
+      i = (y * kMatrixWidth) + x;
+    }
+  }
+
+  return i;
+}
 
 inline uint8_t fastCosineCalc( uint16_t preWrapVal)
 {
