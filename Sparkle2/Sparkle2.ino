@@ -33,7 +33,7 @@ class Star {
           hue += vary;
         }
         else {
-          hue += vary;
+          hue -= vary;
         }
         // should we change direction?
         if (random(1, 25) == 1) {
