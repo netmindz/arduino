@@ -153,26 +153,26 @@ SimplePatternList gPatterns = {
   vortex,
   squares,
 
-//      // Audio
-//         MSGEQtest,
-//     MSGEQtest2,
-//  //   MSGEQtest3,
-//     MSGEQtest4,
-//     AudioSpiral,
-//     MSGEQtest5,
-//     MSGEQtest6,
-//     MSGEQtest7,
-//     MSGEQtest8,
-//  //   MSGEQtest9,
-//     CopyTest,
-//     Audio1,
-//     Audio2,
-//     Audio3,
-//     Audio4,
-//     CaleidoTest1,
-//     CaleidoTest2,
-//     Audio5,
-//     Audio6,
+  //      // Audio
+  MSGEQtest,
+  MSGEQtest2,
+  //   MSGEQtest3,
+  MSGEQtest4,
+  // AudioSpiral, // TODO: resize
+  //     MSGEQtest5,// TODO: resize
+  //     MSGEQtest6, //boring
+  MSGEQtest7, // nice but resize?
+  MSGEQtest8,
+  //   MSGEQtest9,
+  //     CopyTest,
+  Audio1,// TODO: resize
+  Audio2, // cool wave - move
+  //     Audio3, // boring
+  //     Audio4,// TODO: move
+  //   CaleidoTest1,
+  //  CaleidoTest2,// TODO: move
+  Audio5, // cool wave - move
+  //     Audio6,
 
 };
 
