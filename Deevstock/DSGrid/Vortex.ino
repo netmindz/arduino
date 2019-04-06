@@ -85,9 +85,10 @@ void vortex() {
   for (int  i = 0; i < vortexsStarted; i++) {
     vortexs[i].vortex();
   }
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 25); // TWEAK ME
+  fadeToBlackBy(leds, NUM_LEDS, map(FADE, 0, 255, 100, 0));
+  FastLED.delay(map(SPEED, 0, 255, 70, 0));
   EVERY_N_SECONDS(10) {
-    Serial.println(FastLED.getFPS());
+    Serial.printf("FPS: %u\n", FastLED.getFPS());
   }
 }
 
