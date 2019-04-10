@@ -8,7 +8,7 @@ void DrawOneFrame( byte startHue8, int8_t yHueDelta8, int8_t xHueDelta8)
     byte pixelHue = lineStartHue;
     for ( byte x = 0; x < kMatrixWidth; x++) {
       pixelHue += xHueDelta8;
-      leds[ XY(x, y)]  = CHSV( pixelHue, 255, 255);
+      leds[ XY(x, y)]  = ColorFromPalette(pixelHue, hue, 255, currentBlending);
     }
   }
 }

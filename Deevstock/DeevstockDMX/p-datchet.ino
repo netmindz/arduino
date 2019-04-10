@@ -9,7 +9,7 @@ class DSnake {
     }
 
     void snake() {
-      leds[p]  = CHSV(hue, 255, v);
+      leds[p]  = ColorFromPalette(currentPalette, hue, v, currentBlending);
       p++;
       if(p > ( NUM_LEDS - 1)) {
         p=0;

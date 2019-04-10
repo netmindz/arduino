@@ -2,7 +2,7 @@ void ledtest() {
   int hue = 0;
   for (int y = 0; y < kMatrixHeight; y++) {
     for (int x = 0; x < kMatrixWidth; x++) {
-      leds[ XY(x, y)]  = CHSV( hue, 255, 255);
+      leds[ XY(x, y)]  = ColorFromPalette(currentPalette, hue, 255, currentBlending);
       FastLED.delay(50);
       leds[ XY(x, y)]  = CRGB::Black;
       hue += 5;

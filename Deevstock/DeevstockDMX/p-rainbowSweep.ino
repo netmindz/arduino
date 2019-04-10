@@ -5,7 +5,7 @@ void rainbowSweep() {
   
   
     for (int y = 0; y < kMatrixHeight; y++) {
-      leds[ XY(rsX, y)]  = CHSV( hue, 255, 255);
+      leds[ XY(rsX, y)]  = ColorFromPalette(currentPalette, hue, 255, currentBlending);
     }
     FastLED.delay(map(SPEEDO,0,255, 70, 1));  // TWEAK ME was 70
     fadeToBlackBy(leds, NUM_LEDS, map(FADE,0,255, 100, 0));
