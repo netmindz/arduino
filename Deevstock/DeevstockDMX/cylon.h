@@ -28,7 +28,7 @@ void cylon() {
     // leds[i] = CRGB::Black;
     fadeall();
     // Wait a little bit before we loop around and do it again
-    delay(SPEEDO);
+    FastLED.delay(map(SPEEDO, 0, 255, 100, 0));
   
 
 
