@@ -55,6 +55,6 @@ void colorwaves( CRGB* ledarray, uint16_t numleds, CRGBPalette16& palette)
 
 void colorWaves()
 {
-  colorwaves( leds, NUM_LEDS, gCurrentPalette);
+  colorwaves( leds, NUM_LEDS, currentPalette);
 }
 
