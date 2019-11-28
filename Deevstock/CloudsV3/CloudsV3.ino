@@ -34,6 +34,11 @@ ESPAsyncE131 e131(UNIVERSE_COUNT);
 int brightness  = 255;
 int pattern = 0;
 
+int SPEED = 40;
+int FADE = 70;
+int CLUSTER = 15;
+int CHANCE = 20;
+
 void autoRun();
 void storm();
 
@@ -99,9 +104,15 @@ void readDMX() {
 
     pattern = getValue(packet, 2, 0, (gPatternCount - 1));
 
+    SPEED = getValue(packet, 3, 0, 255);
+    FADE = getValue(packet, 4, 60, 90);
+    CLUSTER = getValue(packet, 5, 1, 20);
+    CHANCE = getValue(packet, 6, 10, 100);
+
   }
 }
 
+// todo - 0 means default
 int getValue(e131_packet_t packet, int chan, int minV, int maxV) {
   return map(packet.property_values[(CHANNEL_START + (chan - 1))], 0, 255, minV, maxV);
 }
@@ -125,18 +136,18 @@ void nextPattern() {
 }
 void storm() {
   // clusters of leds, souce of
-  if (random(0, 20) == 0) {
+  if (random(0, CHANCE) == 0) {
     for (int i = 0; i < random(1, NUM_LEDS); i++) {
       int r = random16(NUM_LEDS);
-      for (int j = 0; j < random(1, 15); j++) {
+      for (int j = 0; j < random(1, CLUSTER); j++) {
         if ((r + j) <  NUM_LEDS) {
           leds[(r + j)] = CHSV(random(0, 255), 100, 255);
         }
       }
     }
   }
-  fadeToBlackBy(leds, NUM_LEDS, 70);
-  FastLED.delay(40);
+  FastLED.delay(SPEED);
+  fadeToBlackBy(leds, NUM_LEDS, FADE);
 }
 
 
