@@ -63,3 +63,6 @@
 [submodule "libraries/StringSplitter"]
 	path = libraries/StringSplitter
 	url = https://github.com/aharshac/StringSplitter.git
+[submodule "libraries/FSBrowser"]
+	path = libraries/FSBrowser
+	url = https://github.com/sticilface/FSBrowser.git
