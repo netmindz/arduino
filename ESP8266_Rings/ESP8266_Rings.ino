@@ -134,12 +134,12 @@ void loop() {
 }
 
 void rings() {
-  for (int r = 0; r <= RINGS; r++) {
-    setRing(r, ColorFromPalette(currentPalette, hue[(r - 1)], 255, currentBlending));
+  for (int r = 0; r < RINGS; r++) {
+    setRing(r, ColorFromPalette(currentPalette, hue[r], 255, currentBlending));
   }
   FastLED.delay(SPEED);
   if (INWARD) {
-    for (int r = 1; r < RINGS; r++) { 
+    for (int r = 0; r < RINGS; r++) {
       hue[(r - 1)] = hue[r]; // set ring one less to that of the outer
     }
     hue[(RINGS - 1)] += JUMP;
@@ -152,42 +152,63 @@ void rings() {
   }
 }
 
+int j;
+void simpleRings() {
+  for (int r = 0; r < RINGS; r++) {
+    setRing(r, ColorFromPalette(currentPalette, j +(r * JUMP), 255, currentBlending));
+  }
+  j += JUMP;
+  FastLED.delay(SPEED);
+}
+
+
+void randomFlow() {
+  hue[0] = random(0,255);
+  for (int r = 0; r < RINGS; r++) {
+    setRing(r, CHSV(hue[r], 255, 255));
+  }
+  for (int r = (RINGS - 1); r >= 1; r--) {
+    hue[r] = hue[(r - 1)]; // set this ruing based on the inner
+  }
+  FastLED.delay(SPEED);
+}
+
 void setRing(int ring, CRGB colour) {
   int offset = 0;
   int count = 0;
   switch (ring) {
-    case 1:
+    case 0:
       count = 1;
       break;
-    case 2:
+    case 1:
       offset = 1;
       count = 8;
       break;
-    case 3:
+    case 2:
       offset = 9;
       count = 12;
       break;
-    case 4:
+    case 3:
       offset = 21;
       count = 16;
       break;
-    case 5:
+    case 4:
       offset = 37;
       count = 24;
       break;
-    case 6:
+    case 5:
       offset = 61;
       count = 32;
       break;
-    case 7:
+    case 6:
       offset = 93;
       count = 40;
       break;
-    case 8:
-      offset =133;
+    case 7:
+      offset = 133;
       count = 48;
       break;
-    case 9:
+    case 8:
       offset = 181;
       count = 60;
       break;
