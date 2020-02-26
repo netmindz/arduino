@@ -21,10 +21,157 @@ uint8_t patternum = 0;    // For keeping track of what patterns are running
 uint8_t oldpattern = 1;
 uint16_t crossct = 255;
 
-// have 3 independent CRGBs - 2 for the sources and one for the output
-CRGB leds[LEDstrips][LEDper];                                 // There is probably a way to do this with only 2 CRGB objects
+// have 2 independent CRGBs - 2 for the previous pattern and one for the output
+CRGB leds[LEDstrips][LEDper];
 CRGB leds2[LEDstrips][LEDper];
-//CRGB leds3[LEDstrips][LEDper];
+
+
+//Pattern Key
+typedef void (*SimplePatternList[])();
+uint8_t PATTERNnum = 0; // Index number of which pattern is current
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+
+void setup() {
+  delay(500);
+  // Initialize LEDs
+   FastLED.setMaxPowerInVoltsAndMilliamps(5,LEDamps); //play with the order here
+   //FastLED.setTemperature();
+   FastLED.setBrightness(LEDbright);
+   FastLED.setDither(LEDdither);
+//   FastLED.addLeds<LEDtype, PIN_C4, GRB>(leds[0], LEDper).setCorrection(LEDcorr);       // I'm switching to paralell output soon :)
+//   FastLED.addLeds<LEDtype, PIN_C3, GRB>(leds[1], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_C2, GRB>(leds[2], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_C1, GRB>(leds[3], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_C0, GRB>(leds[4], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_E1, GRB>(leds[5], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_E0, GRB>(leds[6], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D7, GRB>(leds[7], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D6, GRB>(leds[8], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D5, GRB>(leds[9], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D4, GRB>(leds[10], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D1, GRB>(leds[11], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_D0, GRB>(leds[12], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B7, GRB>(leds[13], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B4, GRB>(leds[14], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B3, GRB>(leds[15], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B2, GRB>(leds[16], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B1, GRB>(leds[17], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_B0, GRB>(leds[18], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_E7, GRB>(leds[19], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_E6, GRB>(leds[20], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F0, GRB>(leds[21], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F1, GRB>(leds[22], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F2, GRB>(leds[23], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F3, GRB>(leds[24], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F4, GRB>(leds[25], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F5, GRB>(leds[26], LEDper).setCorrection(LEDcorr);
+//   FastLED.addLeds<LEDtype, PIN_F6, GRB>(leds[27], LEDper).setCorrection(LEDcorr);
+   delay(500);
+   FastLED.clear();
+   FastLED.show();
+   Serial.begin(9600);
+   delay(500);
+}
+SimplePatternList PATTERNlist = {diagonal, tropic, waterfall};    // PATTERNlist[PATTERNnum]();
+
+void loop() {
+  //uint8_t ratio = ease8InOutCubic(beatsin8(5));         fades in a straight line that looks pretty good right now, but could change that later
+  
+  EVERY_N_MILLIS(100){        // I'm frame rate limited, and havign this be low makes sure that some patterns don't run a ton faster than other patterns. Could definitely speed this up once I'm on a faster controller
+    crossfader();
+    hue[0]++;
+    hue[1]++;
+    FastLED.show();  
+  } 
+}
+
+void patcrossproc(){                                // Every time you switch patterns run this to begin crossfading
+  oldpattern = patternum;                           // set the current pattern to be the old one so we can make it use the same variables
+  crossct = 0;                                      // reset the blend amount
+  patternum++;                                      // increase pattern number   -> this just goes in sequence, but the best part of this is that you can control this by remote or any other system
+
+  rowbucket[0] = rowbucket[1];      // copy row status to default rows, and reset them for the new pattern
+  rowbucket[1] = 0;
+  colbucket[0] = colbucket[1];
+  colbucket[1] = 0;
+  countbucket[0] = countbucket[1];
+  countbucket[1] = 0;
+  hue[0] = hue[1];
+  hue[1] = 0;
+  
+  if(patternum > 2){
+    patternum = 0;
+  }
+}
+
+
+// ***********************************************************************************
+//  Crossfade related code
+// ***********************************************************************************
+
+void crossfader(){
+ if(crossct >= 255){ 
+    PATTERNlist[patternum]();   // run completed pattern only when fading is complete
+    if (millis() > 15000){  
+      EVERY_N_SECONDS(15){  // new pattern timer
+        patcrossproc();
+      } 
+    }   
+  } 
+  else if(crossct < 255){
+    crossct+=5;           // higher increase faster xfade
+    if(crossct > 255){   // overflow prevention
+      crossct = 255;
+    }
+    uint8_t blendamt = crossct;
+ 
+   if (millis() > 15000){       // Run the old pattern and save to array
+    PATTERNlist[oldpattern]();
+      for(uint8_t x = 0; x < LEDstrips; x++){
+        for(uint8_t y = 0; y < LEDper; y++){
+          leds2[x][y] = leds[x][y];
+        }
+      }
+    }
+    
+    PATTERNlist[patternum]();   // Run the new pattern and save to array 
+    
+    for(uint8_t x = 0; x < LEDstrips; x++){     // blend oldpattern into main output
+      for(uint8_t y = 0; y < LEDper; y++){
+        leds[x][y] = blend( leds2[x][y], leds[x][y], blendamt);   // Blend arrays of LEDs, third value is blend %
+      }
+    }
+  }
+}
+
+void fader(uint8_t targfade){
+  if(currfade > targfade){
+      currfade = targfade;
+  }
+  for(uint8_t x = 0; x < LEDstrips; x++){
+    fadeToBlackBy( leds[x], LEDper, currfade);
+  }
+  EVERY_N_MILLIS(50){
+    if(currfade < targfade){
+      currfade++;
+    }
+    else if(currfade > targfade){
+      currfade = targfade;
+    }
+  }
+}
+
+uint8_t fetcher(uint8_t oldcheck){        // Get which counters should be used
+  if(oldcheck == oldpattern){
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+// ***********************************************************************************
+//  Patterns
+// ***********************************************************************************
 
 DEFINE_GRADIENT_PALETTE( startup ){ //RYGCB
   0,   255,  0,  0,      //red
@@ -44,64 +191,6 @@ DEFINE_GRADIENT_PALETTE( tropicana ){
   145, 255, 255, 255,
   255,  245, 66, 203};
 
-//Pattern Key
-typedef void (*SimplePatternList[])();
-uint8_t PATTERNnum = 0; // Index number of which pattern is current
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-
-void setup() {
-  delay(500);
-  // Initialize LEDs
-   FastLED.setMaxPowerInVoltsAndMilliamps(5,LEDamps); //play with the order here
-   //FastLED.setTemperature();
-   FastLED.setBrightness(LEDbright);
-   FastLED.setDither(LEDdither);
-   FastLED.addLeds<LEDtype, PIN_C4, GRB>(leds[0], LEDper).setCorrection(LEDcorr);       // I'm switching to paralell output soon :)
-   FastLED.addLeds<LEDtype, PIN_C3, GRB>(leds[1], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_C2, GRB>(leds[2], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_C1, GRB>(leds[3], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_C0, GRB>(leds[4], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_E1, GRB>(leds[5], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_E0, GRB>(leds[6], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D7, GRB>(leds[7], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D6, GRB>(leds[8], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D5, GRB>(leds[9], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D4, GRB>(leds[10], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D1, GRB>(leds[11], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_D0, GRB>(leds[12], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B7, GRB>(leds[13], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B4, GRB>(leds[14], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B3, GRB>(leds[15], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B2, GRB>(leds[16], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B1, GRB>(leds[17], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_B0, GRB>(leds[18], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_E7, GRB>(leds[19], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_E6, GRB>(leds[20], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F0, GRB>(leds[21], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F1, GRB>(leds[22], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F2, GRB>(leds[23], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F3, GRB>(leds[24], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F4, GRB>(leds[25], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F5, GRB>(leds[26], LEDper).setCorrection(LEDcorr);
-   FastLED.addLeds<LEDtype, PIN_F6, GRB>(leds[27], LEDper).setCorrection(LEDcorr);
-   delay(500);
-   FastLED.clear();
-   FastLED.show();
-   Serial.begin(9600);
-   delay(500);
-}
-SimplePatternList PATTERNlist = {diagonal, tropic, waterfall};    // PATTERNlist[PATTERNnum]();
-
-void loop() {
-  //uint8_t ratio = ease8InOutCubic(beatsin8(5));         fades in a straight line that looks pretty good right now, but could change that later
-  
-  EVERY_N_MILLIS(100){        // I'm frame rate limited, and havign this be low makes sure that some patterns don't run a ton faster than other patterns. Could definitely speed this up once I'm on a faster controller
-    crossfader();
-    hue[0]++;
-    hue[1]++;
-    FastLED.show();  
-  } 
-}
 
 void diagonal(){
   fader(deffade);         // apply some fading, since this pattern is full screen it does not need to be too high
@@ -154,86 +243,4 @@ void waterfall(){
    countbucket[z]++; 
 }
 
-void patcrossproc(){                                // Every time you switch patterns run this to begin crossfading
-  oldpattern = patternum;                           // set the current pattern to be the old one so we can make it use the same variables
-  crossct = 0;                                      // reset the blend amount
-  patternum++;                                      // increase pattern number   -> this just goes in sequence, but the best part of this is that you can control this by remote or any other system
 
-  rowbucket[0] = rowbucket[1];      // copy row status to default rows, and reset them for the new pattern
-  rowbucket[1] = 0;
-  colbucket[0] = colbucket[1];
-  colbucket[1] = 0;
-  countbucket[0] = countbucket[1];
-  countbucket[1] = 0;
-  hue[0] = hue[1];
-  hue[1] = 0;
-  
-  if(patternum > 2){
-    patternum = 0;
-  }
-}
-
-void crossfader(){
- if(crossct >= 255){ 
-    PATTERNlist[patternum]();   // run completed pattern only when fading is complete
-    if (millis() > 15000){  
-      EVERY_N_SECONDS(15){  // new pattern timer
-        patcrossproc();
-      } 
-    }   
-  } 
-  else if(crossct < 255){
-    crossct+=5;           // higher increase faster xfade
-    if(crossct > 255){   // overflow prevention
-      crossct = 255;
-    }
-    uint8_t blendamt = crossct;
- 
-   if (millis() > 15000){       // Run the old pattern and save to array
-    PATTERNlist[oldpattern]();
-      for(uint8_t x = 0; x < LEDstrips; x++){
-        for(uint8_t y = 0; y < LEDper; y++){
-          leds2[x][y] = leds[x][y];
-        }
-      }
-    }
-    
-    PATTERNlist[patternum]();   // Run the new pattern and save to array 
-    /*for(uint8_t x = 0; x < LEDstrips; x++){
-      for(uint8_t y = 0; y < LEDper; y++){
-        leds3[x][y] = leds[x][y];
-      }
-    }*/
-    
-    for(uint8_t x = 0; x < LEDstrips; x++){     // blend em
-      for(uint8_t y = 0; y < LEDper; y++){
-        leds[x][y] = blend( leds2[x][y], leds[x][y], blendamt);   // Blend arrays of LEDs, third value is blend %
-      }
-    }
-  }
-}
-
-void fader(uint8_t targfade){
-  if(currfade > targfade){
-      currfade = targfade;
-  }
-  for(uint8_t x = 0; x < LEDstrips; x++){
-    fadeToBlackBy( leds[x], LEDper, currfade);
-  }
-  EVERY_N_MILLIS(50){
-    if(currfade < targfade){
-      currfade++;
-    }
-    else if(currfade > targfade){
-      currfade = targfade;
-    }
-  }
-}
-
-uint8_t fetcher(uint8_t oldcheck){        // Get which counters should be used
-  if(oldcheck == oldpattern){
-    return 0;
-  } else {
-    return 1;
-  }
-}
