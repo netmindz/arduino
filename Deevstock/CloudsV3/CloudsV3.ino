@@ -1,3 +1,5 @@
+#define FASTLED_ALLOW_INTERRUPTS 0
+
 #include<FastLED.h>
 
 #define CHIPSET WS2811
@@ -32,7 +34,7 @@ const char passphrase[] = SECRET_PSK;
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 
 int brightness  = 255;
-int pattern = 0;
+int pattern = 1;
 
 int SPEED = 40;
 int FADE = 70;
@@ -41,9 +43,10 @@ int CHANCE = 20;
 
 void autoRun();
 void storm();
+void lightnings();
 
 typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = { autoRun, storm };
+SimplePatternList gPatterns = { autoRun, storm, lightnings };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
@@ -122,7 +125,7 @@ void autoRun() {
 
   gPatterns[autoPattern]();
 
-  EVERY_N_SECONDS(60) {
+  EVERY_N_SECONDS(600) {
     nextPattern();
     Serial.print("Swapping to pattern ");
     Serial.println(autoPattern);
@@ -150,4 +153,33 @@ void storm() {
   fadeToBlackBy(leds, NUM_LEDS, FADE);
 }
 
+uint8_t frequency = 50;                                       // controls the interval between strikes
+uint8_t flashes = CLUSTER;                                    //the upper limit of flashes per strike
+unsigned int dimmer = 1;
+
+uint8_t ledstart;                                             // Starting location of a flash
+uint8_t ledlen;                                               // Length of a flash
+
+void lightnings() {
+  ledstart = random8(NUM_LEDS);                               // Determine starting location of flash
+  ledlen = random8(NUM_LEDS - ledstart);                      // Determine length of flash (not to go beyond NUM_LEDS-1)
+
+  for (int flashCounter = 0; flashCounter < random8(3, flashes); flashCounter++) {
+    if (flashCounter == 0) dimmer = 5;                        // the brightness of the leader is scaled down by a factor of 5
+    else dimmer = random8(1, 3);                              // return strokes are brighter than the leader
+
+    fill_solid(leds + ledstart, ledlen, CHSV(255, 0, 255 / dimmer));
+    FastLED.show();                                           // Show a section of LED's
+    delay(random8(4, 10));                                    // each flash only lasts 4-10 milliseconds
+    fill_solid(leds + ledstart, ledlen, CHSV(255, 0, 0));     // Clear the section of LED's
+    FastLED.show();
+
+    if (flashCounter == 0) delay (150);                       // longer delay until next flash after the leader
+
+    delay(50 + random8(100));                                 // shorter delay between strokes
+  }
+
+  delay(random8(frequency) * 100);                            // delay between strikes
+
+}
 
