@@ -15,7 +15,7 @@
 	url = git@github.com:forkineye/ESPAsyncE131.git
 [submodule "libraries/ESPAsyncUDP"]
 	path = libraries/ESPAsyncUDP
-	url = git@github.com:me-no-dev/ESPAsyncUDP.git
+	url = https://github.com/me-no-dev/ESPAsyncUDP.git
 [submodule "MashedPixels"]
 	path = MashedPixels
 	url = git@github.com:alexisisaac/MashedPixels.git
@@ -66,3 +66,15 @@
 [submodule "libraries/FSBrowser"]
 	path = libraries/FSBrowser
 	url = https://github.com/sticilface/FSBrowser.git
+[submodule "WLED"]
+	path = WLED
+	url = https://github.com/atuline/WLED.git
+[submodule "libraries/ESPAsyncTCP"]
+	path = libraries/ESPAsyncTCP
+	url = https://github.com/me-no-dev/ESPAsyncTCP.git
+[submodule "libraries/ESPAsyncWebServer"]
+	path = libraries/ESPAsyncWebServer
+	url = https://github.com/me-no-dev/ESPAsyncWebServer.git
+[submodule "libraries/NeoPixelBus"]
+	path = libraries/NeoPixelBus
+	url = https://github.com/Makuna/NeoPixelBus.git
