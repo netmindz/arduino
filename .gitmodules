@@ -78,3 +78,6 @@
 [submodule "libraries/NeoPixelBus"]
 	path = libraries/NeoPixelBus
 	url = https://github.com/Makuna/NeoPixelBus.git
+[submodule "esp8266-fastled-audio"]
+	path = esp8266-fastled-audio
+	url = https://github.com/jasoncoon/esp8266-fastled-audio.git
