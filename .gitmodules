@@ -12,7 +12,7 @@
 	url = git@github.com:forkineye/E131.git
 [submodule "libraries/ESPAsyncE131"]
 	path = libraries/ESPAsyncE131
-	url = git@github.com:forkineye/ESPAsyncE131.git
+	url = https://github.com/forkineye/ESPAsyncE131.git
 [submodule "libraries/ESPAsyncUDP"]
 	path = libraries/ESPAsyncUDP
 	url = https://github.com/me-no-dev/ESPAsyncUDP.git
@@ -66,15 +66,20 @@
 [submodule "libraries/FSBrowser"]
 	path = libraries/FSBrowser
 	url = https://github.com/sticilface/FSBrowser.git
-[submodule "WLED"]
-	path = WLED
-	url = https://github.com/atuline/WLED.git
 [submodule "libraries/ESPAsyncTCP"]
 	path = libraries/ESPAsyncTCP
 	url = https://github.com/me-no-dev/ESPAsyncTCP.git
 [submodule "libraries/ESPAsyncWebServer"]
 	path = libraries/ESPAsyncWebServer
-	url = https://github.com/me-no-dev/ESPAsyncWebServer.git
+	url = https://github.com/Aircoookie/ESPAsyncWebServer.git
 [submodule "libraries/NeoPixelBus"]
 	path = libraries/NeoPixelBus
 	url = https://github.com/Makuna/NeoPixelBus.git
+[submodule "ESPAsyncE131"]
+	url = https://github.com/forkineye/ESPAsyncE131.git
+[submodule "WLED-Audio"]
+	path = WLED-Audio
+	url = https://github.com/atuline/WLED.git
+[submodule "WLED-Default"]
+	path = WLED-Default
+	url = https://github.com/Aircoookie/WLED.git
