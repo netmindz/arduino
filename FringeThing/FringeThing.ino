@@ -6,14 +6,21 @@
 const char* ssid = "Enterprise";
 const char* password = "hardhouserules";
 
-#define textBuffSize 30 //length of longest command string plus two spaces for CR + LF
+#define textBuffSize 40 //length of longest command string plus two spaces for CR + LF
 char textBuff[textBuffSize]; //someplace to put received text
 int charsReceived = 0;
 
-#define LED_PIN 12
+#define LED_PIN D4
 #define CHIPSET     NEOPIXEL
 
-#define NUM_LEDS 40
+#define kMatrixWidth 8
+#define kMatrixHeight 8
+
+const long maxD = 30000;
+
+boolean kMatrixSerpentineLayout = false;
+
+#define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 CRGB leds[NUM_LEDS];
 
 
@@ -23,7 +30,7 @@ WiFiClient serverClients[MAX_SRV_CLIENTS];
 void setup() {
   Serial.begin(115200);
   FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-  FastLED.setBrightness(250);
+  FastLED.setBrightness(255);
   leds[0] = CRGB::Blue;
   FastLED.show();
 
@@ -47,6 +54,21 @@ void setup() {
 
   leds[0] = CRGB::Green;
   FastLED.show();
+  /*
+  leds[XY(0,0)] = CRGB::Green;
+  leds[XY(4,0)] = CRGB::Green;
+  leds[XY(4,7)] = CRGB::Green;
+  leds[XY(0,7)] = CRGB::Green;
+  FastLED.show();
+
+for(int x = 0; x< 10; x++) {
+  leds[XY(0,0)] = CRGB::Green;
+  leds[XY(1,0)] = CRGB::Red;
+  leds[XY(2,0)] = CRGB::Blue;
+  scroll();  
+  FastLED.delay(200);
+}
+*/
 
 }
 
@@ -155,7 +177,8 @@ void parseReceivedText() {
   tmp.replace("s","");
   float duration = tmp.toFloat();
   long d = duration * 1000; // s -> ms
-  uint8_t bright = map(d, 0, 60000, 30, 255);
+  if(d > maxD) d = maxD;
+  uint8_t bright = map(d, 0, maxD, 30, 255);
   Serial.printf("CMD:%i  Server:%i  Duration:%f  Bright:%i\n", cmd, server, duration, bright);
 
   if (cmd == 10) hue = 0;
@@ -239,12 +262,12 @@ void parseReceivedText() {
   if (cmd == 9023) hue = 234;
 
 
-  Serial.print("hue=");
-  Serial.println(hue);
   if (hue == 72) hue = 150;
   if (hue == 71) hue = 100;
   if (hue == 69) hue = 120;
   
+//  Serial.print("hue=");
+//  Serial.println(hue);
   /*for(int n = 0; n > kMatrixWidth; n++) {
     leds[XY(0,n)] = CHSV(hue, 255, 255); 
   }*/

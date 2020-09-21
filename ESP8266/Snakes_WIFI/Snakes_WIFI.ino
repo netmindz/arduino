@@ -31,8 +31,14 @@ int FADE = 40;        // CH4
 // ********************
 
 
-const char ssid[] = "";         /* Replace with your SSID */
-const char passphrase[] = "";   /* Replace with your WPA2 passphrase */
+#include "wifi.h"
+// Create file with the following
+// *************************************************************************
+// #define SECRET_SSID "";  /* Replace with your SSID */
+// #define SECRET_PSK "";   /* Replace with your WPA2 passphrase */
+// *************************************************************************
+const char ssid[] = SECRET_SSID;
+const char passphrase[] = SECRET_PSK;
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 

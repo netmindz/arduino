@@ -17,13 +17,13 @@
 	path = libraries/ESPAsyncUDP
 	url = https://github.com/me-no-dev/ESPAsyncUDP.git
 [submodule "MashedPixels"]
-	path = MashedPixels
+	path = 3rdParty/MashedPixels
 	url = git@github.com:alexisisaac/MashedPixels.git
 [submodule "tree"]
-	path = tree
+	path = 3rdParty/tree
 	url = git@github.com:evilgeniuslabs/tree.git
 [submodule "tree-v2"]
-	path = tree-v2
+	path = 3rdParty/tree-v2
 	url = git@github.com:evilgeniuslabs/tree-v2.git
 [submodule "libraries/MSGEQ7"]
 	path = libraries/MSGEQ7
@@ -50,16 +50,12 @@
 	path = libraries/SerialFlash
 	url = https://github.com/PaulStoffregen/SerialFlash
 [submodule "FunkyNoise"]
-	path = FunkyNoise
+	path = 3rdParty/FunkyNoise
 	url = https://github.com/netmindz/FunkyNoise.git
 [submodule "FastLED-Demos"]
-	path = FastLED-Demos
+	path = 3rdParty/FastLED-Demos
 	url = https://github.com/atuline/FastLED-Demos.git
 	branch = .
-[submodule "Lumos-Board-Audio"]
-	path = Lumos-Board-Audio
-	url = https://github.com/zombodotcom/Lumos-Board-Audio.git
-	branch = master
 [submodule "libraries/StringSplitter"]
 	path = libraries/StringSplitter
 	url = https://github.com/aharshac/StringSplitter.git
@@ -83,3 +79,6 @@
 [submodule "WLED-Default"]
 	path = WLED-Default
 	url = https://github.com/Aircoookie/WLED.git
+[submodule "esp8266-fastled-audio"]
+	path = 3rdParty/esp8266-fastled-audio
+	url = https://github.com/jasoncoon/esp8266-fastled-audio.git
