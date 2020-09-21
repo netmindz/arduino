@@ -77,3 +77,6 @@
 [submodule "esp8266-fastled-audio"]
 	path = 3rdParty/esp8266-fastled-audio
 	url = https://github.com/jasoncoon/esp8266-fastled-audio.git
+[submodule "Lumos-Board-Audio"]
+	path = Lumos-Board-Audio
+	url = https://github.com/netmindz/Lumos-Board-Audio.git
