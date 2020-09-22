@@ -213,15 +213,16 @@ void loop()
 
     led = !led;
     digitalWrite(LED_BUILTIN, led);
-    int b = Dmx.getBuffer()[1]; // brightness = 1
+    int b = Dmx.getBuffer()[0]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
       FastLED.setBrightness(BRIGHTNESS);
+      Serial.printf("Brightness: %u\n", BRIGHTNESS);
     }
-    STEPS = Dmx.getBuffer()[2]; // steps = 2
-    SPEEDO = Dmx.getBuffer()[3]; //speed = 3
-    FADE = Dmx.getBuffer()[4]; // fade = 4
-    int p = Dmx.getBuffer()[5]; // pattern = 5
+    STEPS = Dmx.getBuffer()[1]; // steps = 2
+    SPEEDO = Dmx.getBuffer()[2]; //speed = 3
+    FADE = Dmx.getBuffer()[3]; // fade = 4
+    int p = Dmx.getBuffer()[4]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
     if(p > (gPatternCount - 1)) { 
       p = 0;
