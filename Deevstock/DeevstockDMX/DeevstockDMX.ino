@@ -245,6 +245,7 @@ void loop()
     EVERY_N_SECONDS( 10 ) {
       Serial.println(LEDS.getFPS());
     }
+  soundmems();
   gPatterns[pattern]();
 
   // do some periodic updates
