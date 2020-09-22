@@ -85,3 +85,6 @@
 [submodule "Lumos-Board-Audio"]
 	path = Lumos-Board-Audio
 	url = https://github.com/netmindz/Lumos-Board-Audio.git
+[submodule "libraries/arduinoFFT"]
+	path = libraries/arduinoFFT
+	url = https://github.com/kosme/arduinoFFT.git
