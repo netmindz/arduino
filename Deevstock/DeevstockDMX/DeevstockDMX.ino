@@ -275,7 +275,7 @@ void autoRun() {
   
   // change patterns periodically
 //  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
-  EVERY_N_SECONDS(20) {
+  EVERY_N_SECONDS(60) {
     nextPattern();
     Serial.print("Swapping to pattern ");
     Serial.println(gCurrentPatternNumber);
