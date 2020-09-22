@@ -11,14 +11,10 @@
 #define FASTLED_ALLOW_INTERRUPTS   1 // setting 0 fixes flutter, causes crash
 //#define FASTLED_INTERRUPT_RETRY_COUNT 0
 
-#define LED_PIN  7
 #define MIC_PIN  A0
-
-// #define CHIPSET NEOPIXEL
-
 const uint8_t kMatrixWidth = 50; // length of string
 const uint8_t kMatrixHeight = 16; // number of strings
-#define NUM_LEDS_PER_STRIP 50
+#define NUM_LEDS_PER_STRIP 100
 #define NUM_STRIPS 8
 
 
