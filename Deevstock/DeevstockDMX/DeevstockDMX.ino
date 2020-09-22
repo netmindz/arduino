@@ -168,6 +168,9 @@ CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_
 // **********************************************************************************************************
 
 void setup() {
+  // Audio requires memory to work.
+  AudioMemory(12);
+
   /* USB serial */
   Serial.begin(115200);
 
@@ -183,6 +186,11 @@ void setup() {
 
   currentPalette = palettes[0];
 
+  // Enable the audio shield and set the output volume.
+  audioShield.enable();
+  audioShield.inputSelect(AUDIO_INPUT_MIC);
+  audioShield.volume(0.5);
+  
   ledtest();
 }
 
