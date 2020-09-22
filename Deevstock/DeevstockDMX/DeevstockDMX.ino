@@ -54,6 +54,9 @@ uint8_t FADE = 180;
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
+CRGBPalette16 currentPalette;
+TBlendType currentBlending;
+
 // **********************************************************************************************************
 
 void autoRun();
@@ -113,6 +116,8 @@ bool thisdir = 0;
 #include "besin.h"          // center to edges with black
 #include "noisepal.h"       // Long line
 
+#include "cylon.h"
+#include "colours.h"
 
 // *************
 // End audio
@@ -125,6 +130,9 @@ SimplePatternList gPatterns = { autoRun, rainbowSweep, Rainbow, dsnake, RainbowW
 };
 // shimmer, confetti, sinelon,
 SimplePatternList gAutoPatterns = { rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm };
+
+typedef void (*SimplePaletteList[])();
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
 
 // **********************************************************************************************************
 // Setup
@@ -143,12 +151,16 @@ void setup() {
   
   FastLED.setBrightness(BRIGHTNESS);
   Serial.println("Setup");
+
+  currentPalette = palettes[0];
+
   ledtest();
 }
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
+int paletteCount = ARRAY_SIZE(palettes);
 
 int led = 0;
 elapsedMillis elapsed;
@@ -180,6 +192,12 @@ void loop()
     else {
       pattern = p;
     }
+    currentPalette = palettes[map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1))]; // channel 6
+//    EVERY_N_SECONDS( 2 ) {
+//      Serial.println(p);
+//      Serial.print("b=");
+//      Serial.println(b);
+//    }
   }
 
     EVERY_N_SECONDS( 2 ) {
