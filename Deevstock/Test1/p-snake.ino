@@ -61,13 +61,13 @@ class Snake {
     }
 };
 
-
-#define NUM_SNAKES (NUM_LEDS / 20) 
+#define SNAKE_GAP 30
+#define NUM_SNAKES (NUM_LEDS / SNAKE_GAP) 
 Snake snakes[NUM_SNAKES];
 
 int snakesStarted = 1;
 //int const snakeDelay = ((kMatrixWidth * 2) + (kMatrixHeight * 2) - 1);
-int const snakeDelay = 20;
+int const snakeDelay = SNAKE_GAP;
 int snakeGap = 0;
 
 void snake() {
@@ -85,8 +85,11 @@ void snake() {
   for (int  i = 0; i < snakesStarted; i++) {
     snakes[i].snake();
   }
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 50); // TWEAK ME
-  FastLED.delay(20);
+  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 25); // TWEAK ME
+  FastLED.delay(100);
+  EVERY_N_SECONDS(10) {
+    Serial.println(FastLED.getFPS());
+  }
 }
 
 
