@@ -122,10 +122,43 @@ bool thisdir = 0;
 
 typedef void (*SimplePatternList[])();
 // snake, 
-SimplePatternList gPatterns = { autoRun, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, shimmer, sinwave_1, rainbow, confetti, sinelon, juggle, bpm, rainbowWithGlitter, pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal, pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal
-};
+SimplePatternList gPatterns = { autoRun, 
+pixels,         // Long line of colours
+fillnoise,      // Center to edges with base color and twinkle
+jugglep,        // Long line of sinewaves
+ripple,         // Juggle with twinkles
+pixel,          // Long line of colours
+matrix,         // Start to end with twinkles
+onesine,        // Long line of shortlines
+noisefire,      // Start to end
+rainbowbit,     // Long line of short lines with twinkles
+noisefiretest,  // Center to edges
+rainbowg,       // Long line with flashes
+noisewide,      // Center to edges
+plasma,         // Long line of short lines
+besin,          // center to edges with black
+noisepal,       // Long line
+cylon, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, confetti, sinelon, juggle};
+// soundmems_demo
+// pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal
+
 // shimmer, confetti, sinelon,
-SimplePatternList gAutoPatterns = { rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm };
+SimplePatternList gAutoPatterns = { pixels,         // Long line of colours
+fillnoise,      // Center to edges with base color and twinkle
+jugglep,        // Long line of sinewaves
+ripple,         // Juggle with twinkles
+pixel,          // Long line of colours
+matrix,         // Start to end with twinkles
+onesine,        // Long line of shortlines
+noisefire,      // Start to end
+rainbowbit,     // Long line of short lines with twinkles
+noisefiretest,  // Center to edges
+rainbowg,       // Long line with flashes
+noisewide,      // Center to edges
+plasma,         // Long line of short lines
+besin,          // center to edges with black
+noisepal,       // Long line
+rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm};
 
 typedef void (*SimplePaletteList[])();
 CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
