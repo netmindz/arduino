@@ -88,3 +88,9 @@
 [submodule "libraries/arduinoFFT"]
 	path = libraries/arduinoFFT
 	url = https://github.com/kosme/arduinoFFT.git
+[submodule "libraries/SmartMatrix"]
+	path = libraries/SmartMatrix
+	url = https://github.com/pixelmatix/SmartMatrix.git
+[submodule "libraries/FlexIO_t4"]
+	path = libraries/FlexIO_t4
+	url = https://github.com/KurtE/FlexIO_t4.git
