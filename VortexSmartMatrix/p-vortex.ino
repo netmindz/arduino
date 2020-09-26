@@ -14,7 +14,8 @@ class Vortex {
     }
 
     void vortex() {
-      leds[ XY(x, y)]  = CHSV(hue, 255, 255);
+      rgb24 *buffer = backgroundLayer.backBuffer();
+      buffer[ XY(x, y)]  = CRGB(CHSV(hue, 255, 255));
       // End of right
       if ((x >= (w - margin)) && (up == 0)) {
         up = 1;
@@ -71,7 +72,7 @@ int const vortexDelay = SNAKE_GAP * 2;
 int vortexGap = 0;
 
 void vortex() {
-
+  rgb24 *buffer = backgroundLayer.backBuffer();
   if (vortexsStarted < NUM_SNAKES) {
     if (vortexGap == vortexDelay)  {
       vortexsStarted++;
@@ -85,11 +86,10 @@ void vortex() {
   for (int  i = 0; i < vortexsStarted; i++) {
     vortexs[i].vortex();
   }
-  fadeToBlackBy(leds, (kMatrixWidth * kMatrixHeight), 55); // TWEAK ME
-  FastLED.delay(20);
+  fadeToBlackBy((CRGB*)buffer, (kMatrixWidth * kMatrixHeight), 10); // TWEAK ME
+  backgroundLayer.swapBuffers();
+  delay(3);
   EVERY_N_SECONDS(10) {
     Serial.println(FastLED.getFPS());
   }
 }
-
-
