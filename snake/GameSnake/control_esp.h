@@ -2,9 +2,14 @@
 
 #include <Arduino.h>
 
+#ifdef ESP32
+#include <WiFi.h>
+#elif
 #include <ESP8266WiFi.h>
+#endif
 #include <WebSocketsServer.h>
-#include <Hash.h>
+#include <ESPmDNS.h>
+//#include <Hash.h>
 
 #include "wifi.h"
 // Create file with the following
@@ -46,7 +51,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       break;
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\n", num, length);
-      hexdump(payload, length);
+      //      hexdump(payload, length);
       break;
   }
 
@@ -59,12 +64,6 @@ void controlSetup() {
   Serial.println();
   Serial.println();
 
-  for (uint8_t t = 4; t > 0; t--) {
-    Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
-    Serial.flush();
-    delay(1000);
-  }
-  
   // Make sure you're in station mode
   WiFi.mode(WIFI_STA);
 
@@ -88,6 +87,17 @@ void controlSetup() {
   Serial.println("\nDone");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  if (!MDNS.begin("snake")) {
+    Serial.println("Error setting up MDNS responder!");
+    while (1) {
+      delay(1000);
+    }
+  }
+  Serial.println("mDNS responder started");
+
+  // Add service to MDNS-SD
+  MDNS.addService("http", "tcp", 80);
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
