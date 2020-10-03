@@ -9,6 +9,12 @@ const uint8_t kMatrixHeight = 30;
 
 CRGB leds[NUM_LEDS];
 
+#if defined(CORE_TEENSY)
+#include "control_teensy.h"
+#else
+#include "control_esp.h"
+#endif
+
 bool kMatrixSerpentineLayout = true;
 uint16_t XY( uint8_t x, uint8_t y)
 {
@@ -194,11 +200,6 @@ void loop() {
     incomingByte = Serial.read();
     snake.input(incomingByte);
   }
-  if (Serial2.available() > 0) {
-    incomingByte = Serial2.read();
-    snake.input(incomingByte);
-  }
+  controlLoop();
   snake.frame();
 }
-
-
