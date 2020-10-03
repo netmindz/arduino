@@ -9,13 +9,8 @@ const uint8_t kMatrixHeight = 30;
 
 CRGB leds[NUM_LEDS];
 
-#if defined(CORE_TEENSY)
-#include "control_teensy.h"
-#else
-#include "control_esp.h"
-#endif
-
 bool kMatrixSerpentineLayout = true;
+
 uint16_t XY( uint8_t x, uint8_t y)
 {
   uint16_t i;
@@ -188,10 +183,18 @@ class GameSnake {
 
 GameSnake snake;
 
+#if defined(CORE_TEENSY)
+#include "control_teensy.h"
+#else
+#include "control_esp.h"
+#endif
+
 void setup() {
   Serial.begin(115200);
-  Serial2.begin(115200);
-  FastLED.addLeds<WS2812SERIAL, 1, BRG>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  controlSetup();
+  FastLED.addLeds<WS2812, 2, BRG>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+
+  FastLED.setBrightness(10);
 }
 
 int incomingByte = 0;
