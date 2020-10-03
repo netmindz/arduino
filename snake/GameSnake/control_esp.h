@@ -10,6 +10,8 @@
 #include <WebSocketsServer.h>
 #include <ESPmDNS.h>
 //#include <Hash.h>
+#include <HashMap.h>
+
 
 #include "wifi.h"
 // Create file with the following
@@ -23,34 +25,57 @@ const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
 
 WebSocketsServer webSocket = WebSocketsServer(81);
 
-#define Serial Serial
+CreateHashMap (snakeMap, IPAddress, int, MAX_SNAKES);
+int snakeIndex = 0;
+
+CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::Yellow};
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
+  IPAddress ip = webSocket.remoteIP(num);
+  int s = snakeMap[ip];
   switch (type) {
+    
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
+      snakes[s].exit();
       break;
-    case WStype_CONNECTED:
-      {
-        IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-
+      
+    case WStype_CONNECTED:      {
+        Serial.printf("[%u] Connection from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        if(snakeIndex > (MAX_SNAKES -1)) {
+          Serial.println("MAX SNAKES!!");
+          webSocket.sendTXT(num, "Sorry, player count exceeded");
+          return;
+        }
         // send message to client
-        webSocket.sendTXT(num, "Connected");
-      }
-      break;
-    case WStype_TEXT:
-      Serial.printf("[%u] get Text: %s\n", num, payload);
-      for ( size_t i = 0; i < length; i++ ) {
-        snake.input( payload[i] );
-      }
-      // send message to client
-      webSocket.sendTXT(num, "Sent command");
+        CRGB color = playerColors[snakeIndex];
+        char rgbTxt[8];
+        sprintf(rgbTxt, "#%02X%02X%02X", color.r, color.g, color.b);
+        String msg = "Connected player = " + (String) (snakeIndex + 1) + " <span style=\"background: " + rgbTxt +  "\">&nbsp;</span>";
+        Serial.println(msg);
+        webSocket.sendTXT(num, msg);
+        snakes[snakeIndex].init(playerColors[snakeIndex]);
+        snakeMap[ip] = snakeIndex;
+        snakeIndex++;
 
+        // TODO: remove this and replace with proper tracking oc active players
+        leds[0] = CRGB::Black;
+      }
       break;
+    
+    case WStype_TEXT: {
+        Serial.printf("[%u] got Text: %s\n", num, payload);
+        for ( size_t i = 0; i < length; i++ ) {
+          snakes[s].input( payload[i] );
+        }
+        // send message to client
+        //webSocket.sendTXT(num, "Sent command");
+      }
+      break;
+    
     case WStype_BIN:
-      Serial.printf("[%u] get binary length: %u\n", num, length);
+      Serial.printf("[%u] got binary length: %u\n", num, length);
       //      hexdump(payload, length);
       break;
   }
@@ -82,7 +107,10 @@ void controlSetup() {
     delay(500);
     Serial.print("w");
     sanity++;
-    if (sanity > 20) break;
+    if (sanity > 50) {
+      Serial.println("ERROR: failed to connect to wifi");
+      break;
+    }
   }
   Serial.println("\nDone");
   Serial.print("IP address: ");
@@ -101,6 +129,9 @@ void controlSetup() {
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
+
+  leds[0] = CRGB::Blue;
+  FastLED.show();
 
 }
 

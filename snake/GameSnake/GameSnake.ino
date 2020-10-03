@@ -37,7 +37,8 @@ uint16_t XY( uint8_t x, uint8_t y)
 }
 
 #include "snake.h"
-GameSnake snake;
+#define MAX_SNAKES 2
+GameSnake snakes[MAX_SNAKES];
 
 #if defined(CORE_TEENSY)
 #include "control_teensy.h"
@@ -47,18 +48,27 @@ GameSnake snake;
 
 void setup() {
   Serial.begin(115200);
-  controlSetup();
-  FastLED.addLeds<WS2812, 2, BRG>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
+  leds[0] = CRGB::Red;
+  FastLED.setBrightness(50);
+  FastLED.show();
 
-  FastLED.setBrightness(10);
+  controlSetup();
+  FastLED.addLeds<WS2812, 2, GRB>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+
 }
 
 int incomingByte = 0;
 void loop() {
   if (Serial.available() > 0) {
     incomingByte = Serial.read();
-    snake.input(incomingByte);
+    snakes[0].input(incomingByte);
   }
   controlLoop();
-  snake.frame();
+  for (int s = 0; s < MAX_SNAKES; s++) {
+    snakes[s].frame();
+  }
+  FastLED.delay(400);
+  for (int s = 0; s < MAX_SNAKES; s++) {
+    snakes[s].frameClear();
+  }
 }
