@@ -5,11 +5,18 @@
 <script>
 var websocket;
 function start() {
+	$("#controls").hide();
 
-  websocket = new WebSocket('ws://192.168.178.94:81/');
-  websocket.onopen = function(evt) { console.log('websocket open'); websocket.send("new"); };
-  websocket.onclose = function(evt) { console.log('websocket close'); };
-  websocket.onerror = function(evt) { console.log(evt); };
+  websocket = new WebSocket('ws://snake.local:81/');
+  setStatus("Connecting ...");
+  websocket.onopen = function(evt) { 
+		  setStatus("Connected!");
+		  console.log('websocket open');
+		  websocket.send("new");
+		  setControlsVisible();
+	  };
+  websocket.onclose = function(evt) { setStatus("Lost connection :("); console.log('websocket close'); };
+  websocket.onerror = function(evt) { setStatus("ERROR: " + evt); console.log(evt); };
   
 }
 
@@ -18,17 +25,25 @@ function start() {
 <body> 
 <center><h1>Snake</h1></center>
 	
-
-<button id="new">NEW Game</button>
-<button id="left">Left</button>
-<button id="right">Right</button>
-<button id="down">Down</button>
-<button id="up">UP</button>
 <div id="status"></div>
+<div id="controls">
+	<button id="new">NEW Game</button>
+	<button id="left">Left</button>
+	<button id="right">Right</button>
+	<button id="down">Down</button>
+	<button id="up">UP</button>
+</div>
 <script>
+	function setStatus(msg) {
+		$("#status").html(msg);
+	}
+
+	function setControlsVisible() {
+		$("#controls").show();
+	}
 
 function sendCmd(cmd) {
-	$("#status").innerHTML = cmd;
+//	$("#status").innerHTML = cmd;
 	console.log("Sending " + cmd);
 	websocket.send(cmd);
 }
