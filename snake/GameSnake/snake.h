@@ -22,8 +22,10 @@ class GameSnake {
     int l;
     int fruit;
     Point tail[200];
-    int d; // TODO need to make speed per snake
+  public: int d = 400; // TODO need to make speed per snake
     boolean started = false;
+    boolean isDead  = false;
+    int deathPulse = 0;
     CRGB colorH;
     CRGB colorT;
 
@@ -54,15 +56,28 @@ class GameSnake {
     }
 
     void frame() {
-      if(!started) {
+      if (!started) {
+        return;
+      }
+      if (isDead) {
+        if (deathPulse > 0) {
+          if ( deathPulse & 0x01) {
+            renderTail(CRGB::Red);
+          }
+          else {
+            renderTail(CRGB::Black);
+          }
+          deathPulse--;
+        }
+        else {
+          leds[fruit] = CRGB::Black; // TODO: not sure about this
+          reset();
+        }
         return;
       }
 
-      // move tail values up by one
-      for (int i = l; i >= 1; i--) {
-        tail[i] = tail[(i - 1)];
-      }
-      
+      renderTail(colorT);
+
       switch (dir) {
         case 'U':
           y++;
@@ -78,52 +93,55 @@ class GameSnake {
           break;
       }
 
+      CRGB currentColor = leds[XY(x, y)];
+
       if (x > (kMatrixWidth - 1)) {
         die();
       }
-      if (x < 0) {
+      else if (x < 0) {
         die();
       }
-
-      if (y > (kMatrixHeight - 1)) {
+      else if (y > (kMatrixHeight - 1)) {
         die();
       }
-      if (y < 0) {
+      else if (y < 0) {
         die();
       }
-      if (leds[XY(x, y)].r != 0) {
-        die();
-      }
-      if (leds[XY(x, y)].g != 0) {
+      else if (currentColor.g != 0 && currentColor.r == 0 && currentColor.b == 0) {
+        //        Serial.printf("Current g,r value (%i,%i) = %i %i\n", x, y, currentColor.g, currentColor.r);
         eat();
+      }
+      else if (currentColor.r != 0 || currentColor.g != 0 || currentColor.b != 0) {
+        die();
       }
 
       leds[XY(x, y)] = colorH;
-      renderTail(colorT);
     }
 
     void frameClear() {
-      if(!started) {
+      if (!started) {
         return;
       }
+
       leds[XY(x, y)] = CRGB::Black;
       renderTail(CRGB::Black);
 
-      Point h;
-      h.setXY(x, y);
-      tail[0] = h;
+      if(!isDead) {
+        // move tail values up by one
+        for (int i = l; i >= 1; i--) {
+          tail[i] = tail[(i - 1)];
+        }
+  
+        Point h;
+        h.setXY(x, y);
+        tail[0] = h;
+      }
     }
 
     void die() {
       Serial.println("Dead");
-      for (int i = 0; i < 10; i++) {
-        renderTail(CRGB::Red);
-        FastLED.delay(90);
-        renderTail(CRGB::Black);
-        FastLED.delay(90);
-      }
-      leds[fruit] = CRGB::Black;
-      reset();
+      isDead = true;
+      deathPulse = 5;
     }
 
     void exit() {
@@ -163,11 +181,11 @@ class GameSnake {
         leds[XY(t.x, t.y)] = color;
       }
     }
-    
+
 
     void newFruit() {
       int i = fruit = XY(random(0, (kMatrixWidth - 1)), random(0, (kMatrixHeight - 1)));
-      if (leds[i].r != 0 ||leds[i].g != 0 || leds[i].b != 0) {
+      if (leds[i].r != 0 || leds[i].g != 0 || leds[i].b != 0) {
         Serial.println("Fruit inside, retry");
         newFruit();
       }

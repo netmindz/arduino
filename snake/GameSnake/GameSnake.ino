@@ -64,11 +64,13 @@ void loop() {
     snakes[0].input(incomingByte);
   }
   controlLoop();
-  for (int s = 0; s < MAX_SNAKES; s++) {
-    snakes[s].frame();
-  }
-  FastLED.delay(400);
-  for (int s = 0; s < MAX_SNAKES; s++) {
-    snakes[s].frameClear();
+  EVERY_N_MILLISECONDS( snakes[0].d ) {
+    for (int s = 0; s < MAX_SNAKES; s++) {
+      snakes[s].frame();
+    }
+    FastLED.show();
+    for (int s = 0; s < MAX_SNAKES; s++) {
+      snakes[s].frameClear();
+    }
   }
 }
