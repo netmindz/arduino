@@ -10,6 +10,7 @@ function start() {
   var hostname = document.getElementById('hostname').value;
   websocket = new WebSocket('ws://'+hostname+':81/');
   setStatus("Connecting " + hostname + " ...");
+  $("#connect").hide();
   websocket.onopen = function(evt) { 
 		  setStatus("Connected!");
 		  console.log('websocket open');
@@ -17,7 +18,7 @@ function start() {
 		  setControlsVisible();
 	  };
   websocket.onclose = function(evt) { setStatus("Lost connection :("); console.log('websocket close'); };
-  websocket.onerror = function(evt) { setStatus("ERROR: " + evt); console.log(evt); };
+  websocket.onerror = function(evt) { setStatus("ERROR: " + evt); console.log(evt); $("#connect").show();};
   websocket.onmessage =function(event) { console.debug("WebSocket message received:", event); setStatus(event.data) };
   
 }
@@ -27,7 +28,9 @@ function start() {
 <body> 
 <center><h1>Snake</h1></center>
 
-<input id="hostname" value="snake.local"/><input type="button" onClick="start()">
+<div id="connect">
+	<input id="hostname" value="snake.local"/><input type="button" value="Connect" onClick="start()">
+</div>
 
 <div id="status"></div>
 <div id="controls">

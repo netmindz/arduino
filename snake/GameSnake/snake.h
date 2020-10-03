@@ -36,14 +36,16 @@ class GameSnake {
     void init(CRGB color) {
       started = true;
       colorH = color; // CHSV(hue,255,255);
-      colorT = color.fadeToBlackBy(50);
+      color.fadeToBlackBy(90);
+      colorT = color; //.fadeToBlackBy(90);
       reset();
     }
-    
+
     void reset() {
-      x = random(1, (kMatrixWidth -1));
+      isDead = false;
+      x = random(1, (kMatrixWidth - 1));
       y = random(1, (kMatrixHeight - 1));
-      if(random(0,1) == 1) {
+      if (random(0, 1) == 1) {
         dir = 'L';
       }
       else {

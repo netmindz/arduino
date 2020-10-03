@@ -35,24 +35,26 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
   IPAddress ip = webSocket.remoteIP(num);
   int s = snakeMap[ip];
   switch (type) {
-    
+
     case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
       snakes[s].exit();
+      snakeIndex = s; // TODO: uses as next snake, but will fail if you had 3
       break;
-      
+
     case WStype_CONNECTED:      {
         Serial.printf("[%u] Connection from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-        if(snakeIndex > (MAX_SNAKES -1)) {
+        if (snakeIndex > (MAX_SNAKES - 1)) {
           Serial.println("MAX SNAKES!!");
           webSocket.sendTXT(num, "Sorry, player count exceeded");
+          webSocket.disconnect(num);
           return;
         }
         // send message to client
         CRGB color = playerColors[snakeIndex];
         char rgbTxt[8];
         sprintf(rgbTxt, "#%02X%02X%02X", color.r, color.g, color.b);
-        String msg = "Connected player = " + (String) (snakeIndex + 1) + " <span style=\"background: " + rgbTxt +  "\">&nbsp;</span>";
+        String msg = "Connected player = " + (String) (snakeIndex + 1) + " <span style=\"background: " + rgbTxt +  "\">&nbsp;&nbsp;</span>";
         Serial.println(msg);
         webSocket.sendTXT(num, msg);
         snakes[snakeIndex].init(playerColors[snakeIndex]);
@@ -63,7 +65,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         leds[0] = CRGB::Black;
       }
       break;
-    
+
     case WStype_TEXT: {
         Serial.printf("[%u] got Text: %s\n", num, payload);
         for ( size_t i = 0; i < length; i++ ) {
@@ -73,7 +75,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         //webSocket.sendTXT(num, "Sent command");
       }
       break;
-    
+
     case WStype_BIN:
       Serial.printf("[%u] got binary length: %u\n", num, length);
       //      hexdump(payload, length);
