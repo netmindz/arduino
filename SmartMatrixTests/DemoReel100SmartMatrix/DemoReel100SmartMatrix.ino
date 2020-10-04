@@ -15,17 +15,19 @@ FASTLED_USING_NAMESPACE
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define NUM_LEDS    64
-CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS          30
+#define BRIGHTNESS          125
 #define FRAMES_PER_SECOND  120
 
+#define USE_SMART_MATRIX
+
 #if defined(USE_SMART_MATRIX)
-  #include "smartmatrix.h"
+  #include "smartmatrixControl.h"
 #else
   #include "default.h"
 #endif
+
+
 
 void setup() {
   delay(3000); // 3 second delay for recovery
