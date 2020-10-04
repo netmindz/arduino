@@ -1,58 +1,53 @@
-
-/*
-   WebSocketServer.ino
-
-    Created on: 22.05.2015
-
-*/
-
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 #include <WebSocketsServer.h>
 #include <Hash.h>
 #include <SoftwareSerial.h>
+#include <ESP8266mDNS.h>
 
-ESP8266WiFiMulti WiFiMulti;
+#include "wifi.h"
+// Create file with the following
+// *************************************************************************
+// #define SECRET_SSID "";
+// #define SECRET_PSK "";
+// *************************************************************************
+const char ssid[] = SECRET_SSID;
+const char passphrase[] = SECRET_PSK;
 
 WebSocketsServer webSocket = WebSocketsServer(81);
 
 #define SERIAL_DEBUG Serial
 
-SoftwareSerial swSer(D1, D2, false);
+SoftwareSerial swSer(D3, D4); //, false);
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
   switch (type) {
     case WStype_DISCONNECTED:
       SERIAL_DEBUG.printf("[%u] Disconnected!\n", num);
+      swSer.printf("%u:e\n", num);
       break;
-    case WStype_CONNECTED:
+    case WStype_CONNECTED: 
       {
         IPAddress ip = webSocket.remoteIP(num);
         SERIAL_DEBUG.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        swSer.printf("%u:s\n", num);
 
         // send message to client
-        webSocket.sendTXT(num, "Connected");
+//        webSocket.sendTXT(num, "Connected as " + (String) num);
       }
       break;
     case WStype_TEXT:
       SERIAL_DEBUG.printf("[%u] get Text: %s\n", num, payload);
-      swSer.printf("%s", payload);
+      swSer.printf("%u:%s\n", num, payload);
 
       // send message to client
-      webSocket.sendTXT(num, "Sent command");
-
-      // send data to all connected clients
-      // webSocket.broadcastTXT("message here");
+//      webSocket.sendTXT(num, "Sent command");
       break;
     case WStype_BIN:
       SERIAL_DEBUG.printf("[%u] get binary length: %u\n", num, length);
       hexdump(payload, length);
-
-      // send message to client
-      // webSocket.sendBIN(num, payload, length);
       break;
   }
 
@@ -76,12 +71,43 @@ void setup() {
     delay(1000);
   }
 
-  WiFiMulti.addAP("X", "Y");
+  // Make sure you're in station mode
+  WiFi.mode(WIFI_STA);
 
-  while (WiFiMulti.run() != WL_CONNECTED) {
-    delay(100);
-    SERIAL_DEBUG.println("w");
+  Serial.println("");
+  Serial.print(F("Connecting to "));
+  Serial.println(ssid);
+
+  if (passphrase != NULL)
+    WiFi.begin(ssid, passphrase);
+  else
+    WiFi.begin(ssid);
+
+  Serial.print("Waiting on wifi ");
+  int sanity = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print("w");
+    sanity++;
+    if (sanity > 50) {
+      Serial.println("ERROR: failed to connect to wifi");
+      break;
+    }
   }
+  Serial.println("\nDone");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  if (!MDNS.begin("snake")) {
+    Serial.println("Error setting up MDNS responder!");
+    while (1) {
+      delay(1000);
+    }
+  }
+  Serial.println("mDNS responder started");
+
+  // Add service to MDNS-SD
+  MDNS.addService("http", "tcp", 80);
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
@@ -89,5 +115,11 @@ void setup() {
 
 void loop() {
   webSocket.loop();
+  if(swSer.available() > 0) {
+    String input = Serial1.readStringUntil('\n');
+    int index = input.indexOf(':');
+    int s = input.substring(0, index).toInt();
+    String msg = input.substring((index + 1));
+    webSocket.sendTXT(s, msg);
+  }
 }
-
