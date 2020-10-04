@@ -1,5 +1,6 @@
  <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scaleable=no">
 <title>Snake</title>
  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script>
@@ -14,7 +15,6 @@ function start() {
   websocket.onopen = function(evt) { 
 		  setStatus("Connected!");
 		  console.log('websocket open');
-		  websocket.send("new");
 		  setControlsVisible();
 	  };
   websocket.onclose = function(evt) { setStatus("Lost connection :("); console.log('websocket close'); };
@@ -24,21 +24,41 @@ function start() {
 }
 
 </script>
+<style>
+button {
+	width: 8em;
+	height: 8em;
+}
+</style>
 </head>
 <body> 
 <center><h1>Snake</h1></center>
 
 <div id="connect">
-	<input id="hostname" value="snake.local"/><input type="button" value="Connect" onClick="start()">
+	<!-- <input id="hostname" value="snake.local"/><input type="button" value="Connect" onClick="start()"> -->
+	<input id="hostname" value="192.168.178.95"/><input type="button" value="Connect" onClick="start()">
 </div>
 
 <div id="status"></div>
 <div id="controls">
-	<button id="new">NEW Game</button>
-	<button id="left">Left</button>
-	<button id="right">Right</button>
-	<button id="down">Down</button>
-	<button id="up">UP</button>
+	<table>
+		<tr>
+			<td></td>
+			<td><button id="up">UP</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><button id="left">Left</button></td>
+			<td></td>
+			<td><button id="right">Right</button></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button id="down">Down</button></td>
+			<td></td>
+		</tr>
+	</table>
+	<!--	<button id="new">NEW Game</button> -->
 </div>
 <script>
 	function setStatus(msg) {
