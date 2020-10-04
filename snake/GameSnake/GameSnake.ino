@@ -1,15 +1,21 @@
-#include <WS2812Serial.h>
-#define USE_WS2812SERIAL
+#ifdef ESP32
+  #define FASTLED_ALLOW_INTERRUPTS 0
+  // Params for width and height
+  const uint8_t kMatrixWidth = 8; // length of string
+  const uint8_t kMatrixHeight = 8;
+  bool kMatrixSerpentineLayout = false;
+#elif
+  // Params for width and height
+  const uint8_t kMatrixWidth = 30; // length of string
+  const uint8_t kMatrixHeight = 30;
+  bool kMatrixSerpentineLayout = true;
+#endif
+
 #include <FastLED.h>
 
-// Params for width and height
-const uint8_t kMatrixWidth = 30; // length of string
-const uint8_t kMatrixHeight = 30;
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
-
 CRGB leds[NUM_LEDS];
 
-bool kMatrixSerpentineLayout = true;
 
 uint16_t XY( uint8_t x, uint8_t y)
 {
@@ -41,20 +47,28 @@ uint16_t XY( uint8_t x, uint8_t y)
 GameSnake snakes[MAX_SNAKES];
 CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CRGB::OrangeRed };
 
-#if defined(CORE_TEENSY)
-#include "control_teensy.h"
-#else
+#ifdef ESP32
 #include "control_esp.h"
+#else
+#include "control_teensy.h"
 #endif
 
 void setup() {
   Serial.begin(115200);
   leds[0] = CRGB::Red;
-  FastLED.setBrightness(50);
+  FastLED.setBrightness(150);
   FastLED.show();
 
   controlSetup();
-  FastLED.addLeds<WS2812, 2, GRB>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+  
+  #ifdef ESP32
+    FastLED.addLeds<WS2812, 2, GRB>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+  #elif
+    #define LED_PIN 7
+    #define CLOCK_PIN 14
+    #define COLOR_ORDER BGR
+    FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  #endif
 
 }
 
