@@ -1,8 +1,8 @@
 /*
- * Default config file with normal FastLED stuff
- */
-
-#define DATA_PIN    3
+   Default config file with normal FastLED stuff
+*/
+#define FASTLED_ALLOW_INTERRUPTS 0
+#define DATA_PIN    2
 //#define CLK_PIN   4
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
@@ -14,4 +14,11 @@ void controlSetup() {
 
   // set master brightness control
   FastLED.setBrightness(BRIGHTNESS);
+}
+
+void controlLoop() {
+  // send the 'leds' array out to the actual LED strip
+  FastLED.show();
+  // insert a delay to keep the framerate modest
+  FastLED.delay(1000 / FRAMES_PER_SECOND);
 }
