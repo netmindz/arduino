@@ -79,8 +79,8 @@ void loop() {
     snakes[0].input(incomingByte);
   }
   controlLoop();
-  EVERY_N_MILLISECONDS( snakes[0].d ) {
-    for (int s = 0; s < MAX_SNAKES; s++) {
+  EVERY_N_MILLISECONDS( snakes[0].d ) { // TODO: avg of all players?
+     for (int s = 0; s < MAX_SNAKES; s++) {
       snakes[s].frame();
     }
     FastLED.show();
