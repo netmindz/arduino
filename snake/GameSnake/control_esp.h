@@ -28,8 +28,6 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 CreateHashMap (snakeMap, IPAddress, int, MAX_SNAKES);
 int snakeIndex = 0;
 
-CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::Yellow};
-
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
   IPAddress ip = webSocket.remoteIP(num);

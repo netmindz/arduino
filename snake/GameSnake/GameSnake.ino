@@ -37,8 +37,9 @@ uint16_t XY( uint8_t x, uint8_t y)
 }
 
 #include "snake.h"
-#define MAX_SNAKES 2
+#define MAX_SNAKES 4
 GameSnake snakes[MAX_SNAKES];
+CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CRGB::OrangeRed };
 
 #if defined(CORE_TEENSY)
 #include "control_teensy.h"
