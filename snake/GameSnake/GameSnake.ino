@@ -74,7 +74,7 @@ void setup() {
 
 int incomingByte = 0;
 void loop() {
-  if (Serial.available() > 0) {
+  if (Serial.available() > 0) { // TODO: start on input
     incomingByte = Serial.read();
     snakes[0].input(incomingByte);
   }
