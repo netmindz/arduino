@@ -25,7 +25,7 @@ class GameSnake {
     int l;
     int fruit;
     Point tail[200];
-  public: int d = 400; // TODO need to make speed per snake
+    int d = 500; // TODO need to make speed per snake
     boolean started = false;
     boolean isDead  = false;
     int deathPulse = 0;
@@ -38,9 +38,9 @@ class GameSnake {
 
     void init(CRGB color) {
       started = true;
-      colorH = color; // CHSV(hue,255,255);
-      color.fadeToBlackBy(90);
-      colorT = color; //.fadeToBlackBy(90);
+      colorH = color;
+      colorT = CRGB(color.g, color.g, color.b);
+      colorT = colorT.fadeToBlackBy(200);
       reset();
     }
 
@@ -131,12 +131,12 @@ class GameSnake {
       leds[XY(x, y)] = CRGB::Black;
       renderTail(CRGB::Black);
 
-      if(!isDead) {
+      if (!isDead) {
         // move tail values up by one
         for (int i = l; i >= 1; i--) {
           tail[i] = tail[(i - 1)];
         }
-  
+
         Point h;
         h.setXY(x, y);
         tail[0] = h;
@@ -204,6 +204,12 @@ class GameSnake {
     void eat() {
       l++;
       newFruit();
-      d -= 15;
+      d -= 70;
+    }
+
+    int getDelay () {
+      return d;
     }
 };
+
+GameSnake snakes[MAX_SNAKES];
