@@ -1,21 +1,12 @@
-#ifdef ESP32
-  #define FASTLED_ALLOW_INTERRUPTS 0
-  // Params for width and height
-  const uint8_t kMatrixWidth = 8; // length of string
-  const uint8_t kMatrixHeight = 8;
-  bool kMatrixSerpentineLayout = false;
-#elif
-  // Params for width and height
-  const uint8_t kMatrixWidth = 30; // length of string
-  const uint8_t kMatrixHeight = 30;
-  bool kMatrixSerpentineLayout = true;
-#endif
+#define BRIGHTNESS 150
 
 #include <FastLED.h>
 
-#define NUM_LEDS (kMatrixWidth * kMatrixHeight)
-CRGB leds[NUM_LEDS];
-
+#ifdef __MK64FX512__ // Teensy 3.5 + SmartMatrixShield
+  #include "smartmatrixControl.h"
+#else
+  #include "default.h"
+#endif
 
 uint16_t XY( uint8_t x, uint8_t y)
 {
@@ -43,9 +34,6 @@ uint16_t XY( uint8_t x, uint8_t y)
 }
 
 #include "snake.h"
-#define MAX_SNAKES 4
-GameSnake snakes[MAX_SNAKES];
-CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CRGB::OrangeRed };
 
 #ifdef ESP32
 #include "control_esp.h"
@@ -55,35 +43,35 @@ CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CR
 
 void setup() {
   Serial.begin(115200);
+  delay(1000);
+  Serial.println("Setup");
+
+  ledSetup();
+
   leds[0] = CRGB::Red;
-  FastLED.setBrightness(150);
-  FastLED.show();
-
+  FastLED.setBrightness(BRIGHTNESS);
+  ledLoop();
+  delay(5000);
   controlSetup();
-  
-  #ifdef ESP32
-    FastLED.addLeds<WS2812, 2, GRB>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
-  #elif
-    #define LED_PIN 7
-    #define CLOCK_PIN 14
-    #define COLOR_ORDER BGR
-    FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-  #endif
-
 }
 
+boolean serialStart = false;
 int incomingByte = 0;
 void loop() {
-  if (Serial.available() > 0) { // TODO: start on input
+  if (Serial.available() > 0) {
+    if (!serialStart) {
+      snakes[0].init(playerColors[0]);
+      serialStart = true;
+    }
     incomingByte = Serial.read();
     snakes[0].input(incomingByte);
   }
   controlLoop();
-  EVERY_N_MILLISECONDS( snakes[0].d ) { // TODO: avg of all players?
-     for (int s = 0; s < MAX_SNAKES; s++) {
+  EVERY_N_MILLISECONDS( snakes[0].getDelay() ) { // TODO: avg of all players?
+    for (int s = 0; s < MAX_SNAKES; s++) {
       snakes[s].frame();
     }
-    FastLED.show();
+    ledLoop();
     for (int s = 0; s < MAX_SNAKES; s++) {
       snakes[s].frameClear();
     }

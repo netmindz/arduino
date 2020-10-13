@@ -1,3 +1,6 @@
+#define MAX_SNAKES 4
+CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CRGB::OrangeRed};
+
 class Point {
 
   public:
