@@ -1,3 +1,4 @@
+#include <FastLED.h>
 #include <Arduino.h>
 
 #include <ESP8266WiFi.h>
@@ -5,6 +6,11 @@
 #include <Hash.h>
 #include <SoftwareSerial.h>
 #include <ESP8266mDNS.h>
+
+// Must copy and paste from main game
+#define MAX_SNAKES 4
+CRGB playerColors[MAX_SNAKES] = {CRGB::Blue, CRGB::DarkMagenta, CRGB::Yellow, CRGB::OrangeRed };
+
 
 #include "wifi.h"
 // Create file with the following
@@ -28,14 +34,27 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       SERIAL_DEBUG.printf("[%u] Disconnected!\n", num);
       swSer.printf("%u:e\n", num);
       break;
-    case WStype_CONNECTED: 
+    case WStype_CONNECTED:
       {
         IPAddress ip = webSocket.remoteIP(num);
         SERIAL_DEBUG.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        if (num > (MAX_SNAKES - 1)) {
+          Serial.println("MAX SNAKES!!");
+          webSocket.sendTXT(num, "Sorry, player count exceeded");
+          //webSocket.disconnect(num);
+          return;
+        }
+        CRGB color = playerColors[num];
+        char rgbTxt[8];
+        sprintf(rgbTxt, "#%02X%02X%02X", color.r, color.g, color.b);
+        String msg = "Connected player = " + (String) (num + 1) + " <span style=\"background: " + rgbTxt +  "\">&nbsp;&nbsp;</span>";
+        Serial.println(msg);
+        webSocket.sendTXT(num, msg);
+
         swSer.printf("%u:s\n", num);
 
         // send message to client
-//        webSocket.sendTXT(num, "Connected as " + (String) num);
+        //        webSocket.sendTXT(num, "Connected as " + (String) num);
       }
       break;
     case WStype_TEXT:
