@@ -94,3 +94,6 @@
 [submodule "libraries/FlexIO_t4"]
 	path = libraries/FlexIO_t4
 	url = https://github.com/KurtE/FlexIO_t4.git
+[submodule "ledtable"]
+	path = ledtable
+	url = https://github.com/netmindz/ledtable.git
