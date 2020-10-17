@@ -97,3 +97,6 @@
 [submodule "ledtable"]
 	path = ledtable
 	url = https://github.com/netmindz/ledtable.git
+[submodule "LEDSnakeGame"]
+	path = LEDSnakeGame
+	url = https://github.com/netmindz/LEDSnakeGame.git
