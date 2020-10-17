@@ -109,3 +109,6 @@
 [submodule "libraries/LEDText"]
 	path = libraries/LEDText
 	url = https://github.com/AaronLiddiment/LEDText.git
+[submodule "Tetris"]
+	path = Tetris
+	url = https://github.com/netmindz/ESP32Tetris.git
