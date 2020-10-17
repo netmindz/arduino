@@ -103,3 +103,6 @@
 [submodule "libraries/LEDSprites"]
 	path = libraries/LEDSprites
 	url = https://github.com/AaronLiddiment/LEDSprites.git
+[submodule "libraries/LEDMatrix"]
+	path = libraries/LEDMatrix
+	url = https://github.com/AaronLiddiment/LEDMatrix.git
