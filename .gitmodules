@@ -100,3 +100,6 @@
 [submodule "LEDSnakeGame"]
 	path = LEDSnakeGame
 	url = https://github.com/netmindz/LEDSnakeGame.git
+[submodule "libraries/LEDSprites"]
+	path = libraries/LEDSprites
+	url = https://github.com/AaronLiddiment/LEDSprites.git
