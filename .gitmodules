@@ -106,3 +106,6 @@
 [submodule "libraries/LEDMatrix"]
 	path = libraries/LEDMatrix
 	url = https://github.com/AaronLiddiment/LEDMatrix.git
+[submodule "libraries/LEDText"]
+	path = libraries/LEDText
+	url = https://github.com/AaronLiddiment/LEDText.git
