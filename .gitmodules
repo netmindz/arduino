@@ -37,9 +37,6 @@
 [submodule "libraries/DMXSerial"]
 	path = libraries/DMXSerial
 	url = https://github.com/mathertel/DMXSerial.git
-[submodule "libraries/ESP-Dmx"]
-	path = libraries/ESP-Dmx
-	url = https://github.com/Rickgg/ESP-Dmx.git
 [submodule "libraries/OctoWS2811"]
 	path = libraries/OctoWS2811
 	url = https://github.com/PaulStoffregen/OctoWS2811.git
@@ -100,3 +97,12 @@
 [submodule "LEDSnakeGame"]
 	path = LEDSnakeGame
 	url = https://github.com/netmindz/LEDSnakeGame.git
+[submodule "libraries/FastLED_NeoMatrix"]
+	path = libraries/FastLED_NeoMatrix
+	url = https://github.com/marcmerlin/FastLED_NeoMatrix.git
+[submodule "libraries/ESP-Dmx"]
+	path = libraries/ESP-Dmx
+	url = https://github.com/Rickgg/ESP-Dmx.git
+[submodule "libraries/AsyncTCP"]
+	path = libraries/AsyncTCP
+	url = https://github.com/me-no-dev/AsyncTCP.git
