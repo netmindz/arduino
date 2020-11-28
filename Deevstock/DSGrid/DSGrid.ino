@@ -68,8 +68,8 @@ int FADE = 50;
 #if defined(CORE_TEENSY)
 #include "control_tdmx.h"
 #else
-//#include "control_null.h"
-#include "control_esp.h"
+#include "control_null.h"
+//#include "control_esp.h"
 #endif
 
 #include "stars.h"
