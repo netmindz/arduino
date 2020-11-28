@@ -68,8 +68,8 @@ int FADE = 50;
 #if defined(CORE_TEENSY)
 #include "control_tdmx.h"
 #else
-#include "control_null.h"
-//#include "control_esp.h"
+// #include "control_null.h"
+#include "control_esp.h"
 #endif
 
 #include "stars.h"
@@ -98,8 +98,6 @@ void setup() {
   //  FastLED.delay(10000);
 
   //  ledtest();
-
-  InitMSGEQ7();
 
   //  // Initialize our noise coordinates to some random values
   //  fx = random16();

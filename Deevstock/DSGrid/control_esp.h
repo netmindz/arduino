@@ -1,26 +1,26 @@
-#if defined(ESP8266)
+#if defined(ESP8266) // ESP8266
 #include <ESP8266WiFi.h>
 
 #define LED_PIN D4
 #define CLOCK_PIN D3
 
-// MSGEQ7 wiring on spectrum analyser shield
-#define MSGEQ7_STROBE_PIN D6
-#define MSGEQ7_RESET_PIN  D1
-#define AUDIO_LEFT_PIN    A0
-#define AUDIO_RIGHT_PIN   A0
+//  // MSGEQ7 wiring on spectrum analyser shield
+//  #define MSGEQ7_STROBE_PIN D6
+//  #define MSGEQ7_RESET_PIN  D1
+//  #define AUDIO_LEFT_PIN    A0
+//  #define AUDIO_RIGHT_PIN   A0
 
-#else
+#else // ESP32
 #include <WiFi.h>
 
-#define LED_PIN 27
-#define CLOCK_PIN 33
+#define LED_PIN 2 // Huzzah! ESP 32 values
+#define CLOCK_PIN 4
 
-// MSGEQ7 wiring on spectrum analyser shield
-#define MSGEQ7_STROBE_PIN 32
-#define MSGEQ7_RESET_PIN  15
-#define AUDIO_LEFT_PIN    A0
-#define AUDIO_RIGHT_PIN   A1
+//  // MSGEQ7 wiring on spectrum analyser shield
+//  #define MSGEQ7_STROBE_PIN 14
+//  #define MSGEQ7_RESET_PIN  27
+//  #define AUDIO_LEFT_PIN    A0 // pin 26
+//  #define AUDIO_RIGHT_PIN   A1 // pin 25
 
 #endif
 
@@ -43,6 +43,9 @@ const char passphrase[] = SECRET_PSK;
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 
+WiFiUDP fftUdp;
+boolean udpSyncConnected;
+uint16_t audioSyncPort = 20000;
 
 void controlSetup() {
   // Make sure you're in station mode
@@ -64,16 +67,18 @@ void controlSetup() {
     delay(500);
     Serial.print(".");
     sanity++;
-    if(sanity > 10) break;
+    if (sanity > 10) break;
   }
   Serial.println(F("Connected to wifi "));
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  pgm = 0; // 0 = autoRun
+
   setupOTA();
 
-  pgm = 0;
-
+  udpSyncConnected = true; // TODO - sometimes the wifi starts but ip is still 0.0.0.0
+  fftUdp.beginMulticast(IPAddress(239, 0, 0, 1), audioSyncPort);
 }
 
 
@@ -101,13 +106,105 @@ void readDMX() {
 
     pgm = getValue(packet, 2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(packet, 3, 0, 255); // speed = 3
-    FADE = getValue(packet, 4, 0, 255);  // fade = 4 
+    FADE = getValue(packet, 4, 0, 255);  // fade = 4
 
   }
 }
 
+// storage of the 7 10Bit (0-1023) audio band values
+// modified only by AudioRead()
+int left[7];
+int right[7];
 
+#include "audio.h"
+
+void ReadAudio() {
+  for (byte band = 0; band < 7; band++) {
+    delayMicroseconds(30);
+  }
+}
+
+// FAKE MSGEQ for now
+int MSGEQ7get(int band) {
+  ReadAudio();
+  return left[band];
+}
+
+int MSGEQ7get(int band, int channel) {
+  return MSGEQ7get(band);
+}
+
+
+// Read the UDP audio data sent by WLED-Audio
+void readAudioUDP() {
+
+  // Begin UDP Microphone Sync
+
+  // Only run the audio listener code if we're in Receive mode
+  if (millis() - lastTime > delayMs) {
+    if (udpSyncConnected) {
+      //      Serial.println("Checking for UDP Microphone Packet");
+      int packetSize = fftUdp.parsePacket();
+      if (packetSize) {
+        //        Serial.println("Received UDP Sync Packet");
+        uint8_t fftBuff[packetSize];
+        fftUdp.read(fftBuff, packetSize);
+        audioSyncPacket receivedPacket;
+        memcpy(&receivedPacket, fftBuff, packetSize);
+        for (int i = 0; i < 32; i++ ) {
+          myVals[i] = receivedPacket.myVals[i];
+        }
+        sampleAgc = receivedPacket.sampleAgc;
+        sample = receivedPacket.sample;
+        sampleAvg = receivedPacket.sampleAvg;
+        // VERIFY THAT THIS IS A COMPATIBLE PACKET
+        char packetHeader[6];
+        memcpy(&receivedPacket, packetHeader, 6);
+        if (!(isValidUdpSyncVersion(packetHeader))) {
+          memcpy(&receivedPacket, fftBuff, packetSize);
+          for (int i = 0; i < 32; i++ ) {
+            myVals[i] = receivedPacket.myVals[i];
+          }
+          sampleAgc = receivedPacket.sampleAgc;
+          sample = receivedPacket.sample;
+          sampleAvg = receivedPacket.sampleAvg;
+
+          // Only change samplePeak IF it's currently false.  If it's true already, then the animation still needs to respond
+          if (!samplePeak) {
+            samplePeak = receivedPacket.samplePeak;
+          }
+
+          for (int i = 0; i < 16; i++) {
+            fftResult[i] = receivedPacket.fftResult[i];
+          }
+
+          FFT_Magnitude = receivedPacket.FFT_Magnitude;
+          FFT_MajorPeak = receivedPacket.FFT_MajorPeak;
+          // Serial.println("Finished parsing UDP Sync Packet");
+
+          // "Legacy" - for MSGEQ7 patterns
+          for (int b = 0; b < 7; b++) {
+            left[b] = map(fftResult[(b * 2)], 0, 255, 0, 1023);
+            right[b] = map(fftResult[(b * 2)], 0, 255, 0, 1023);
+          }
+        }
+      }
+    }
+  }
+
+}
+
+bool newReading;
 void controlLoop() {
   readDMX();
   ArduinoOTA.handle();
+  readAudioUDP();
+  EVERY_N_MILLISECONDS(30) { // Possibly swap to when we actually get new UDP packet?
+    if(newReading) {
+      newReading = false;  
+    }
+    else {
+      newReading = true;
+    }
+  }
 }

@@ -73,10 +73,7 @@ byte osci[4];
 // modified only by MoveOscillators()
 byte p[4];
 
-// storage of the 7 10Bit (0-1023) audio band values
-// modified only by AudioRead()
-int left[7];    
-int right[7];
+
 
 // noise stuff
 uint16_t speed = 10;
@@ -186,27 +183,9 @@ void MoveOscillators() {
   }
 }
 
-// wake up the MSGEQ7
-void InitMSGEQ7() {
-  pinMode(MSGEQ7_RESET_PIN, OUTPUT);      
-  pinMode(MSGEQ7_STROBE_PIN, OUTPUT);   
-  digitalWrite(MSGEQ7_RESET_PIN, LOW);     
-  digitalWrite(MSGEQ7_STROBE_PIN, HIGH); 
-}
 
-// get the data from the MSGEQ7
-// (still fucking slow...)
-void ReadAudio() {
-  digitalWrite(MSGEQ7_RESET_PIN, HIGH);
-  digitalWrite(MSGEQ7_RESET_PIN, LOW);
-  for(byte band = 0; band < 7; band++) {
-    digitalWrite(MSGEQ7_STROBE_PIN, LOW); 
-    delayMicroseconds(30); 
-    left[band] = analogRead(AUDIO_LEFT_PIN); 
-    right[band] = analogRead(AUDIO_RIGHT_PIN); 
-    digitalWrite(MSGEQ7_STROBE_PIN, HIGH);
-  }
-}
+
+
 
 /*
 -------------------------------------------------------------------
@@ -952,19 +931,6 @@ void NoiseExample4() {
   ClearAll();
 }
 
-void ReadAudio2() {
-  digitalWrite(MSGEQ7_RESET_PIN, HIGH);
-  digitalWrite(MSGEQ7_RESET_PIN, LOW);
-  for(byte band = 0; band < 7; band++) {
-    digitalWrite(MSGEQ7_STROBE_PIN, LOW); 
-    delayMicroseconds(30); 
-    left[band] = analogRead(AUDIO_LEFT_PIN)/4; 
-    right[band] = analogRead(AUDIO_RIGHT_PIN)/4; 
-    digitalWrite(MSGEQ7_STROBE_PIN, HIGH);
-  }
-}
-
-
 void NoiseExample5() { 
   MoveOscillators();
   ReadAudio();
@@ -1164,8 +1130,3 @@ void NoiseExample8() {
     }
     ShowFrame();
   }  
-
-
-
-
-

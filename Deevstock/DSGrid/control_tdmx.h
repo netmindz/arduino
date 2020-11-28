@@ -16,6 +16,9 @@ void controlSetup() {
   pinMode(LED_BUILTIN, OUTPUT);
   Dmx.setMode(TeensyDmx::DMX_IN);
   pgm = 0;
+
+  InitMSGEQ7();
+  
   delay(1000);
   Serial.println("Startup");
 }
@@ -48,3 +51,29 @@ void controlLoop() {
 }
 
 
+// EQ STUFF
+#define MSGEQ7_INTERVAL ReadsPerSecond(30)
+#define MSGEQ7_SMOOTH true
+CMSGEQ7<MSGEQ7_SMOOTH, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
+
+// wake up the MSGEQ7
+void InitMSGEQ7() {
+  pinMode(MSGEQ7_RESET_PIN, OUTPUT);      
+  pinMode(MSGEQ7_STROBE_PIN, OUTPUT);   
+  digitalWrite(MSGEQ7_RESET_PIN, LOW);     
+  digitalWrite(MSGEQ7_STROBE_PIN, HIGH); 
+}
+
+// get the data from the MSGEQ7
+// (still fucking slow...)
+void ReadAudio() {
+  digitalWrite(MSGEQ7_RESET_PIN, HIGH);
+  digitalWrite(MSGEQ7_RESET_PIN, LOW);
+  for(byte band = 0; band < 7; band++) {
+    digitalWrite(MSGEQ7_STROBE_PIN, LOW); 
+    delayMicroseconds(30); 
+    left[band] = analogRead(AUDIO_LEFT_PIN); 
+    right[band] = analogRead(AUDIO_RIGHT_PIN); 
+    digitalWrite(MSGEQ7_STROBE_PIN, HIGH);
+  }
+}
