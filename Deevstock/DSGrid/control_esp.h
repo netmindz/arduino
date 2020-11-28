@@ -26,6 +26,8 @@
 
 #include <ESPAsyncE131.h>
 
+#include "ota.h"
+
 #define UNIVERSE 1        // First DMX Universe to listen for
 #define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
 #define CHANNEL_START 1   // Channel to start listening at
@@ -68,6 +70,8 @@ void controlSetup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  setupOTA();
+
   pgm = 0;
 
 }
@@ -105,5 +109,5 @@ void readDMX() {
 
 void controlLoop() {
   readDMX();
+  ArduinoOTA.handle();
 }
-
