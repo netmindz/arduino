@@ -106,3 +106,15 @@
 [submodule "libraries/AsyncTCP"]
 	path = libraries/AsyncTCP
 	url = https://github.com/me-no-dev/AsyncTCP.git
+[submodule "libraries/LEDSprites"]
+	path = libraries/LEDSprites
+	url = https://github.com/AaronLiddiment/LEDSprites.git
+[submodule "libraries/LEDMatrix"]
+	path = libraries/LEDMatrix
+	url = https://github.com/AaronLiddiment/LEDMatrix.git
+[submodule "libraries/LEDText"]
+	path = libraries/LEDText
+	url = https://github.com/AaronLiddiment/LEDText.git
+[submodule "Tetris"]
+	path = Tetris
+	url = https://github.com/netmindz/ESP32Tetris.git

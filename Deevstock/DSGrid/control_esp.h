@@ -95,9 +95,9 @@ void readDMX() {
     BRIGHTNESS = getValue(packet, 1, 0, 255);
     FastLED.setBrightness(BRIGHTNESS);
 
-    pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
-    SPEED = getValue(3, 0, 255); // speed = 3
-    FADE = getValue(4, 0, 255);  // fade = 4 
+    pgm = getValue(packet, 2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
+    SPEED = getValue(packet, 3, 0, 255); // speed = 3
+    FADE = getValue(packet, 4, 0, 255);  // fade = 4 
 
   }
 }

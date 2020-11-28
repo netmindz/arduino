@@ -60,12 +60,6 @@ TODO:
 #define LOOP_COUNT 3000
 
 
-// MSGEQ7 wiring on spectrum analyser shield
-#define MSGEQ7_STROBE_PIN 4
-#define MSGEQ7_RESET_PIN  5
-#define AUDIO_LEFT_PIN    A0
-#define AUDIO_RIGHT_PIN   A1
-
 // all 2D effects will be calculated in this matrix size
 // do not touch
 const uint8_t WIDTH  = 30;
