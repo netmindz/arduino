@@ -28,7 +28,7 @@ void EQ() {
 
 
   // analyze without delay
-  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+  bool newReading = MSGEQ7read();
 
   // Led strip output
   if (newReading) {
@@ -41,7 +41,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(mapNoise(MSGEQ7.get(band)), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7get(band)), 0, 255, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
       for (int b = 0; b < barWidth; b++) {
         xpos = blockWidth - (barWidth * band) - b;
@@ -67,7 +67,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(mapNoise(MSGEQ7.get(band)), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7get(band)), 0, 255, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
 
       for (int b = 0; b < barWidth; b++) {
@@ -101,7 +101,7 @@ int xytopixel(int x, int y) {
 int getTotal(int input) {
   int t = 0;
   for (int i = 0; i < 7; i++) {
-    t += MSGEQ7.get(i, input);
+    t += MSGEQ7get(i, input);
   }
   return t / 7;
 }
@@ -112,14 +112,14 @@ void VU() {
 
   const boolean gay = false;
 
-  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+  bool newReading = MSGEQ7read();
 
   // Led strip output
   if (newReading) {
     //fill_solid(leds, kMatrixWidth, CRGB::Black);
 
-    int displayPeakL = map(MSGEQ7.get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7.get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakL = map(MSGEQ7get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
@@ -201,7 +201,7 @@ void safeSetPixel(int pos, CRGB value) {
 
 void FunkyPlank() {
 
-  bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
+  bool newReading = MSGEQ7read();
 
   int offset = 8;
   // Led strip output
@@ -210,8 +210,8 @@ void FunkyPlank() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int hue = MSGEQ7.get(band, 0);
-      int v = map(MSGEQ7.get(band, 0), 0, 255, 10, 255);
+      int hue = MSGEQ7get(band, 0);
+      int v = map(MSGEQ7get(band, 0), 0, 255, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int  xpos = blockWidth - (barWidth * band) - b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
@@ -222,8 +222,8 @@ void FunkyPlank() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int hue = MSGEQ7.get(band, 1);
-      int v = map(MSGEQ7.get(band, 1), 0, 255, 10, 255);
+      int hue = MSGEQ7get(band, 1);
+      int v = map(MSGEQ7get(band, 1), 0, 255, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int xpos = blockWidth + 1 + (barWidth * band) + b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
@@ -241,7 +241,7 @@ void FunkyPlank() {
 
 void DJLight() {
 
-  bool newReading = MSGEQ7.read(ReadsPerSecond(30));
+  bool newReading = MSGEQ7read();
 
 //  int offset = 8;
 
@@ -253,7 +253,7 @@ void DJLight() {
     int bands[8];
     for ( band = 0; band < 7; band++ )
     {
-      bands[band] = MSGEQ7.get(band, 1);
+      bands[band] = MSGEQ7get(band, 1);
     }
 
 
@@ -298,5 +298,3 @@ void fade_down(uint8_t value) {
   }
   }
 */
-
-

@@ -202,4 +202,3 @@ void autoRun() {
   gPatterns[autopgm]();
 
 }
-

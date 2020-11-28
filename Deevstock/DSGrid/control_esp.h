@@ -118,13 +118,15 @@ int right[7];
 
 #include "audio.h"
 
-void ReadAudio() {
-  for (byte band = 0; band < 7; band++) {
-    delayMicroseconds(30);
-  }
+void ReadAudio() { // Data already loaded by UDP
 }
 
 // FAKE MSGEQ for now
+bool newReading;
+bool MSGEQ7read() {
+  return newReading;
+}
+
 int MSGEQ7get(int band) {
   ReadAudio();
   return left[band];
@@ -194,7 +196,7 @@ void readAudioUDP() {
 
 }
 
-bool newReading;
+
 void controlLoop() {
   readDMX();
   ArduinoOTA.handle();
