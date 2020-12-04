@@ -118,3 +118,6 @@
 [submodule "Tetris"]
 	path = Tetris
 	url = https://github.com/netmindz/ESP32Tetris.git
+[submodule "libraries/LITTLEFS"]
+	path = libraries/LITTLEFS
+	url = https://github.com/lorol/LITTLEFS.git
