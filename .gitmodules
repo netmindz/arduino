@@ -121,3 +121,6 @@
 [submodule "libraries/LITTLEFS"]
 	path = libraries/LITTLEFS
 	url = https://github.com/lorol/LITTLEFS.git
+[submodule "libraries/NTPClient"]
+	path = libraries/NTPClient
+	url = https://github.com/arduino-libraries/NTPClient.git
