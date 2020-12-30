@@ -5,12 +5,13 @@
 #include <FastLED.h>
 #include <ESP8266WiFi.h>
 #include <ESPAsyncE131.h>
+#include <WiFiUdp.h>
 
 #define UNIVERSE 1        // First DMX Universe to listen for
 #define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
 
 #define CHANNEL_START 1 /* Channel to start listening at */
-#define LED_PIN D4
+#define LED_PIN 2
 
 #define COLOR_ORDER GRB
 #define CHIPSET     WS2811
@@ -33,6 +34,7 @@ const char ssid[] = SECRET_SSID;         /* Replace with your SSID */
 const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
+WiFiUDP fftUdp;
 
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
@@ -44,6 +46,9 @@ TBlendType    currentBlending =  LINEARBLEND;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
+uint16_t audioSyncPort = 20000;
+
+#include "audio.h"
 void setup() {
   Serial.begin(115200);
   delay(10);
@@ -87,6 +92,9 @@ void setup() {
     hue[r] = ColorFromPalette(currentPalette, h, 255, currentBlending);
     h += JUMP;
   }
+
+  fftUdp.beginMulticast(WiFi.localIP(), IPAddress(239, 0, 0, 1), audioSyncPort);
+
 }
 
 void loop() {
@@ -129,8 +137,9 @@ void loop() {
 
     Serial.println();
   }
-
-  rings();
+  readAudioUDP();
+//  rings();
+  audioRings();
 }
 
 void rings() {
@@ -171,6 +180,21 @@ void randomFlow() {
     hue[r] = hue[(r - 1)]; // set this ruing based on the inner
   }
   FastLED.delay(SPEED);
+}
+
+void audioRings() {
+  for (int i = 0; i < 7; i++) {
+    // visualize the average bass of both channels
+    uint8_t val = fftResult[(i*2)];
+
+    // Visualize leds to the beat
+    CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
+    color.nscale8_video(val);
+    setRing(i, color);
+  }
+
+  // Update Leds
+  FastLED.show();
 }
 
 void setRing(int ring, CRGB colour) {
