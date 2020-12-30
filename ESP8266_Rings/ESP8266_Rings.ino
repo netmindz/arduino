@@ -47,6 +47,7 @@ TBlendType    currentBlending =  LINEARBLEND;
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 uint16_t audioSyncPort = 20000;
+bool newReading;
 
 #include "audio.h"
 void setup() {
@@ -71,7 +72,7 @@ void setup() {
     delay(500);
     Serial.print("w");
     sanity++;
-    if(sanity > 20) break;
+    if (sanity > 20) break;
   }
   Serial.println("\nDone");
   Serial.print("IP address: ");
@@ -164,7 +165,7 @@ void rings() {
 int j;
 void simpleRings() {
   for (int r = 0; r < RINGS; r++) {
-    setRing(r, ColorFromPalette(currentPalette, j +(r * JUMP), 255, currentBlending));
+    setRing(r, ColorFromPalette(currentPalette, j + (r * JUMP), 255, currentBlending));
   }
   j += JUMP;
   FastLED.delay(SPEED);
@@ -172,7 +173,7 @@ void simpleRings() {
 
 
 void randomFlow() {
-  hue[0] = random(0,255);
+  hue[0] = random(0, 255);
   for (int r = 0; r < RINGS; r++) {
     setRing(r, CHSV(hue[r], 255, 255));
   }
@@ -183,18 +184,21 @@ void randomFlow() {
 }
 
 void audioRings() {
-  for (int i = 0; i < 7; i++) {
-    // visualize the average bass of both channels
-    uint8_t val = fftResult[(i*2)];
-
-    // Visualize leds to the beat
-    CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
-    color.nscale8_video(val);
-    setRing(i, color);
+  if(newReading) {
+    newReading = false;
+    for (int i = 0; i < 7; i++) {
+      // visualize the average bass of both channels
+      uint8_t val = fftResult[(i*2)];
+  
+      // Visualize leds to the beat
+      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
+      color.nscale8_video(val);
+      setRing(i, color);
+    }
+  
+    // Update Leds
+    FastLED.show();
   }
-
-  // Update Leds
-  FastLED.show();
 }
 
 void setRing(int ring, CRGB colour) {

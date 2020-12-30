@@ -88,59 +88,44 @@ void logAudio() {
 // Read the UDP audio data sent by WLED-Audio
 void readAudioUDP() {
 
-  // Begin UDP Microphone Sync
-
-  // Only run the audio listener code if we're in Receive mode
-//  if (millis() - lastTime > delayMs) {
-//    if (udpSyncConnected) {
-      //      Serial.println("Checking for UDP Microphone Packet");
-      int packetSize = fftUdp.parsePacket();
-      if (packetSize) {
-        //        Serial.println("Received UDP Sync Packet");
-        uint8_t fftBuff[packetSize];
-        fftUdp.read(fftBuff, packetSize);
-        audioSyncPacket receivedPacket;
-        memcpy(&receivedPacket, fftBuff, packetSize);
-        for (int i = 0; i < 32; i++ ) {
-          myVals[i] = receivedPacket.myVals[i];
-        }
-        sampleAgc = receivedPacket.sampleAgc;
-        sample = receivedPacket.sample;
-        sampleAvg = receivedPacket.sampleAvg;
-        // VERIFY THAT THIS IS A COMPATIBLE PACKET
-        char packetHeader[6];
-        memcpy(&receivedPacket, packetHeader, 6);
-        if (!(isValidUdpSyncVersion(packetHeader))) {
-          memcpy(&receivedPacket, fftBuff, packetSize);
-          for (int i = 0; i < 32; i++ ) {
-            myVals[i] = receivedPacket.myVals[i];
-          }
-          sampleAgc = receivedPacket.sampleAgc;
-          sample = receivedPacket.sample;
-          sampleAvg = receivedPacket.sampleAvg;
-
-          // Only change samplePeak IF it's currently false.  If it's true already, then the animation still needs to respond
-          if (!samplePeak) {
-            samplePeak = receivedPacket.samplePeak;
-          }
-
-          for (int i = 0; i < 16; i++) {
-            fftResult[i] = receivedPacket.fftResult[i];
-          }
-
-          FFT_Magnitude = receivedPacket.FFT_Magnitude;
-          FFT_MajorPeak = receivedPacket.FFT_MajorPeak;
-          // Serial.println("Finished parsing UDP Sync Packet");
-
-//          // "Legacy" - for MSGEQ7 patterns
-//          for (int b = 0; b < 7; b++) {
-//            left[b] = map(fftResult[(b * 2)], 0, 255, 0, 1023);
-//            right[b] = map(fftResult[(b * 2)], 0, 255, 0, 1023);
-//          }
-//          newReading = true;
-        }
+  int packetSize = fftUdp.parsePacket();
+  if (packetSize) {
+    //        Serial.println("Received UDP Sync Packet");
+    uint8_t fftBuff[packetSize];
+    fftUdp.read(fftBuff, packetSize);
+    audioSyncPacket receivedPacket;
+    memcpy(&receivedPacket, fftBuff, packetSize);
+    for (int i = 0; i < 32; i++ ) {
+      myVals[i] = receivedPacket.myVals[i];
+    }
+    sampleAgc = receivedPacket.sampleAgc;
+    sample = receivedPacket.sample;
+    sampleAvg = receivedPacket.sampleAvg;
+    // VERIFY THAT THIS IS A COMPATIBLE PACKET
+    char packetHeader[6];
+    memcpy(&receivedPacket, packetHeader, 6);
+    if (!(isValidUdpSyncVersion(packetHeader))) {
+      memcpy(&receivedPacket, fftBuff, packetSize);
+      for (int i = 0; i < 32; i++ ) {
+        myVals[i] = receivedPacket.myVals[i];
       }
-//    }
-//  }
+      sampleAgc = receivedPacket.sampleAgc;
+      sample = receivedPacket.sample;
+      sampleAvg = receivedPacket.sampleAvg;
 
+      // Only change samplePeak IF it's currently false.  If it's true already, then the animation still needs to respond
+      if (!samplePeak) {
+        samplePeak = receivedPacket.samplePeak;
+      }
+
+      for (int i = 0; i < 16; i++) {
+        fftResult[i] = receivedPacket.fftResult[i];
+      }
+
+      FFT_Magnitude = receivedPacket.FFT_Magnitude;
+      FFT_MajorPeak = receivedPacket.FFT_MajorPeak;
+      // Serial.println("Finished parsing UDP Sync Packet");
+      newReading = true;
+    }
+  }
 }
