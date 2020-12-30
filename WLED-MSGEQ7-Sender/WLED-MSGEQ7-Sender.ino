@@ -9,6 +9,7 @@
 #include <WiFi.h>
 #endif
 #include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
 #include "wifi.h"
 // Create file with the following
@@ -24,9 +25,9 @@ const char passphrase[] = SECRET_PSK;
 #include "MSGEQ7.h"
 #define pinAnalogLeft A0
 #define pinAnalogRight A0
-#define pinReset 6
-#define pinStrobe 4
-#define MSGEQ7_INTERVAL ReadsPerSecond(50)
+#define pinReset 22
+#define pinStrobe 23
+#define MSGEQ7_INTERVAL ReadsPerSecond(10)
 #define MSGEQ7_SMOOTH false
 
 CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
@@ -52,11 +53,12 @@ void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, passphrase);
+  Serial.print("Connecting to WiFi ");
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print('.');
     delay(500);
   }
-  Serial.print("Connected! IP address: ");
+  Serial.print("\nConnected! IP address: ");
   Serial.println(WiFi.localIP());
 
 #ifndef ESP8266
@@ -66,19 +68,53 @@ void setup() {
 #endif
   // This will set the IC ready for reading
   MSGEQ7.begin();
+
+  ArduinoOTA.setHostname("WLED-MSGEQ7");
+  ArduinoOTA
+  .onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH)
+      type = "sketch";
+    else // U_SPIFFS
+      type = "filesystem";
+
+    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+    Serial.println("Start updating " + type);
+  })
+  .onEnd([]() {
+    Serial.println("\nEnd");
+  })
+  .onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  })
+  .onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+  });
+
+  ArduinoOTA.begin();
+
 }
 
 void loop() {
+  ArduinoOTA.handle();
   // Analyze without delay every interval
   bool newReading = MSGEQ7.read(MSGEQ7_INTERVAL);
   if (newReading) {
     audioSyncPacket transmitData;
 
-    for(int b=0; b < 16; b = b + 2) {
-      transmitData.fftResult[b] = MSGEQ7.get((b/2));
-      transmitData.fftResult[(b+1)] = MSGEQ7.get((b/2));
+    for (int b = 0; b < 16; b = b + 2) {
+      int val = MSGEQ7.get((b / 2));
+      val = mapNoise(val);
+      Serial.printf("%u ", val);
+      transmitData.fftResult[b] = val;
+      transmitData.fftResult[(b + 1)] = val;
     }
-
+    Serial.println();
 
     fftUdp.beginMulticastPacket();
     fftUdp.write(reinterpret_cast<uint8_t *>(&transmitData), sizeof(transmitData));
