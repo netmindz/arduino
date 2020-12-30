@@ -26,8 +26,8 @@ const char passphrase[] = SECRET_PSK;
 #define pinAnalogLeft A0
 #define pinAnalogRight A0
 #define pinReset 22
-#define pinStrobe 23
-#define MSGEQ7_INTERVAL ReadsPerSecond(10)
+#define pinStrobe 19
+#define MSGEQ7_INTERVAL ReadsPerSecond(30)
 #define MSGEQ7_SMOOTH false
 
 CMSGEQ7<MSGEQ7_SMOOTH, pinReset, pinStrobe, pinAnalogLeft, pinAnalogRight> MSGEQ7;
@@ -107,7 +107,7 @@ void loop() {
   if (newReading) {
     audioSyncPacket transmitData;
 
-    for (int b = 0; b < 16; b = b + 2) {
+    for (int b = 0; b < 14; b = b + 2) {
       int val = MSGEQ7.get((b / 2));
       val = mapNoise(val);
       Serial.printf("%u ", val);
