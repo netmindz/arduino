@@ -127,3 +127,6 @@
 [submodule "libraries/espDMX"]
 	path = libraries/espDMX
 	url = https://github.com/mtongnz/espDMX.git
+[submodule "WLED-MSGEQ7-Sender"]
+	path = WLED-MSGEQ7-Sender
+	url = https://github.com/netmindz/WLED-MSGEQ7-Sender.git
