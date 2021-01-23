@@ -124,3 +124,6 @@
 [submodule "libraries/NTPClient"]
 	path = libraries/NTPClient
 	url = https://github.com/arduino-libraries/NTPClient.git
+[submodule "libraries/espDMX"]
+	path = libraries/espDMX
+	url = https://github.com/mtongnz/espDMX.git
