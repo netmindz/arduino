@@ -205,7 +205,7 @@ void loop() {
 
 int autopgm = 1; // random(1, (gPatternCount - 1));
 void autoRun() {
-  EVERY_N_SECONDS(10) {
+  EVERY_N_SECONDS(90) {
     autopgm = random(1, (gPatternCount - 1));
     // autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
