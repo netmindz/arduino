@@ -1,3 +1,12 @@
+#ifdef __IMXRT1062__ // Teensy 4
+  #define  SMARTMATRIX
+#else
+  #define  APA1023030
+#endif
+
+#include "neomatrix_config.h"
+
+
 #include<FastLED.h>
 
 //---LED SETUP STUFF
@@ -5,15 +14,15 @@
 #define COLOR_ORDER BGR
 
 // the size of your matrix
-#define kMatrixWidth  30
-#define kMatrixHeight 30
+#define kMatrixWidth  mw
+#define kMatrixHeight mh
 
 // used in FillNoise for central zooming
 byte CentreX =  (kMatrixWidth / 2) - 1;
 byte CentreY = (kMatrixHeight / 2) - 1;
 
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
-CRGB leds[kMatrixWidth * kMatrixHeight];
+#define leds matrixleds
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
@@ -81,13 +90,8 @@ void setup() {
   Serial.println("Setup");
   controlSetup();
 
-  FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-
-  // switch dithering off to avoid flicking at low fps
-  FastLED.setDither(0);
-
-  FastLED.setBrightness(55);
-
+  matrix_setup();
+  
   //  leds[XY(0,0)] = CRGB::White;
   //  leds[XY(29,0)] = CRGB::Blue;
   //  leds[XY(29,8)] = CRGB::Yellow;

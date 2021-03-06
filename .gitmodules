@@ -72,7 +72,7 @@
 	url = https://github.com/forkineye/ESPAsyncE131.git
 [submodule "WLED-Audio"]
 	path = WLED-Audio
-	url = https://github.com/atuline/WLED.git
+	url = https://github.com/netmindz/WLED.git
 [submodule "WLED-Default"]
 	path = WLED-Default
 	url = https://github.com/Aircoookie/WLED.git
@@ -130,3 +130,21 @@
 [submodule "WLED-MSGEQ7-Sender"]
 	path = WLED-MSGEQ7-Sender
 	url = https://github.com/netmindz/WLED-MSGEQ7-Sender.git
+[submodule "libraries/ledtable2"]
+	path = libraries/ledtable2
+	url = https://github.com/netmindz/ledtable2.git
+[submodule "libraries/ArduinoJson"]
+	path = libraries/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson.git
+[submodule "3rdParty/psilocybe"]
+	path = 3rdParty/psilocybe
+	url = https://github.com/evilgeniuslabs/psilocybe.git
+[submodule "3rdParty/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos"]
+	path = 3rdParty/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos
+	url = https://github.com/marcmerlin/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos.git
+[submodule "libraries/SmartMatrix_GFX"]
+	path = libraries/SmartMatrix_GFX
+	url = https://github.com/marcmerlin/SmartMatrix_GFX.git
+[submodule "libraries/Framebuffer_GFX"]
+	path = libraries/Framebuffer_GFX
+	url = https://github.com/marcmerlin/Framebuffer_GFX.git
