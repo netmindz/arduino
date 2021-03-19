@@ -16,8 +16,8 @@ AudioControlSGTL5000 audioShield; //xy=446.1999969482422,317
 // GUItool: end automatically generated code
 
 // These 2 lines hardcore an input mode, LINEIN (aux) or MIC. Only 1 can be uncommented.
-const int myInput = AUDIO_INPUT_LINEIN;
-//const int myInput = AUDIO_INPUT_MIC;
+//const int myInput = AUDIO_INPUT_LINEIN;
+const int myInput = AUDIO_INPUT_MIC;
 //int myInput;
 
 // AUDIO DETECTION VARIABLES

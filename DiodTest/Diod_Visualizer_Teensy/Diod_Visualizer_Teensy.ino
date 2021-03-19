@@ -5,8 +5,8 @@
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 #include <Arduino.h>
 // These OCTOWS2811 library lines must be before #include FastLED
-#define USE_OCTOWS2811
-#include <OctoWS2811.h>
+//#define USE_OCTOWS2811
+//#include <OctoWS2811.h>
 #include <FastLED.h>
 // Statistic.h library is used for music analytics
 #include <Statistic.h>
@@ -25,10 +25,10 @@ double mult = 1.00;
 // NUM_LEDS is the total number of LEDs you have on 1 strip, if you're only using 1 LED output (1 LED strip/string)
 // ** If you're using multiple LED outputs, NUM_LEDS is not used when "LEDS.addLeds..." is called in setup() **
 // ** If you're using multiple LED outputs, use NUM_LEDS_PER_STRIP and NUM_STRIPS **
-#define NUM_LEDS 256
-#define NUM_LEDS_PER_STRIP 256
+#define NUM_LEDS 900
+#define NUM_LEDS_PER_STRIP 900
 // NUM_STRIPS controls how many of the OCTOWS2811 output pins will drive LEDs, in this order : 2, 14, 7, 8, 6, 20, 21, 5
-#define NUM_STRIPS 3
+#define NUM_STRIPS 1
 
 // "leds" is the LED data that is actually pushed out to the LEDs
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
@@ -39,8 +39,8 @@ CRGB leds3[NUM_STRIPS * NUM_LEDS_PER_STRIP];
 // 'leds2' and 'leds3' are blended in to 'leds'. If there is a beat present in the music, 'leds' essentially equals 'leds3'. If not, 'leds' = 'leds2'
 
 // if LEDs are arranged as a matrix, put the number of rows in 'height' and number of columns in 'width'
-const int height = 16;
-const int width = 16;
+const int height = 30;
+const int width = 30;
 int coords[width][height];
 
 #include "DDGradients.h"
@@ -75,8 +75,10 @@ void setup()
 	Serial1.begin(115200); // Used for ESP communication to the Teensy's RX1/TX1 pins
 	delay(100);
 
-	LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS); // Initalize LEDs if only 1 strip is used
+//	LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS); // Initalize LEDs if only 1 strip is used
 	//LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP); // Initialize LEDs if more than 1 strip is used
+  #define COLOR_ORDER BGR
+  FastLED.addLeds<APA102,7, 14, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
 	FastLED.clear(true); // clear all LEDs and push to strip (makes it all black)
 	delay(1000); // make it easier on the eyes by waiting a second before they turn back on
