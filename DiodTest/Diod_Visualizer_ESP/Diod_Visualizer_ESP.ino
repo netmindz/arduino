@@ -3,14 +3,27 @@
 *********/
 
 // Import required libraries
-#include "WiFi.h"
 #include "ESPAsyncWebServer.h"
+#if defined(ESP8266) // ESP8266
+#include <ESP8266WiFi.h>
+#include "FS.h"
+#include <SoftwareSerial.h>
+SoftwareSerial swSer(2, 0); //, false);
+#define SerialPort swSer
+#else
+#include "WiFi.h"
 #include "SPIFFS.h"
+#define SerialPort Serial2
+#endif
 
-// Replace with your network credentials if connecting to a network
-// Replace with whatever credentials you want if creating an Access Point
-const char* ssid = "ESP32";
-const char* password = "123456789"; // must be at least 8 characters
+#include "wifi.h"
+// Create file with the following
+// *************************************************************************
+// #define SECRET_SSID "";  /* Replace with your SSID */
+// #define SECRET_PSK "";   /* Replace with your WPA2 passphrase */
+// *************************************************************************
+const char* ssid = SECRET_SSID;
+const char* passphrase = SECRET_PSK;
 
 // Set LED GPIO
 const int ledPin = 2;
@@ -64,33 +77,33 @@ String processor(const String& var) {
 void setup() {
 	// Serial port for debugging purposes
 	Serial.begin(115200); // Serial monitor output
-	Serial2.begin(115200); // TX2/RX2 pins that are connected to Teensy TX1/RX1 pins
+	SerialPort.begin(115200); // TX2/RX2 pins that are connected to Teensy TX1/RX1 pins
 	pinMode(ledPin, OUTPUT);
 
-	// Initialize SPIFFS (SPI FORMAT FILE SYSTEM makes it possible to upload .html, .css, .jpg/.png files to memory
-	if (!SPIFFS.begin(true)) {
+//	// Initialize SPIFFS (SPI FORMAT FILE SYSTEM makes it possible to upload .html, .css, .jpg/.png files to memory
+	if (!SPIFFS.begin()) {
 		Serial.println("An Error has occurred while mounting SPIFFS");
 		return;
 	}
  
 	// CONNECTING TO EXISTING WIFI NETWORK
 	// Connect to Wi-Fi 
-//	WiFi.begin(ssid, password); // connect to existing WiFi
-//	while (WiFi.status() != WL_CONNECTED) { // While trying to connect
-//		delay(1000);
-//		Serial.println("Connecting to WiFi.."); // print this statement
-//	}
-//	// Print ESP32 Local IP Address
-//	Serial.println(WiFi.localIP()); // If connected, print the IP address
+	WiFi.begin(ssid, passphrase); // connect to existing WiFi
+	while (WiFi.status() != WL_CONNECTED) { // While trying to connect
+		delay(1000);
+		Serial.println("Connecting to WiFi.."); // print this statement
+	}
+	// Print ESP32 Local IP Address
+	Serial.println(WiFi.localIP()); // If connected, print the IP address
 
 	// CREATING A SOFT ACCESS POINT
 	// Create Wi-Fi
-	WiFi.softAP(ssid, password);	// For creating a network / access point
+//	WiFi.softAP(ssid, password);	// For creating a network / access point
 
-	//// For creating a network
-	IPAddress IP = WiFi.softAPIP(); // Create access point
-	Serial.print("AP IP address: "); 
-	Serial.println(IP); // print IP address
+//	//// For creating a network
+//	IPAddress IP = WiFi.softAPIP(); // Create access point
+//	Serial.print("AP IP address: "); 
+//	Serial.println(IP); // print IP address
 
 	// Route for root / web page
 	server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -119,7 +132,7 @@ void setup() {
 	// Route when "on" button is pressed. Also sets GPIO to HIGH (blue light turns on)
 	server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request) {
 		digitalWrite(ledPin, HIGH);
-		//Serial2.write('o');
+		//SerialPort.write('o');
 		sendRequest(1);
 		request->send(SPIFFS, "/index.html", String(), false, processor);
 	});
@@ -127,7 +140,7 @@ void setup() {
 	// Route when "off" button is pressed. Also sets GPIO to LOW (blue light turns off)
 	server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request) {
 		digitalWrite(ledPin, LOW);
-		//Serial2.write('f');
+		//SerialPort.write('f');
 		sendRequest(0);
 		request->send(SPIFFS, "/index.html", String(), false, processor);
 	});
@@ -281,48 +294,48 @@ void sendRequest(int req) {
 	switch (req) {
 	case 0:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('f');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('>');
+		SerialPort.write('<');
+		SerialPort.write('f');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('>');
 		break;
 	case 1:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('o');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('>');
+		SerialPort.write('<');
+		SerialPort.write('o');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('>');
 		break;
 	case 2:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('s');
+		SerialPort.write('<');
+		SerialPort.write('s');
 		for (int i = 0; i < inputHue.length(); i++) {
-			Serial2.write(inputHue[i]);
+			SerialPort.write(inputHue[i]);
 		}
-		Serial2.write('>');
+		SerialPort.write('>');
 		break;
 	case 3:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('t');
+		SerialPort.write('<');
+		SerialPort.write('t');
 		for (int i = 0; i < inputSat.length(); i++) {
-			Serial2.write(inputSat[i]);
+			SerialPort.write(inputSat[i]);
 		}
-		Serial2.write('>');
+		SerialPort.write('>');
 		break;
 	case 4:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('b');
+		SerialPort.write('<');
+		SerialPort.write('b');
 		for (int i = 0; i < inputVal.length(); i++) {
-			Serial2.write(inputVal[i]);
+			SerialPort.write(inputVal[i]);
 		}
-		Serial2.write('>');
+		SerialPort.write('>');
 		break;
 	case 5:
 		currentMode = req;
@@ -398,53 +411,53 @@ void sendRequest(int req) {
 		break;
 	case 23:
 		//currentMode = req;
-		Serial2.write('<');
-		Serial2.write('z');
+		SerialPort.write('<');
+		SerialPort.write('z');
 		for (int i = 0; i < inputMasterBrightness.length(); i++) {
-			Serial2.write(inputMasterBrightness[i]);
+			SerialPort.write(inputMasterBrightness[i]);
 		}
-		Serial2.write('>');
+		SerialPort.write('>');
 		break;
 	case 98:
 		currentMode = req;
-		Serial2.write('<');
-		Serial2.write('x');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('0');
-		Serial2.write('>');
+		SerialPort.write('<');
+		SerialPort.write('x');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('0');
+		SerialPort.write('>');
 		break;
 	case 99:
-		Serial2.write('<');
-		Serial2.write('y');
+		SerialPort.write('<');
+		SerialPort.write('y');
 		for (int i = 0; i < inputAudioMultiplier.length(); i++) {
-			Serial2.write(inputAudioMultiplier[i]);
+			SerialPort.write(inputAudioMultiplier[i]);
 		}
-		Serial2.write('>');
+		SerialPort.write('>');
 		break;
 	}
 }
 
 void sendMVMode(int req) {
 	currentMode = req;
-	Serial2.write('<');
-	Serial2.write('m');
+	SerialPort.write('<');
+	SerialPort.write('m');
 	sendMode = currentMode - 4;
 	sendModeStr = (String)sendMode;
 	for (int i = 0; i < sendModeStr.length(); i++) {
-		Serial2.write(sendModeStr[i]);
+		SerialPort.write(sendModeStr[i]);
 	}
-	Serial2.write('>');
+	SerialPort.write('>');
 }
 
 void sendAmbMode(int req) {
 	currentMode = req;
-	Serial2.write('<');
-	Serial2.write('a');
+	SerialPort.write('<');
+	SerialPort.write('a');
 	sendMode = currentMode - 16;
 	sendModeStr = (String)sendMode;
 	for (int i = 0; i < sendModeStr.length(); i++) {
-		Serial2.write(sendModeStr[i]);
+		SerialPort.write(sendModeStr[i]);
 	}
-	Serial2.write('>');
+	SerialPort.write('>');
 }
