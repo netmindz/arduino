@@ -141,10 +141,15 @@
 	url = https://github.com/evilgeniuslabs/psilocybe.git
 [submodule "3rdParty/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos"]
 	path = 3rdParty/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos
-	url = https://github.com/marcmerlin/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos.git
+	url = https://github.com/netmindz/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos.git
 [submodule "libraries/SmartMatrix_GFX"]
 	path = libraries/SmartMatrix_GFX
 	url = https://github.com/marcmerlin/SmartMatrix_GFX.git
 [submodule "libraries/Framebuffer_GFX"]
 	path = libraries/Framebuffer_GFX
 	url = https://github.com/marcmerlin/Framebuffer_GFX.git
+[submodule "https://github.com/netmindz/FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos.git"]
+	url = FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos/
+[submodule "3rdParty/New_Visualizer_Skeleton"]
+	path = 3rdParty/New_Visualizer_Skeleton
+	url = https://github.com/Diod-dev/New_Visualizer_Skeleton.git
