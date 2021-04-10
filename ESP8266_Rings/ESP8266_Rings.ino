@@ -51,10 +51,95 @@ uint16_t audioSyncPort = 20000;
 bool newReading;
 
 #include "audio.h"
+#include "Spiralight.h"
+
+typedef void (*Pattern)();
+typedef Pattern PatternList[];
+typedef struct {
+  Pattern pattern;
+  String name;
+} PatternAndName;
+typedef PatternAndName PatternAndNameList[];
+
+void autoRun();
+void rings();
+void simpleRings();
+void randomFlow();
+void audioRings();
+
+PatternAndNameList gPatterns = {
+  { autoRun, "autoRun"}, // must be first
+  { rings, "rings"},
+  { simpleRings, "simpleRings" },
+  { randomFlow, "randomFlow" },
+  { audioRings, "audioRings"},
+  { do_Static, "do_Static"},
+  { do_Rainbow_Fade, "do_Rainbow_Fade"},
+  { do_MC_Fade, "do_MC_Fade"},
+  { do_Spiral_Rainbow_Wave_1, "do_Spiral_Rainbow_Wave_1"},
+  { do_Spiral_Rainbow_Wave_2, "do_Spiral_Rainbow_Wave_2"},
+  { do_Spiral_Rainbow_Wave_3, "do_Spiral_Rainbow_Wave_3"},
+  { do_Spiral_MC_Wave_1, "do_Spiral_MC_Wave_1"},
+  { do_Spiral_MC_Wave_2, "do_Spiral_MC_Wave_2"},
+  { do_Spiral_MC_Wave_3, "do_Spiral_MC_Wave_3"},
+  { do_Linear_Rainbow_Gradient_1, "do_Linear_Rainbow_Gradient_1"},
+  { do_Linear_Rainbow_Gradient_2, "do_Linear_Rainbow_Gradient_2"},
+  { do_Linear_Rainbow_Gradient_3, "do_Linear_Rainbow_Gradient_3"},
+  { do_Linear_MC_Gradient_1, "do_Linear_MC_Gradient_1"},
+  { do_Linear_MC_Gradient_2, "do_Linear_MC_Gradient_2"},
+  { do_Linear_MC_Gradient_3, "do_Linear_MC_Gradient_3"},
+  { do_Indiv_Jump_Rainbow, "do_Indiv_Jump_Rainbow"},
+  { do_Indiv_Jump_MC, "do_Indiv_Jump_MC"},
+  { do_All_Jump_Rainbow, "do_All_Jump_Rainbow"},
+  { do_Strobe_Static, "do_Strobe_Static"},
+  { do_Strobe_MC, "do_Strobe_MC"},
+  { do_Strobe_Rainbow, "do_Strobe_Rainbow"},
+  { do_Marquee_MC, "do_Marquee_MC"},
+  { do_Marquee_Rainbow, "do_Marquee_Rainbow"},
+  { do_Marquee_Static, "do_Marquee_Static"},
+  { do_Segment_Rainbow, "do_Segment_Rainbow"},
+  { do_Segment_MC, "do_Segment_MC"},
+  { do_Segment_Static, "do_Segment_Static"},
+  { do_Visor_MC, "do_Visor_MC"},
+  { do_Visor_Rainbow, "do_Visor_Rainbow"}, 
+  { do_Visor_Static, "do_Visor_Static"},
+  { do_Bounce_Linear_MC, "do_Bounce_Linear_MC"},
+  { do_Bounce_Spiral_Static, "do_Bounce_Spiral_Static"},
+  { do_Bounce_Spiral_Rainbow, "do_Bounce_Spiral_Rainbow"},
+  { do_Bounce_Spiral_MC, "do_Bounce_Spiral_MC"},
+  { do_Bounce_Linear_Rainbow, "do_Bounce_Linear_Rainbow"},
+  { do_Bounce_Linear_Static, "do_Bounce_Linear_Static"},
+  { do_Ripple_Rainbow, "do_Ripple_Rainbow"},
+  { do_Ripple_MC, "do_Ripple_MC"},
+  { do_Ripple_Static, "do_Ripple_Static"},
+  { do_Pulse_Rainbow, "do_Pulse_Rainbow"},
+  { do_Pulse_MC, "do_Pulse_MC"},
+  { do_Pulse_Static, "do_Pulse_Static"},
+  { do_Rain_Rainbow, "do_Rain_Rainbow"},
+  { do_Rain_MC, "do_Rain_MC"},
+  { do_Rain_Static, "do_Rain_Static"},
+  { do_Special_Xmas, "do_Special_Xmas"},
+  { do_Special_Special, "do_Special_Special"},
+  { do_Sparkle, "do_Sparkle"},
+  { do_Shift_MC, "do_Shift_MC"},
+  { do_Shift_Rainbow, "do_Shift_Rainbow"},
+
+};
+
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+int gPatternCount = ARRAY_SIZE(gPatterns);
+int pgm = 0;
+
 void setup() {
   Serial.begin(115200);
   delay(10);
 
+  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+  FastLED.setBrightness( BRIGHTNESS );
+
+  leds[0] = CRGB::Blue;
+  FastLED.show();
+  
   // Make sure you're in station mode
   WiFi.mode(WIFI_STA);
 
@@ -78,6 +163,8 @@ void setup() {
   Serial.println("\nDone");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+  leds[0] = CRGB::Green;
+  FastLED.show();
   // Choose one to begin listening for E1.31 data
   //if (e131.begin(E131_UNICAST)) {
   if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
@@ -86,8 +173,6 @@ void setup() {
   else {
     Serial.println(F("*** e131.begin failed ***"));
   }
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
-  FastLED.setBrightness( BRIGHTNESS );
 
   int h = 0;
   for (int r = 0; r < RINGS; r++) {
@@ -174,8 +259,24 @@ void loop() {
     Serial.println();
   }
   readAudioUDP();
-//  rings();
-  audioRings();
+  EVERY_N_SECONDS(10) {
+    Serial.println(gPatterns[pgm].name);
+  }
+  gPatterns[pgm].pattern();
+}
+
+int autopgm = 1; // random(1, (gPatternCount - 1));
+void autoRun() {
+  EVERY_N_SECONDS(90) {
+    autopgm = random(1, (gPatternCount - 1));
+    // autopgm++;
+    if (autopgm >= gPatternCount) autopgm = 1;
+    Serial.print("Next Auto pattern: ");
+    Serial.println(gPatterns[autopgm].name);
+  }
+
+  gPatterns[autopgm].pattern();
+
 }
 
 void rings() {
