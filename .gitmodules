@@ -152,4 +152,7 @@
 	url = FastLED_NeoMatrix_SmartMatrix_LEDMatrix_GFX_Demos/
 [submodule "3rdParty/New_Visualizer_Skeleton"]
 	path = 3rdParty/New_Visualizer_Skeleton
-	url = https://github.com/Diod-dev/New_Visualizer_Skeleton.git
+	url = https://github.com/netmindz/New_Visualizer_Skeleton.git
+[submodule "libraries/elapsedMillis"]
+	path = libraries/elapsedMillis
+	url = https://github.com/pfeerick/elapsedMillis.git
