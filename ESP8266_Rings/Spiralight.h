@@ -1,13 +1,8 @@
-//Spiralight
-//Ed's Code
+// Spiralight
+// Ed's Code
+
 #include <Arduino.h>
-#include <IRremoteESP8266.h>
-#include <IRrecv.h>
-#include <IRutils.h>
 #include <FastLED.h>
-
-
-
 
 
 //------------------CUSTOMS---------------
@@ -41,7 +36,6 @@ CRGBPalette16 MC1_p = redblue1_gp;
 int static_r = 255;
 int static_g = 255;
 int static_b = 255;
-int brightness = 100;
 int anispeed = 50;
 long mil;
 int r2b = 1;
@@ -72,30 +66,12 @@ int rainspeeds[30];
 int rainposs[30];
 int rainloc[30];
 int sparklephase[30];
-int shiftspeeds[61];
-int shiftposs[61];
-int shiftloc[61];
-int shiftphase[61];
-CRGB shiftcol1[61];
-CRGB shiftcol2[61];
-
-int Variation = 3;
-int mode_Solid = 0;
-int mode_RainbowFade = 0;
-int mode_RainbowWave = 0;
-int mode_IndivJump = 0;
-int mode_AllJump = 0;
-int mode_Strobe = 0;
-int mode_Marquee = 0;
-int mode_Segment = 1;
-int mode_Visor = 0;
-int mode_Bounce = 0;
-int mode_Ripple = 0;
-int mode_Pulse = 0;
-int mode_Rain = 0;
-int mode_Special = 0;
-int mode_Sparkle = 0;
-int mode_Shift = 0;
+int shiftspeeds[NUM_LEDS];
+int shiftposs[NUM_LEDS];
+int shiftloc[NUM_LEDS];
+int shiftphase[NUM_LEDS];
+CRGB shiftcol1[NUM_LEDS];
+CRGB shiftcol2[NUM_LEDS];
 
 //
 //void loop() {
@@ -257,13 +233,13 @@ int mode_Shift = 0;
 //      Variation = 0;
 //  }
 //}
+
 void fade(int pix, CRGB fade_from, CRGB fade_to, int per) {
-
-
   leds[pix].r = fade_from.r + ((fade_to.r - fade_from.r) * (per / 100.0)) ;
   leds[pix].g = fade_from.g + ((fade_to.g - fade_from.g) * (per / 100.0));
   leds[pix].b = fade_from.b + ((fade_to.b - fade_from.b) * (per / 100.0));
 }
+
 void soft_Zero() {
 
   for (int x = 0; x < 61; x++)
@@ -284,35 +260,16 @@ void soft_Zero() {
   }
   FastLED.clear();
 }
-void all_Zero() {
-  Variation = 0;
-  mode_Solid = 0;
-  mode_RainbowFade = 0;
-  mode_RainbowWave = 0;
-  mode_IndivJump = 0;
-  mode_AllJump = 0;
-  mode_Strobe = 0;
-  mode_Marquee = 0;
-  mode_Segment = 0;
-  mode_Visor = 0;
-  mode_Bounce = 0;
-  mode_Ripple = 0;
-  mode_Pulse = 0;
-  mode_Rain = 0;
-  mode_Special = 0;
-  mode_Sparkle = 0;
-  mode_Shift = 0;
-  soft_Zero();
-}
+
 void do_Shift_Rainbow() {
 
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40map(anispeed, 0, 100, 40, 10)
     mil = millis();
 
-    //fill_solid(leds, 61, CRGB(static_r*lowm,static_g*lowm,static_b*lowm));
+    //fill_solid(leds, NUM_LEDS, CRGB(static_r*lowm,static_g*lowm,static_b*lowm));
 
     //generate
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
 
       if (shiftposs[i] <= 0) {
 
@@ -371,10 +328,10 @@ void do_Shift_MC() {
 
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40map(anispeed, 0, 100, 40, 10)
     mil = millis();
-    //fill_solid(leds, 61, CRGB(static_r*lowm,static_g*lowm,static_b*lowm));
+    //fill_solid(leds, NUM_LEDS, CRGB(static_r*lowm,static_g*lowm,static_b*lowm));
 
     //generate
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
 
       if (shiftposs[i] <= 0) {
 
@@ -382,17 +339,17 @@ void do_Shift_MC() {
         shiftposs[i] = random(2, 100);
         shiftphase[i] = random(1, 3);
         shiftspeeds[i] = random(1, 5);
-        shiftloc[i] = random(61);
+        shiftloc[i] = random(NUM_LEDS);
         int count = 0;
         // Serial.println(i);
         while (count != 1) {
           count = 0;
-          for ( int t = 0; t < 61; t++) {
+          for ( int t = 0; t < NUM_LEDS; t++) {
             if (shiftloc[i] == shiftloc[t])
               count++;
           }
           if (count != 1) {
-            shiftloc[i] = random(61);
+            shiftloc[i] = random(NUM_LEDS);
             // Serial.println("BAD");
           }
 
@@ -428,7 +385,7 @@ void do_Sparkle() {
   float lowm = 0.3;
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
-    fill_solid(leds, 61, CRGB(static_r * lowm, static_g * lowm, static_b * lowm));
+    fill_solid(leds, NUM_LEDS, CRGB(static_r * lowm, static_g * lowm, static_b * lowm));
 
     //generate
     for ( int i = 0; i < 30; i++) {
@@ -441,7 +398,7 @@ void do_Sparkle() {
         rainposs[i] = 1;
         sparklephase[i] = 1;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -450,7 +407,7 @@ void do_Sparkle() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -481,7 +438,7 @@ void do_Sparkle() {
 void do_Special_Special() {
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
-    fill_solid(leds, 61, CRGB(150, 1, 50));
+    fill_solid(leds, NUM_LEDS, CRGB(150, 1, 50));
     //generate
     for ( int i = 0; i < 30; i++) {
 
@@ -494,7 +451,7 @@ void do_Special_Special() {
         rainposs[i] = 1;
         sparklephase[i] = 1;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -503,7 +460,7 @@ void do_Special_Special() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -534,7 +491,7 @@ void do_Special_Special() {
 void do_Special_Xmas() {
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
-    fill_solid(leds, 61, CRGB::Red);
+    fill_solid(leds, NUM_LEDS, CRGB::Red);
     //generate
     for ( int i = 0; i < 30; i++) {
 
@@ -543,7 +500,7 @@ void do_Special_Xmas() {
         rainposs[i] = 1;
         sparklephase[i] = 1;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -552,7 +509,7 @@ void do_Special_Xmas() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -592,7 +549,7 @@ void do_Rain_Rainbow() {
         raindrops[i] = CRGB(randomcols[random(3)], randomcols[random(3)], randomcols[random(3)]);
         rainposs[i] = 100;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -601,7 +558,7 @@ void do_Rain_Rainbow() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -634,7 +591,7 @@ void do_Rain_MC() {
           raindrops[i] = default_col_2;
         rainposs[i] = 100;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -643,7 +600,7 @@ void do_Rain_MC() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -675,7 +632,7 @@ void do_Rain_Static() {
 
         rainposs[i] = 100;
         rainspeeds[i] = random(1, 5);
-        rainloc[i] = random(61);
+        rainloc[i] = random(NUM_LEDS);
         int count = 0;
         while (count != 1) {
           count = 0;
@@ -684,7 +641,7 @@ void do_Rain_Static() {
               count++;
           }
           if (count != 1) {
-            rainloc[i] = random(61);
+            rainloc[i] = random(NUM_LEDS);
           }
 
         }
@@ -709,7 +666,7 @@ void do_Pulse_MC() {
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
     if (pulsepos >= 0)
-      FastLED.setBrightness(map(pulsepos, 0, 100, 0, 255));
+      FastLED.setBrightness(map(pulsepos, 0, 100, 0, BRIGHTNESS));
     else
       FastLED.setBrightness(0);
     if (pulsephase == 1) {
@@ -772,7 +729,7 @@ void do_Pulse_MC() {
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
     FastLED.show();
-    FastLED.setBrightness(brightness);
+    FastLED.setBrightness(BRIGHTNESS);
 
   }
 }
@@ -782,7 +739,7 @@ void do_Pulse_Static() {
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
     if (pulsepos >= 0)
-      FastLED.setBrightness(map(pulsepos, 0, 100, 0, 255));
+      FastLED.setBrightness(map(pulsepos, 0, 100, 0, BRIGHTNESS));
     else
       FastLED.setBrightness(0);
     if (pulsephase == 1) {
@@ -800,9 +757,9 @@ void do_Pulse_Static() {
         pulsephase = 1;
       }
     }
-    fill_solid(leds, 61, CRGB(static_r, static_g, static_b));
+    fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
     FastLED.show();
-    FastLED.setBrightness(brightness);
+    FastLED.setBrightness(BRIGHTNESS);
 
   }
 }
@@ -812,7 +769,7 @@ void do_Pulse_Rainbow() {
   if (millis() - mil >= map(anispeed, 0, 100, 40, 10)) { // speedy 20   slow 40
     mil = millis();
     if (pulsepos >= 0)
-      FastLED.setBrightness(map(pulsepos, 0, 100, 0, 255));
+      FastLED.setBrightness(map(pulsepos, 0, 100, 0, BRIGHTNESS));
     else
       FastLED.setBrightness(0);
     if (pulsephase == 1) {
@@ -875,7 +832,7 @@ void do_Pulse_Rainbow() {
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
     FastLED.show();
-    FastLED.setBrightness(brightness);
+    FastLED.setBrightness(BRIGHTNESS);
 
   }
 }
@@ -883,7 +840,7 @@ void do_Pulse_Rainbow() {
 void do_Static() {
   if (millis() - mil >= 500) {// speedy
     mil = millis();
-    fill_solid(leds, 61, CRGB(static_r, static_g, static_b));
+    fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
     FastLED.show();
   }
 }
@@ -1957,7 +1914,7 @@ void do_Visor_Static() {
   if (millis() - mil >= map(anispeed, 0, 100, 200, 20)) {
     mil = millis();
     // set point
-    fill_solid(leds, 61, CRGB(static_r, static_g, static_b));
+    fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
 
 
     vispos++;
@@ -2282,7 +2239,7 @@ void do_Marquee_Rainbow() {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
       if (random(2))
 
         leds[i] = CRGB::Black;
@@ -2331,7 +2288,7 @@ void do_Marquee_Static() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 250)) {
     mil = millis();
 
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
       if (random(2))
         leds[i] = CRGB(static_r, static_g, static_b);
       else
@@ -2346,11 +2303,11 @@ void do_Strobe_Rainbow() {
     mil = millis();
     if (strpos) {
       strpos = 0;
-      fill_solid(leds, 61, CRGB::Black);
+      fill_solid(leds, NUM_LEDS, CRGB::Black);
     }
     else {
       strpos = 1;
-      fill_solid(leds, 61, CRGB(random(255), random(255), random(255)));
+      fill_solid(leds, NUM_LEDS, CRGB(random(255), random(255), random(255)));
     }
     FastLED.show();
   }
@@ -2360,14 +2317,14 @@ void do_Strobe_MC() {
     mil = millis();
     if (strpos) {
       strpos = 0;
-      fill_solid(leds, 61, CRGB::Black);
+      fill_solid(leds, NUM_LEDS, CRGB::Black);
     }
     else {
       strpos = 1;
       if (random(2))
-        fill_solid(leds, 61, default_col_1);
+        fill_solid(leds, NUM_LEDS, default_col_1);
       else
-        fill_solid(leds, 61, default_col_2);
+        fill_solid(leds, NUM_LEDS, default_col_2);
     }
     FastLED.show();
   }
@@ -2377,11 +2334,11 @@ void do_Strobe_Static() {
     mil = millis();
     if (strpos) {
       strpos = 0;
-      fill_solid(leds, 61, CRGB::Black);
+      fill_solid(leds, NUM_LEDS, CRGB::Black);
     }
     else {
       strpos = 1;
-      fill_solid(leds, 61, CRGB(static_r, static_g, static_b));
+      fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
     }
     FastLED.show();
   }
@@ -2389,7 +2346,7 @@ void do_Strobe_Static() {
 void do_Indiv_Jump_MC() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 250)) {
     mil = millis();
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
       int val = random(5);
       if (val == 5)
         leds[i] = CRGB::Black;
@@ -2405,7 +2362,7 @@ void do_Indiv_Jump_MC() {
 void do_Indiv_Jump_Rainbow() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 150)) {
     mil = millis();
-    for ( int i = 0; i < 61; i++) {
+    for ( int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB(randomcols[random(3)], randomcols[random(3)], randomcols[random(3)]);
     }
     FastLED.show();
@@ -2415,7 +2372,7 @@ void do_All_Jump_Rainbow() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 150)) {
     mil = millis();
 
-    fill_solid(leds, 61, CRGB(random(255), random(255), random(255)));
+    fill_solid(leds, NUM_LEDS, CRGB(random(255), random(255), random(255)));
 
     FastLED.show();
   }
