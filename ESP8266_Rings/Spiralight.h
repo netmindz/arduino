@@ -1,9 +1,6 @@
 // Spiralight
 // Ed's Code
-
-#include <Arduino.h>
-#include <FastLED.h>
-
+// Adapted by Will Tatam for larger set of rings
 
 //------------------CUSTOMS---------------
 //custom colours
@@ -1899,7 +1896,7 @@ void do_Visor_MC() {
       if (i - vispos == -2) {
         leds[i] = CRGB(leds[i].r * 0.2, leds[i].g * 0.2, leds[i].b * 0.2);
 
-        Serial.println(vispos);
+//        Serial.println(vispos);
       }
     }
 
