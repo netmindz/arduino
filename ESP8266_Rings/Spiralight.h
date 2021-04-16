@@ -69,6 +69,11 @@ int shiftphase[NUM_LEDS];
 CRGB shiftcol1[NUM_LEDS];
 CRGB shiftcol2[NUM_LEDS];
 
+#define RING_1_END 1
+#define RING_2_END 7
+#define RING_3_END 19
+#define RING_4_END 37
+#define RING_5_END 61
 
 void fade(int pix, CRGB fade_from, CRGB fade_to, int per) {
   leds[pix].r = fade_from.r + ((fade_to.r - fade_from.r) * (per / 100.0)) ;
@@ -506,26 +511,26 @@ void do_Pulse_MC() {
       }
     }
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
@@ -589,26 +594,26 @@ void do_Pulse_Rainbow() {
       }
     }
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
@@ -643,7 +648,7 @@ void do_Bounce_Spiral_Static() {
     else
       leds[0] = CRGB::Black;
       
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       if (sbouncepos >= 4)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -651,7 +656,7 @@ void do_Bounce_Spiral_Static() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 3)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -659,7 +664,7 @@ void do_Bounce_Spiral_Static() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 2)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -667,7 +672,7 @@ void do_Bounce_Spiral_Static() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 1)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -703,7 +708,7 @@ void do_Bounce_Spiral_MC() {
     else
       leds[0] = CRGB::Black;
       
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24)    ;
       if (sbouncepos >= 4)
         fade(i, default_col_1, default_col_2, val );
@@ -711,7 +716,7 @@ void do_Bounce_Spiral_MC() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24)     ;
       if (sbouncepos >= 3)
         fade(i, default_col_1, default_col_2, val );
@@ -719,7 +724,7 @@ void do_Bounce_Spiral_MC() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24)     ;
       if (sbouncepos >= 2)
         fade(i, default_col_1, default_col_2, val );
@@ -727,7 +732,7 @@ void do_Bounce_Spiral_MC() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24)    ;
       if (sbouncepos >= 1)
         fade(i, default_col_1, default_col_2, val );
@@ -764,7 +769,7 @@ void do_Bounce_Spiral_Rainbow() {
     else
       leds[0] = CRGB::Black;
     
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       if (sbouncepos >= 4)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -772,7 +777,7 @@ void do_Bounce_Spiral_Rainbow() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 3)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -780,7 +785,7 @@ void do_Bounce_Spiral_Rainbow() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 2)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -788,7 +793,7 @@ void do_Bounce_Spiral_Rainbow() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos >= 1)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -825,7 +830,7 @@ void do_Ripple_Rainbow() {
     else
       leds[0] = CRGB::Black;
       
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       if (sbouncepos == 4)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -833,7 +838,7 @@ void do_Ripple_Rainbow() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 3)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -841,7 +846,7 @@ void do_Ripple_Rainbow() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 2)
@@ -850,7 +855,7 @@ void do_Ripple_Rainbow() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 1)
         leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -886,7 +891,7 @@ void do_Ripple_MC() {
     else
       leds[0] = CRGB::Black;
       
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24)    ;
       if (sbouncepos == 4)
         fade(i, default_col_1, default_col_2, val );
@@ -894,7 +899,7 @@ void do_Ripple_MC() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24)     ;
       if (sbouncepos == 3)
         fade(i, default_col_1, default_col_2, val );
@@ -902,7 +907,7 @@ void do_Ripple_MC() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24)     ;
       if (sbouncepos == 2)
         fade(i, default_col_1, default_col_2, val );
@@ -910,7 +915,7 @@ void do_Ripple_MC() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24)    ;
       if (sbouncepos == 1)
         fade(i, default_col_1, default_col_2, val );
@@ -946,7 +951,7 @@ void do_Ripple_Static() {
     else
       leds[0] = CRGB::Black;
       
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       if (sbouncepos == 4)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -954,7 +959,7 @@ void do_Ripple_Static() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 3)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -962,7 +967,7 @@ void do_Ripple_Static() {
         leds[i] = CRGB::Black;
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 2)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -970,7 +975,7 @@ void do_Ripple_Static() {
         leds[i] = CRGB::Black;
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       if (sbouncepos == 1)
         leds[i] = CRGB(static_r, static_g, static_b);
@@ -997,7 +1002,7 @@ void do_Bounce_Linear_MC() {
       else
         leds[0] = CRGB::Black;
         
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1005,7 +1010,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1013,7 +1018,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1021,7 +1026,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1042,7 +1047,7 @@ void do_Bounce_Linear_MC() {
       else
         leds[0] = CRGB::Black;
         
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1050,7 +1055,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1058,14 +1063,14 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
         else
           leds[i] = CRGB::Black;
       }
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1085,7 +1090,7 @@ void do_Bounce_Linear_MC() {
       else
         leds[0] = CRGB::Black;
         
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1093,7 +1098,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1101,7 +1106,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1109,7 +1114,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1126,7 +1131,7 @@ void do_Bounce_Linear_MC() {
       else
         leds[0] = CRGB::Black;
         
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1134,7 +1139,7 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1142,14 +1147,14 @@ void do_Bounce_Linear_MC() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
         else
           leds[i] = CRGB::Black;
       }
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           fade(i, default_col_1, default_col_2, val );
@@ -1184,7 +1189,7 @@ void do_Bounce_Linear_Rainbow() {
       else
         leds[0] = CRGB::Black;
 
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1192,7 +1197,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1200,7 +1205,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1208,7 +1213,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1229,7 +1234,7 @@ void do_Bounce_Linear_Rainbow() {
       else
         leds[0] = CRGB::Black;
 
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1237,7 +1242,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1245,7 +1250,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1253,7 +1258,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1273,7 +1278,7 @@ void do_Bounce_Linear_Rainbow() {
       else
         leds[0] = CRGB::Black;
       
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1281,7 +1286,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1289,7 +1294,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1297,7 +1302,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1314,7 +1319,7 @@ void do_Bounce_Linear_Rainbow() {
       else
         leds[0] = CRGB::Black;
 
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1322,7 +1327,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1330,7 +1335,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1338,7 +1343,7 @@ void do_Bounce_Linear_Rainbow() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = ColorFromPalette( RainbowColors_p, map(val, 0, 100, 0, 255), 255, LINEARBLEND);
@@ -1374,7 +1379,7 @@ void do_Bounce_Linear_Static() {
       else
         leds[0] = CRGB::Black;
       
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1382,7 +1387,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1390,7 +1395,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1398,7 +1403,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1419,7 +1424,7 @@ void do_Bounce_Linear_Static() {
       else
         leds[0] = CRGB::Black;
       
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1427,7 +1432,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1435,7 +1440,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1443,7 +1448,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val <= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1463,7 +1468,7 @@ void do_Bounce_Linear_Static() {
       else
         leds[0] = CRGB::Black;
       
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1471,7 +1476,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1479,7 +1484,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1487,7 +1492,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1504,7 +1509,7 @@ void do_Bounce_Linear_Static() {
       else
         leds[0] = CRGB::Black;
 
-      for ( int i = 1; i < 7; i++) {
+      for ( int i = RING_1_END; i < RING_2_END; i++) {
         float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1512,7 +1517,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 7; i < 19; i++) {
+      for ( int i = RING_2_END; i < RING_3_END; i++) {
         float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1520,7 +1525,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
 
-      for ( int i = 19; i < 37; i++) {
+      for ( int i = RING_3_END; i < RING_4_END; i++) {
         float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1528,7 +1533,7 @@ void do_Bounce_Linear_Static() {
           leds[i] = CRGB::Black;
       }
       
-      for ( int i = 37; i < 61; i++) {
+      for ( int i = RING_4_END; i < RING_5_END; i++) {
         float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
         if (val >= Bouncepos)
           leds[i] = CRGB(static_r, static_g, static_b);
@@ -1553,22 +1558,22 @@ void do_Visor_MC() {
     mil = millis();
     // set point
     fade(0, default_col_1, default_col_2, 50 );
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
@@ -1630,22 +1635,22 @@ void do_Visor_Rainbow() {
     // set point
     leds[0] = ColorFromPalette( RainbowColors_p, 128, 255, LINEARBLEND);
     
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
     
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
@@ -1678,7 +1683,7 @@ void do_Segment_Rainbow() {
     if (spos >= 24)
       spos = 0;
     leds[0] = ColorFromPalette( RainbowColors_p, 128, 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -1690,7 +1695,7 @@ void do_Segment_Rainbow() {
                 leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -1705,7 +1710,7 @@ void do_Segment_Rainbow() {
       }
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -1721,7 +1726,7 @@ void do_Segment_Rainbow() {
                         leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -1750,7 +1755,7 @@ void do_Segment_MC() {
     if (spos >= 24)
       spos = 0;
     leds[0] = ColorFromPalette( MC_p, 128, 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
@@ -1762,7 +1767,7 @@ void do_Segment_MC() {
                 leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
@@ -1777,7 +1782,7 @@ void do_Segment_MC() {
       }
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
@@ -1793,7 +1798,7 @@ void do_Segment_MC() {
                         leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
@@ -1823,7 +1828,7 @@ void do_Segment_Static() {
     if (spos >= 24)
       spos = 0;
     leds[0] = CRGB(static_r, static_g, static_b);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = CRGB(static_r, static_g, static_b);
@@ -1835,7 +1840,7 @@ void do_Segment_Static() {
                 leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = CRGB(static_r, static_g, static_b);
@@ -1850,7 +1855,7 @@ void do_Segment_Static() {
       }
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = CRGB(static_r, static_g, static_b);
@@ -1866,7 +1871,7 @@ void do_Segment_Static() {
                         leds[i] = CRGB::Black;
       }
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = CRGB(static_r, static_g, static_b);
@@ -1893,23 +1898,23 @@ void do_Marquee_Rainbow() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 250)) {
     mil = millis();
     leds[0] = ColorFromPalette( RainbowColors_p, 128, 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -1927,24 +1932,24 @@ void do_Marquee_MC() {
   if (millis() - mil >= map(anispeed, 0, 100, 1250, 250)) {
     mil = millis();
     fade(0, default_col_1, default_col_2, 50 );
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
 
       fade(i, default_col_1, default_col_2, val );
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
@@ -2042,24 +2047,24 @@ void do_Linear_MC_Gradient_2() {
   if (millis() - mil >= 10) {
     mil = millis();
     fade(0, default_col_1, default_col_2, 50 );
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = (((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
 
       fade(i, default_col_1, default_col_2, val );
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = (((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = (((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
@@ -2074,23 +2079,23 @@ void do_Linear_MC_Gradient_1() {
     mil = millis();
     colorIndex = startIndex;
     leds[0] = ColorFromPalette( MC_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
@@ -2112,23 +2117,23 @@ void do_Linear_MC_Gradient_3() {
     mil = millis();
     colorIndex = startIndex;
     leds[0] = ColorFromPalette( MC_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((180 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((180 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((180 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((180 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
@@ -2150,23 +2155,23 @@ void do_Linear_Rainbow_Gradient_1() {
     mil = millis();
     colorIndex = startIndex;
     leds[0] = ColorFromPalette( RainbowColors_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
@@ -2188,21 +2193,21 @@ void do_Linear_Rainbow_Gradient_2() {
   if (millis() - mil >= 10) {
     mil = millis();
     leds[0] = ColorFromPalette( RainbowColors_p, 128, 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
     
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
@@ -2217,23 +2222,23 @@ void do_Linear_Rainbow_Gradient_3() {
     mil = millis();
     colorIndex = startIndex;
     leds[0] = ColorFromPalette( RainbowColors_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((180 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((180 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((180 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
     }
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((180 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val + (180 - colorIndex), 255, LINEARBLEND);
@@ -2254,7 +2259,7 @@ void do_Spiral_MC_Wave_1() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
@@ -2262,14 +2267,14 @@ void do_Spiral_MC_Wave_1() {
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
@@ -2277,7 +2282,7 @@ void do_Spiral_MC_Wave_1() {
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
@@ -2285,7 +2290,7 @@ void do_Spiral_MC_Wave_1() {
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
@@ -2328,23 +2333,23 @@ void do_Spiral_MC_Wave_3() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
@@ -2361,7 +2366,7 @@ void do_Spiral_Rainbow_Wave_1() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
@@ -2369,14 +2374,14 @@ void do_Spiral_Rainbow_Wave_1() {
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
@@ -2384,7 +2389,7 @@ void do_Spiral_Rainbow_Wave_1() {
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
 
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
@@ -2392,7 +2397,7 @@ void do_Spiral_Rainbow_Wave_1() {
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
@@ -2433,23 +2438,23 @@ void do_Spiral_Rainbow_Wave_3() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    for ( int i = 0; i < 1; i++) {
+    for ( int i = 0; i < RING_1_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 1; i < 7; i++) {
+    for ( int i = RING_1_END; i < RING_2_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 7; i < 19; i++) {
+    for ( int i = RING_2_END; i < RING_3_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 19; i < 37; i++) {
+    for ( int i = RING_3_END; i < RING_4_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
-    for ( int i = 37; i < 61; i++) {
+    for ( int i = RING_4_END; i < RING_5_END; i++) {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
