@@ -326,15 +326,27 @@ void randomFlow() {
 }
 
 void audioRings() {
+  if(!audioRec && pgm == 0 && millis() > 5000) {
+    Serial.println("Skip audioRings as no data");
+    autopgm++;
+  }
   if(newReading) {
     newReading = false;
     for (int i = 0; i < 7; i++) {
-      // visualize the average bass of both channels
-      uint8_t val = fftResult[(i*2)];
+
+      uint8_t val;
+      if(INWARD) {
+        val = fftResult[(i*2)];
+      }
+      else {
+        int b = 14 -(i*2);
+        val = fftResult[b];
+      }
   
       // Visualize leds to the beat
-      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
-      color.nscale8_video(val);
+      CRGB color = ColorFromPalette(currentPalette, val, val, currentBlending);
+//      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
+//      color.nscale8_video(val);
       setRing(i, color);
     }
   
