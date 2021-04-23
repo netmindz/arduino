@@ -70,8 +70,8 @@ CRGB shiftcol1[NUM_LEDS];
 CRGB shiftcol2[NUM_LEDS];
 
 #define RING_1_END 1
-#define RING_2_END 7
-#define RING_3_END 19
+#define RING_2_END 9
+#define RING_3_END 21
 #define RING_4_END 37
 #define RING_5_END 61
 
