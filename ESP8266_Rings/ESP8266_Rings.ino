@@ -25,6 +25,7 @@ int SPEED = 100;
 boolean INWARD = true;
 int BRIGHTNESS = 10;
 int autopgm = 1; // random(1, (gPatternCount - 1));
+int autoPalette = 0;
 
 #include "wifi.h"
 // Create file with the following
@@ -128,6 +129,7 @@ PatternAndNameList gPatterns = {
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
+int gPalletteCount = ARRAY_SIZE(palettes);
 int pgm = 0;
 
 void setup() {
@@ -275,14 +277,23 @@ void loop() {
 }
 
 void autoRun() {
+  
   EVERY_N_SECONDS(90) {
-    autopgm = random(1, (gPatternCount - 1));
-    // autopgm++;
+    // autopgm = random(1, (gPatternCount - 1));
+    autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
   }
 
+  EVERY_N_SECONDS(130) {
+    autoPalette = random(0, (gPalletteCount - 1));
+    //  autoPalette++;
+    if (autoPalette >= gPalletteCount) autoPalette = 0;
+    Serial.println("Next Auto pallette");
+    currentPalette = palettes[0];
+  }
+  
   gPatterns[autopgm].pattern();
 
 }

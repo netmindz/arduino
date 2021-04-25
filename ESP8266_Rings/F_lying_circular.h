@@ -68,9 +68,10 @@ void F_lying_circular() {
   byte y4 = beatsin8 (27, 0, (NUM_ROWS - 1));
   byte y5 = beatsin8 (30, 0, (NUM_ROWS - 1));
 
-  CRGB color = CHSV (bhue, 255, BRIGHTNESS);
+  //CRGB color = CHSV (bhue, 255, BRIGHTNESS);
+  CRGB color = ColorFromPalette(currentPalette, bhue, 255, LINEARBLEND);
 
-  fadeToBlackBy (leds, NUM_LEDS, 30 );
+  fadeToBlackBy (leds, NUM_LEDS, 80 ); // TODO: tie to controls
 
   mydrawLine(x1, y1,  x2, y2, color, 1);
   mydrawLine(x2, y2,  x3, y3, color, 1);
@@ -79,7 +80,7 @@ void F_lying_circular() {
   mydrawLine(x3, y3,  x1, y1, color, 1);
   mydrawLine(x4, y4,  x1, y1, color, 1);
 
-  blur2d (leds, NUM_COLS, NUM_ROWS, 64 );
-  FastLED.show();
+  blur2d (leds, NUM_COLS, NUM_ROWS, 10 ); // TODO: tie to controls
+  FastLED.delay((SPEED / 2));// TODO: might need map
 
 } //loop
