@@ -227,12 +227,14 @@ void loop() {
     e131_packet_t packet;
     e131.pull(&packet);     // Pull packet from ring buffer
 
-    Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
+    EVERY_N_SECONDS( 10 ) { 
+      Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
                   htons(packet.universe),                 // The Universe for this packet
                   htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
                   e131.stats.num_packets,                 // Packet counter
                   e131.stats.packet_errors,               // Packet error counter
                   packet.property_values[1]);             // Dimmer data for Channel 1
+    }
 
     /* Parse a packet and update pixels */
     BRIGHTNESS = getValue(packet, 1, 0, 255);
@@ -246,17 +248,10 @@ void loop() {
     }
     currentPalette = palettes[getValue(packet, 5,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
     FastLED.setBrightness(BRIGHTNESS);
-    pgm = getValue(packet, 5,  0, gPatternCount);
+    pgm = getValue(packet, 6,  0, gPatternCount);
   }
   EVERY_N_SECONDS( 10 ) {
-    Serial.print("BRIGHTNESS = ");
-    Serial.print(BRIGHTNESS);
-
-    Serial.print("  JUMP = ");
-    Serial.print(JUMP);
-
-    Serial.print("  SPEED = ");
-    Serial.print(SPEED);
+    Serial.printf("BRIGHTNESS = %u   JUMP = %u   SPEED = %u", BRIGHTNESS, JUMP, SPEED);
 
     Serial.print("  INWARD = ");
     Serial.print(INWARD);
