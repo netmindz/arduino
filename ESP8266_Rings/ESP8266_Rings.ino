@@ -55,6 +55,8 @@ bool newReading;
 #include "audio.h"
 #include "Spiralight.h"
 #include "F_lying_circular.h"
+#include "Disk.h"
+#include "Clock.h"
 
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
@@ -72,6 +74,8 @@ void audioRings();
 
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
+  { arcClock, "arcClock" },
+  { rimClock, "rimClock" },
   { audioRings, "audioRings"},
   { F_lying_circular, "Flying Circular" },
   { rings, "rings"},
