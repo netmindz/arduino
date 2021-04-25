@@ -67,7 +67,7 @@ typedef struct {
 typedef PatternAndName PatternAndNameList[];
 
 void autoRun();
-void rings();
+void ringsx();
 void simpleRings();
 void randomFlow();
 void audioRings();
@@ -78,7 +78,7 @@ PatternAndNameList gPatterns = {
   { rimClock, "rimClock" },
   { audioRings, "audioRings"},
   { F_lying_circular, "Flying Circular" },
-  { rings, "rings"},
+  { ringsx, "ringsx"},
   { simpleRings, "simpleRings" },
   { randomFlow, "randomFlow" },
   { do_Spiral_Rainbow_Wave_1, "Spiral_Rainbow_Wave_1"},
@@ -171,6 +171,9 @@ void setup() {
   Serial.println(WiFi.localIP());
   leds[0] = CRGB::Green;
   FastLED.show();
+
+  timeClient.begin();
+  
   // Choose one to begin listening for E1.31 data
   //if (e131.begin(E131_UNICAST)) {
   if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
@@ -189,6 +192,9 @@ void setup() {
   Serial.printf("There are %u patterns\n", gPatternCount);
 
   fftUdp.beginMulticast(WiFi.localIP(), IPAddress(239, 0, 0, 1), audioSyncPort);
+
+
+  setupRings();
 
   ArduinoOTA.onStart([]() {
     String type;
@@ -273,6 +279,7 @@ void loop() {
     }
   }
   gPatterns[pgm].pattern();
+  timeClient.update();
 }
 
 void autoRun() {
@@ -297,7 +304,7 @@ void autoRun() {
 
 }
 
-void rings() {
+void ringsx() {
   for (int r = 0; r < RINGS; r++) {
     setRing(r, ColorFromPalette(currentPalette, hue[r], 255, currentBlending));
   }
