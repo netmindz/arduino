@@ -132,6 +132,8 @@ void readAudioUDP() {
       FFT_MajorPeak = receivedPacket.FFT_MajorPeak;
       // Serial.println("Finished parsing UDP Sync Packet");
       newReading = true;
+
+      logAudio();
     }
   }
 }
