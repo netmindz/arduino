@@ -512,26 +512,26 @@ void do_Pulse_MC() {
     }
     colorIndex = startIndex;
     for ( int i = 0; i < RING_1_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
     for ( int i = RING_1_END; i < RING_2_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
     for ( int i = RING_2_END; i < RING_3_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
 
     for ( int i = RING_3_END; i < RING_4_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
     colorIndex = startIndex;
     for ( int i = RING_4_END; i < RING_5_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
     FastLED.show();
