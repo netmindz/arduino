@@ -78,7 +78,6 @@ void updateClock()
 void handClock()
 {
 //  dimAll(240);
-   fill_solid(leds, NUM_LEDS, CRGB::Black);
 
   // hour
   drawHand(hourAngle, 4, CRGB::Red);
@@ -95,7 +94,6 @@ void handClock()
 void arcClock()
 {
   EVERY_N_SECONDS( 1 ) { 
-    fill_solid(leds, NUM_LEDS, CRGB::Black);
   
     // hour
     drawHandArc(hourAngle, 6, CRGB::Red);
@@ -109,6 +107,7 @@ void arcClock()
     updateClock();
 
     FastLED.show();
+    fill_solid(leds, NUM_LEDS, CRGB::Black);
   }
 }
 
@@ -116,7 +115,6 @@ void rimClock()
 {
   EVERY_N_SECONDS( 1 ) { 
   //  dimAll(240);
-     fill_solid(leds, NUM_LEDS, CRGB::Black);
   
     // hour
     drawHandDot(hourAngle, 8, CRGB::Red);
@@ -130,5 +128,6 @@ void rimClock()
     updateClock();
 
     FastLED.show();
+    fill_solid(leds, NUM_LEDS, CRGB::Black);
   }
 }
