@@ -8,15 +8,15 @@
 //This is where all the magic happens.
 //Each represents one of the concentric rings.
 uint8_t rings[ringCount][2] = {
-  {240, 240},   //0 Center Point
-  {232, 239},   //1
-  {220, 231},   //2
-  {204, 219},   //3
-  {180, 203},   //4
-  {148, 179},   //5
-  {108, 147},   //6
-  {60, 107},    //7
-  {0, 59},      //8 Outer Ring
+  {0, 0},     //0 Center Point
+  {1, 8},     //1
+  {9, 20},   //2
+  {21, 36},   //3
+  {37, 60},   //4
+  {61, 92},   //5
+  {93, 132},  //6
+  {133, 180}, //7
+  {181, 240}, //8 Outer Ring
 };
 
 //For convenience, last ring index
@@ -206,7 +206,7 @@ uint8_t chaseRadiusLine256() {
   return 4;
 }
 
-uint8_t halfCircleRainbow360() {
+void halfCircleRainbow360() {
   static int angle360 = 0;
   FastLED.clear();
   fillRing360(8, CRGB::Red, angle360 - 90, angle360 + 90);
@@ -218,10 +218,11 @@ uint8_t halfCircleRainbow360() {
   angle360++;
   if (angle360 >= 360)
     angle360 = 0;
-  return 4;
+//  return 4;
+  FastLED.delay(0);
 }
 
-uint8_t halfCircleRainbow256() {
+void halfCircleRainbow256() {
   static uint8_t angle256 = 0;
   FastLED.clear();
   fillRing256(8, CRGB::Purple, angle256 - 64, angle256 + 64);
@@ -231,5 +232,6 @@ uint8_t halfCircleRainbow256() {
   fillRing256(4, CRGB::Orange, angle256 - 64, angle256 + 64);
   fillRing256(3, CRGB::Red, angle256 - 64, angle256 + 64);
   angle256++;
-  return 4;
+  FastLED.delay(0);
+//  return 4;
 }

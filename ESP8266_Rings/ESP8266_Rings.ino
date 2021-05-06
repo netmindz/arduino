@@ -74,8 +74,10 @@ void audioRings();
 
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
-  { arcClock, "arcClock" },
+  { halfCircleRainbow360, "halfCircleRainbow360" },
+  { halfCircleRainbow256, "halfCircleRainbow256" },
   { rimClock, "rimClock" },
+  { arcClock, "arcClock" },
   { audioRings, "audioRings"},
   { F_lying_circular, "Flying Circular" },
   { ringsx, "ringsx"},
