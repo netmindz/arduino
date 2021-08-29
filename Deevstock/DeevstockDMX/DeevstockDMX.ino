@@ -164,23 +164,31 @@ PatternAndNameList gPatterns = {
 // pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal
 
 // shimmer, confetti, sinelon,
-typedef void (*SimplePatternList[])();
-SimplePatternList gAutoPatterns = { pixels,         // Long line of colours
-fillnoise,      // Center to edges with base color and twinkle
-jugglep,        // Long line of sinewaves
-ripple,         // Juggle with twinkles
-pixel,          // Long line of colours
-matrix,         // Start to end with twinkles
-onesine,        // Long line of shortlines
-noisefire,      // Start to end
-rainbowbit,     // Long line of short lines with twinkles
-noisefiretest,  // Center to edges
-rainbowg,       // Long line with flashes
-noisewide,      // Center to edges
-plasma,         // Long line of short lines
-besin,          // center to edges with black
-noisepal,       // Long line
-rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm};
+PatternAndNameList gAutoPatterns = {
+  { pixels, "pixels"},         // Long line of colours
+  { fillnoise, "fillnoise"},      // Center to edges with base color and twinkle
+  { jugglep, "jugglep"},        // Long line of sinewaves
+  { ripple, "ripple"},         // Juggle with twinkles
+  { pixel, "pixel"},          // Long line of colours
+  { matrix, "matrix"},         // Start to end with twinkles
+  { onesine, "onesine"},        // Long line of shortlines
+  { noisefire, "noisefire"},      // Start to end
+  { rainbowbit, "rainbowbit"},     // Long line of short lines with twinkles
+  { noisefiretest, "noisefiretest"},  // Center to edges
+  { rainbowg, "rainbowg"},       // Long line with flashes
+  { noisewide, "noisewide"},      // Center to edges
+  { plasma, "plasma"},         // Long line of short lines
+  { besin, "besin"},          // center to edges with black
+  { noisepal, "noisepal"},       // Long line
+  { rainbowSweep, "rainbowSweep"},
+  { Rainbow, "Rainbow"},
+  { dsnake, "dsnake"},
+  { RainbowWash, "RainbowWash"},
+  { Ripple, "Ripple"},
+  { sinwave_1, "sinwave_1"},
+  { rainbow, "rainbow"},
+  { bpm, "bpm"}
+ };
 
 
 CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
@@ -292,15 +300,13 @@ void nextPattern()
 
 void autoRun() {
 
-  gAutoPatterns[gCurrentPatternNumber]();
-  
-  
+  gAutoPatterns[gCurrentPatternNumber].pattern();
   // change patterns periodically
 //  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
   EVERY_N_SECONDS(60) {
     nextPattern();
     Serial.print("Swapping to pattern ");
-    Serial.println(gCurrentPatternNumber);
+    Serial.println(gAutoPatterns[gCurrentPatternNumber].name);
   } 
 
 }
