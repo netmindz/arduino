@@ -159,3 +159,6 @@
 [submodule "3rdParty/Wormhole_484"]
 	path = 3rdParty/Wormhole_484
 	url = https://github.com/haybur/Wormhole_484.git
+[submodule "libraries/TeensyDMX"]
+	path = libraries/TeensyDMX
+	url = https://github.com/ssilverman/TeensyDMX.git

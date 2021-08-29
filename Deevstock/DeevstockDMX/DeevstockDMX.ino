@@ -32,6 +32,7 @@ const bool    kMatrixSerpentineLayout = true;
 
 #include <TeensyDmx.h>
 #include <FastLED.h>
+#include <Audio.h>
 
 // **********************************************************************************************************
 
@@ -39,6 +40,9 @@ TeensyDmx Dmx(Serial1);
 
 CRGB leds[NUM_LEDS];
 CRGB ledsAudio[NUM_AUDIO_LEDS];
+
+AudioControlSGTL5000 audioShield;
+AudioAnalyzeFFT1024    fft;
 
 // **********************************************************************************************************
 
