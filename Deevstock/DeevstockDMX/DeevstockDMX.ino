@@ -124,29 +124,47 @@ bool thisdir = 0;
 // *************
 
 
-typedef void (*SimplePatternList[])();
-// snake, 
-SimplePatternList gPatterns = { autoRun, 
-pixels,         // Long line of colours
-fillnoise,      // Center to edges with base color and twinkle
-jugglep,        // Long line of sinewaves
-ripple,         // Juggle with twinkles
-pixel,          // Long line of colours
-matrix,         // Start to end with twinkles
-onesine,        // Long line of shortlines
-noisefire,      // Start to end
-rainbowbit,     // Long line of short lines with twinkles
-noisefiretest,  // Center to edges
-rainbowg,       // Long line with flashes
-noisewide,      // Center to edges
-plasma,         // Long line of short lines
-besin,          // center to edges with black
-noisepal,       // Long line
-cylon, rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, confetti, sinelon, juggle};
+typedef void (*Pattern)();
+typedef Pattern PatternList[];
+typedef struct {
+  Pattern pattern;
+  String name;
+} PatternAndName;
+typedef PatternAndName PatternAndNameList[];
+
+PatternAndNameList gPatterns = { 
+  { autoRun, "auotrun"}, 
+  { pixels,"pixels"},         // Long line of colours
+  { fillnoise,"fillnoise"},      // Center to edges with base color and twinkle
+  { jugglep,"jugglep"},        // Long line of sinewaves
+  { ripple,"ripple"},         // Juggle with twinkles 
+  { pixel,"pixel"},          // Long line of colours
+  { matrix,"matrix"},         // Start to end with twinkles
+  { onesine,"onesine"},        // Long line of shortlines
+  { noisefire,"noisefire"},      // Start to end
+  { rainbowbit,"rainbowbit"},     // Long line of short lines with twinkles
+  { noisefiretest,"noisefiretest"},  // Center to edges
+  { rainbowg,"rainbowg"},       // Long line with flashes
+  { noisewide,"noisewide"},      // Center to edges
+  { plasma,"plasma"},         // Long line of short lines
+  { besin,"besin"},          // center to edges with black
+  { noisepal,"noisepal"},       // Long line
+  { cylon,"cylon"},
+  { rainbowSweep,"rainbowSweep"},
+  { Rainbow,"Rainbow"},
+  { dsnake,"dsnake"},
+  { RainbowWash,"RainbowWash"},
+  { Ripple,"Ripple"},
+  { sinwave_1,"sinwave_1"},
+  { confetti,"confetti"},
+  { sinelon,"sinelon"},
+  { juggle,"juggle"}
+  };
 // soundmems_demo
 // pixels, fillnoise, jugglep, ripple, pixel, matrix, onesine, noisefire, rainbowbit, noisefiretest, rainbowg, noisewide, plasma, besin, noisepal
 
 // shimmer, confetti, sinelon,
+typedef void (*SimplePatternList[])();
 SimplePatternList gAutoPatterns = { pixels,         // Long line of colours
 fillnoise,      // Center to edges with base color and twinkle
 jugglep,        // Long line of sinewaves
@@ -164,7 +182,7 @@ besin,          // center to edges with black
 noisepal,       // Long line
 rainbowSweep, Rainbow, dsnake, RainbowWash, Ripple, sinwave_1, rainbow,  bpm};
 
-typedef void (*SimplePaletteList[])();
+
 CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
 
 // **********************************************************************************************************
@@ -244,13 +262,13 @@ void loop()
 
     EVERY_N_SECONDS( 2 ) {
       Serial.print("pattern = ");
-      Serial.println(pattern);
+      Serial.println(gPatterns[pattern].name);
     }
     EVERY_N_SECONDS( 10 ) {
       Serial.println(LEDS.getFPS());
     }
   soundmems();
-  gPatterns[pattern]();
+  gPatterns[pattern].pattern();
 
   // do some periodic updates
   EVERY_N_MILLISECONDS( 20 ) {
@@ -314,6 +332,3 @@ uint16_t XY( uint8_t x, uint8_t y)
   if(i >= (NUM_LEDS - 1)) return 0;
   return i;
 }
-
-
-
