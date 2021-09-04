@@ -1,12 +1,23 @@
 #ifndef SOUNDMEMS_H
 #define SOUNDMEMS_H
 
+// all these libraries are required for the Teensy Audio Library
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
+AudioInputI2S audioInput;
+AudioAnalyzeFFT256 fft;
+AudioControlSGTL5000 audioShield;
+AudioConnection patchCord1(audioInput, 0, fft, 0);
+
 void soundmems() {                                                              // Here's where we capture sound. It provides an average, a current sample as well as a peak trigger.
-                                                                                // I tried some fancier math, but never came up with anything that really worked all that well. Must . . work. . harder.
+if (fft.available()) {                                                                                // I tried some fancier math, but never came up with anything that really worked all that well. Must . . work. . harder.
 // Local definitions
-  #define sensitivity 100                                                       // Define maximum cutoff of potentiometer for cutting off sounds.
-  #define DC_OFFSET  512                                                        // DC offset in mic signal. I subtract this value from the raw sample of a 'quiet room' test.
-  #define NSAMPLES 64                                                           // Creating an array of lots of samples for decent averaging.
+#define sensitivity 100                                                       // Define maximum cutoff of potentiometer for cutting off sounds.
+#define NSAMPLES 64                                                           // Creating an array of lots of samples for decent averaging.
 
 // Persistent local variables (saved for next iteration)
   static int16_t samplearray[NSAMPLES];                                         // Array of samples.
@@ -21,9 +32,8 @@ void soundmems() {                                                              
 
   potin = 50; // map(analogRead(POT_PIN), 0, 1023, 0, sensitivity);                    // Read the potentiometer and scale it to our sensitivity setting, which is scaled to our microphone readings.
 
-  sample = analogRead(MIC_PIN) - DC_OFFSET;                                     // Sample the microphone. Range will result in -512 to 512.
-  sample = abs(sample);                                                         // Get the absolute value and DO NOT combine abs() into the previous line or this will break. Badly!
-  
+  sample = map(fft.read(2, 127), 0 , 1, 0, 500); // TODO: check range of fft
+  //Serial.println(sample);
   if (sample < potin) sample = 0;                                               // Filter ambient noise, which is adjustable via the potentiometer.
 
   samplesum += sample - samplearray[samplecount];                               // Add the new sample and remove the oldest sample in the array. No 'for' loops required here for extra speed.
@@ -34,8 +44,9 @@ void soundmems() {                                                              
   if (sample > (sampleavg + potin) && (sample < oldsample)) samplepeak = 1;     // We're on the down swing, so we just peaked.
   
   oldsample = sample;                                                           // We'll use oldsample globally as our 'current' sample.
-
+}
 } // soundmems()
+
 
 
 
