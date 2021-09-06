@@ -949,6 +949,61 @@ uint32_t tft_spi_speed;
         NEO_MATRIX_BOTTOM + NEO_MATRIX_LEFT +
         NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG );
 //============================================================================
+#elif defined(WS1616)
+    #include <FastLED_NeoMatrix.h>
+    #define FASTLED_NEOMATRIX
+
+    uint8_t matrix_brightness = 64;
+    // Used by LEDMatrix
+    const uint16_t MATRIX_TILE_WIDTH = 16; // width of EACH NEOPIXEL MATRIX (not total display)
+    const uint16_t MATRIX_TILE_HEIGHT= 16; // height of each matrix
+    const uint8_t MATRIX_TILE_H     = 1;  // number of matrices arranged horizontally
+    const uint8_t MATRIX_TILE_V     = 1;  // number of matrices arranged vertically
+
+    // Used by NeoMatrix
+    const uint16_t mw = MATRIX_TILE_WIDTH *  MATRIX_TILE_H;
+    const uint16_t mh = MATRIX_TILE_HEIGHT * MATRIX_TILE_V;
+
+    CRGB *matrixleds;
+    #ifdef LEDMATRIX
+    // cLEDMatrix defines
+    // Unfortunately LEDMatrix has its own matrix definition that isn't as well documented
+    // and easy to use. Look for examples if you need to setup a matrix of matrices.
+    cLEDMatrix<MATRIX_TILE_WIDTH, MATRIX_TILE_HEIGHT, VERTICAL_ZIGZAG_MATRIX> ledmatrix(false);
+    #endif
+
+    // MATRIX DECLARATION:
+    // Parameter 1 = width of EACH NEOPIXEL MATRIX (not total display)
+    // Parameter 2 = height of each matrix
+    // Parameter 3 = number of matrices arranged horizontally
+    // Parameter 4 = number of matrices arranged vertically
+    // Parameter 5 = pin number (most are valid)
+    // Parameter 6 = matrix layout flags, add together as needed:
+    //   NEO_MATRIX_TOP, NEO_MATRIX_BOTTOM, NEO_MATRIX_LEFT, NEO_MATRIX_RIGHT:
+    //     Position of the FIRST LED in the FIRST MATRIX; pick two, e.g.
+    //     NEO_MATRIX_TOP + NEO_MATRIX_LEFT for the top-left corner.
+    //   NEO_MATRIX_ROWS, NEO_MATRIX_COLUMNS: LEDs WITHIN EACH MATRIX are
+    //     arranged in horizontal rows or in vertical columns, respectively;
+    //     pick one or the other.
+    //   NEO_MATRIX_PROGRESSIVE, NEO_MATRIX_ZIGZAG: all rows/columns WITHIN
+    //     EACH MATRIX proceed in the same order, or alternate lines reverse
+    //     direction; pick one.
+    //   NEO_TILE_TOP, NEO_TILE_BOTTOM, NEO_TILE_LEFT, NEO_TILE_RIGHT:
+    //     Position of the FIRST MATRIX (tile) in the OVERALL DISPLAY; pick
+    //     two, e.g. NEO_TILE_TOP + NEO_TILE_LEFT for the top-left corner.
+    //   NEO_TILE_ROWS, NEO_TILE_COLUMNS: the matrices in the OVERALL DISPLAY
+    //     are arranged in horizontal rows or in vertical columns, respectively;
+    //     pick one or the other.
+    //   NEO_TILE_PROGRESSIVE, NEO_TILE_ZIGZAG: the ROWS/COLUMS OF MATRICES
+    //     (tiles) in the OVERALL DISPLAY proceed in the same order for every
+    //     line, or alternate lines reverse direction; pick one.  When using
+    //     zig-zag order, the orientation of the matrices in alternate rows
+    //     will be rotated 180 degrees (this is normal -- simplifies wiring).
+    //   See example below for these values in action.
+    FastLED_NeoMatrix *matrix = new FastLED_NeoMatrix(matrixleds, MATRIX_TILE_WIDTH, MATRIX_TILE_HEIGHT,
+        NEO_MATRIX_BOTTOM + NEO_MATRIX_LEFT +
+        NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG );
+//============================================================================
 #else
     #error "Please write a matrix config or choose one of the definitions above. If you have a FastLED matrix, define M24BY24 at the top of this file"
 #endif
@@ -979,9 +1034,6 @@ extern "C" {
 #include "user_interface.h"
 }
 #endif // ESP8266
-
-uint8_t gHue = 0; // rotating "base color" used by many of the patterns
-uint16_t speed = 255;
 
 float matrix_gamma = 1; // higher number is darker, needed for Neomatrix more than SmartMatrix
 
@@ -1351,6 +1403,13 @@ void matrix_setup(bool initserial=true, int reservemem = 40000) {
         Serial.print(NUMMATRIX);
         Serial.println();
     //============================================================================================
+    #elif defined(WS1616)
+        #define COLOR_ORDER BGR
+        FastLED.addLeds<WS2811,7, COLOR_ORDER>(matrixleds, NUMMATRIX).setCorrection(TypicalLEDStrip);
+        Serial.print("Neomatrix total LEDs: ");
+        Serial.print(NUMMATRIX);
+        Serial.println();
+   //============================================================================================
     #else
         #error "Undefined Matrix"
     #endif

@@ -1,3 +1,4 @@
+#pragma message ESP platform - all in one
 #if defined(ESP8266) // ESP8266
 #include <ESP8266WiFi.h>
 
@@ -117,9 +118,6 @@ int left[7];
 int right[7];
 
 #include "audio.h"
-
-void ReadAudio() { // Data already loaded by UDP
-}
 
 // FAKE MSGEQ for now
 bool newReading;

@@ -1,4 +1,8 @@
+#ifdef ESP32
 #include <ESPmDNS.h>
+#else
+#include <ESP8266mDNS.h>
+#endif
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 

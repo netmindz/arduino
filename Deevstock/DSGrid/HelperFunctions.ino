@@ -112,7 +112,7 @@ void ShowFrame() {
   matrix->show();
 
   // output debugging infos
-  // ShowMenuValues();
+  ShowMenuValues();
 }
 
 
@@ -364,19 +364,3 @@ void FilterAll() {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

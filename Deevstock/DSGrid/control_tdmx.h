@@ -1,16 +1,23 @@
+#pragma message Teensy 3.2 + MSGEQ7
 #include <TeensyDmx.h>
-
-#define LED_PIN 7
-#define CLOCK_PIN 14
+// MSGEQ7
+#include "MSGEQ7.h"
 
 // MSGEQ7 wiring on spectrum analyser shield
 #define MSGEQ7_RESET_PIN  5
 #define MSGEQ7_STROBE_PIN 6
 #define AUDIO_LEFT_PIN    A2
 #define AUDIO_RIGHT_PIN   A1
+#define MSGEQ7_INTERVAL ReadsPerSecond(50)
+#define MSGEQ7_SMOOTH true
 
+CMSGEQ7<true, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
 
 TeensyDmx Dmx(Serial1);
+
+void InitMSGEQ7() { 
+  MSGEQ7.begin();
+}
 
 void controlSetup() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -25,6 +32,19 @@ void controlSetup() {
 
 int getValue(int chan, int minV, int maxV) {
   return map(Dmx.getBuffer()[(chan - 1)], 0, 255, minV, maxV);
+}
+
+
+boolean MSGEQ7read() {
+  return MSGEQ7.read(MSGEQ7_INTERVAL);
+}
+
+int MSGEQ7get(int band) {
+  return MSGEQ7.get(band);
+}
+
+int MSGEQ7get(int band, int channel) {
+  return MSGEQ7.get(band, channel);
 }
 
 int led = 0;

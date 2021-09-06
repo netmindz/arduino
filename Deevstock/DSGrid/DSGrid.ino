@@ -1,9 +1,12 @@
 #ifdef __IMXRT1062__ // Teensy 4
   #define  SMARTMATRIX
+  #define TEENSY4
 #else
   #define  APA1023030
+//  #define  WS1616
 #endif
 
+#define DISABLE_MATRIX_TEST // No grey on start
 #include "neomatrix_config.h"
 
 
@@ -13,7 +16,7 @@
 
 #define COLOR_ORDER BGR
 
-// the size of your matrix
+// the size of your matrix - now defined in neomatrix_config
 #define kMatrixWidth  mw
 #define kMatrixHeight mh
 
@@ -69,52 +72,23 @@ byte red_level;
 byte green_level;
 byte blue_level;
 
-int BRIGHTNESS = 15;
+int BRIGHTNESS = 150;
 int SPEED = 50;
 int FADE = 50;
 
 
 #if defined(CORE_TEENSY)
-#include "control_tdmx.h"
+#ifdef TEENSY4
+#include "control_null.h" // Teensy 4.0 - no input
+#else 
+#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#endif
 #else
-// #include "control_null.h"
-#include "control_esp.h"
+#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
 #endif
 
 #include "stars.h"
 
-void setup() {
-  // enable debugging info output
-  Serial.begin(115200);
-  
-  Serial.println("Setup");
-  controlSetup();
-
-  matrix_setup();
-  
-  //  leds[XY(0,0)] = CRGB::White;
-  //  leds[XY(29,0)] = CRGB::Blue;
-  //  leds[XY(29,8)] = CRGB::Yellow;
-  //  leds[XY(0, 9)] = CRGB::Green;
-  //  leds[XY(0, 28)] = CRGB::Green;
-  //  leds[XY(0, 29)] = CRGB::Red;
-  //  leds[XY(29, 29)] = CRGB::Blue;
-  //  FastLED.delay(10000);
-
-  //  ledtest();
-
-  //  // Initialize our noise coordinates to some random values
-  //  fx = random16();
-  //  fy = random16();
-  //  fz = random16();
-
-  //  x2 = random16();
-  //  y2 = random16();
-  //  z2 = random16();
-
-  //AutoRunAudio();
-
-}
 
 // basically beatsin16 with an additional phase
 
@@ -139,10 +113,12 @@ typedef PatternAndName PatternAndNameList[];
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
   { showStars, "showStars"},
-  { EQ, "EQ"},
+#ifndef TEENSY4
+  { EQ, "EQ"}, 
   { VU, "VU"},
   { FunkyPlank, "FunkyPlank"},
   { DJLight, "DJLight"},
+#endif
   { MirroredNoise, "MirroredNoise"},
 //  RedClouds,
 //  Lavalamp1,
@@ -166,6 +142,7 @@ PatternAndNameList gPatterns = {
   { vortex, "vortex"},
   { squares, "squares"},
 
+#ifndef TEENSY4
   //      // Audio
   { MSGEQtest, "MSGEQtest"},
   { MSGEQtest2, "MSGEQtest2"},
@@ -186,28 +163,67 @@ PatternAndNameList gPatterns = {
   //  CaleidoTest2,// TODO: move
   { Audio5, "Audio5"}, // cool wave - move
   //     Audio6,
-
+#endif
 };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
+int autopgm = random(1, (gPatternCount - 1));
+
+void setup() {
+  // enable debugging info output
+  Serial.begin(115200);
+  
+  Serial.println("Setup");
+  controlSetup();
+
+  matrix_setup();
+  
+  //  leds[XY(0,0)] = CRGB::White;
+  //  leds[XY(29,0)] = CRGB::Blue;
+  //  leds[XY(29,8)] = CRGB::Yellow;
+  //  leds[XY(0, 9)] = CRGB::Green;
+  //  leds[XY(0, 28)] = CRGB::Green;
+  //  leds[XY(0, 29)] = CRGB::Red;
+  //  leds[XY(29, 29)] = CRGB::Blue;
+  //  FastLED.delay(10000);
+
+    ledtest();
+
+  //  // Initialize our noise coordinates to some random values
+  //  fx = random16();
+  //  fy = random16();
+  //  fz = random16();
+
+  //  x2 = random16();
+  //  y2 = random16();
+  //  z2 = random16();
+
+  //AutoRunAudio();
+  Serial.printf("There are %u patterns\n", gPatternCount);
+}
 
 void loop() {
 
   controlLoop();
 
   EVERY_N_SECONDS(10) {
-    Serial.println(gPatterns[pgm].name);
+    if(pgm != 0) {
+      Serial.println(gPatterns[pgm].name);
+    }
+    else {
+      Serial.print("Auto: ");
+      Serial.println(gPatterns[autopgm].name);
+    }
   }
   gPatterns[pgm].pattern();
   ShowFrame();
 }
 
-int autopgm = 1; // random(1, (gPatternCount - 1));
 void autoRun() {
   EVERY_N_SECONDS(90) {
     autopgm = random(1, (gPatternCount - 1));
-    // autopgm++;
+//     autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);

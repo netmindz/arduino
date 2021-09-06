@@ -11,7 +11,7 @@ TODO:
  good interpolation for other matrix dimensions than 15*15
  more move & stream functions
  layers
- palettes
+ palettescoo
  link effects to areas
  1D examples
  2d example with more than 2 sines
@@ -99,7 +99,16 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
  -------------------------------------------------------------------
  */
 
+// storage of the 7 10Bit (0-1023) audio band values
+int left[7];    
+int right[7];
 
+void ReadAudio() {
+  for(byte band = 0; band < 7; band++) {
+    left[band] = MSGEQ7get(band, 0);
+    left[band] = MSGEQ7get(band, 1);
+  }
+}
 
 /*
 -------------------------------------------------------------------
@@ -617,7 +626,7 @@ void AudioSpiral() {
   SpiralStream(11, 11, 3, 122);
   ReadAudio();
   if (left[1] > 500) {
-    leds[2,1] = CHSV (1 , 255, 255);
+    leds[XY(2,1)] = CHSV (1 , 255, 255);
   }  
   if (left[4] > 500) {
     leds[XY(random(15),random(15))] = CHSV (100 , 255, 255);
