@@ -24,6 +24,7 @@ int JUMP = 15;
 int SPEED = 100;
 boolean INWARD = true;
 int BRIGHTNESS = 15;
+int pgm = 0;
 
 #include "wifi.h"
 // Create file with the following
@@ -40,12 +41,24 @@ WiFiUDP fftUdp;
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
 
-CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p };
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-CRGBPalette16 currentPalette = palettes[0];
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p };
+int gPaletteCount = ARRAY_SIZE(palettes);
+
+CRGBPalette16 currentPalette = palettes[1];
 TBlendType    currentBlending =  LINEARBLEND;
 
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+
+
+typedef void (*SimplePatternList[])();
+void  autoRun();
+void rings();
+void audioRings();
+void simpleRings();
+void randomFlow();
+SimplePatternList gPatterns = { autoRun, rings, audioRings, simpleRings, randomFlow};
+int gPatternCount = ARRAY_SIZE(gPatterns);
 
 uint16_t audioSyncPort = 20000;
 bool newReading;
@@ -147,15 +160,16 @@ void loop() {
 
     /* Parse a packet and update pixels */
     BRIGHTNESS = getValue(packet, 1, 0, 255);
-    JUMP = getValue(packet, 2, 5, 40);
-    SPEED = getValue(packet, 3, 200, 0);
-    if (packet.property_values[(CHANNEL_START  + 3)] < 125) {
+    pgm = getValue(packet, 2, 0, (gPatternCount - 1));
+    JUMP = getValue(packet, 3, 5, 40);
+    SPEED = getValue(packet, 4, 200, 0);
+    if (packet.property_values[(CHANNEL_START  + 4)] < 125) {
       INWARD = true;
     }
     else {
       INWARD = false;
     }
-    currentPalette = palettes[getValue(packet, 5,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
+    currentPalette = palettes[getValue(packet, 6,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
     FastLED.setBrightness(BRIGHTNESS);
   }
   EVERY_N_SECONDS( 2 ) {
@@ -174,8 +188,7 @@ void loop() {
     Serial.println();
   }
   readAudioUDP();
-//  rings();
-  audioRings();
+  gPatterns[pgm]();
 }
 
 void rings() {
@@ -219,23 +232,44 @@ void randomFlow() {
 }
 
 void audioRings() {
-  if(newReading) {
+  if (newReading) {
     newReading = false;
     for (int i = 0; i < 7; i++) {
-      // visualize the average bass of both channels
-      uint8_t val = fftResult[(i*2)];
-  
-      // Visualize leds to the beat
-      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
-      color.nscale8_video(val);
-      setRing(i, color);
+      setRingFromFtt((i * 2), i);
     }
-  
+
+    setRingFromFtt(2, 7); // set outer ring to base
+    setRingFromFtt(0, 8); // set outer ring to base
+
     // Update Leds
     FastLED.show();
   }
 }
 
+void setRingFromFtt(int index, int ring) {
+  uint8_t val = fftResult[index];
+  // Visualize leds to the beat
+  CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
+  color.nscale8_video(val);
+  setRing(ring, color);
+}
+
+int autopgm = 2; // random(1, (gPatternCount - 1));
+void autoRun() {
+  EVERY_N_SECONDS(90) {
+    autopgm = random(1, (gPatternCount - 1));
+    // autopgm++;
+    Serial.printf("Next Auto pattern %u\n", autopgm);
+    if (autopgm >= gPatternCount) autopgm = 1;
+  }
+  
+  EVERY_N_SECONDS(160) {
+    Serial.printf("New Palette\n", autopgm);
+    currentPalette = palettes[random(0, (gPaletteCount - 1))];
+  }
+  gPatterns[autopgm]();
+
+}
 void setRing(int ring, CRGB colour) {
   int offset = 0;
   int count = 0;
