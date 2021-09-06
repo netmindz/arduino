@@ -21,6 +21,8 @@ int delayMs = 10;                                   // I don't want to sample to
 
 uint8_t myVals[32];                                 // Used to store a pile of samples as WLED frame rate and WLED sample rate are not synchronized
 
+boolean audioRec = false;
+
 struct audioSyncPacket {
   char header[6] = UDP_SYNC_HEADER;
   uint8_t myVals[32];     //  32 Bytes
@@ -105,6 +107,10 @@ void readAudioUDP() {
     char packetHeader[6];
     memcpy(&receivedPacket, packetHeader, 6);
     if (!(isValidUdpSyncVersion(packetHeader))) {
+      if(!audioRec) {
+        Serial.println("*************** Audio Active ***************");
+      }
+      audioRec = true;
       memcpy(&receivedPacket, fftBuff, packetSize);
       for (int i = 0; i < 32; i++ ) {
         myVals[i] = receivedPacket.myVals[i];
@@ -126,6 +132,8 @@ void readAudioUDP() {
       FFT_MajorPeak = receivedPacket.FFT_MajorPeak;
       // Serial.println("Finished parsing UDP Sync Packet");
       newReading = true;
+
+      logAudio();
     }
   }
 }

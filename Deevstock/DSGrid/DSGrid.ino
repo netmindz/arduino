@@ -1,3 +1,12 @@
+#ifdef __IMXRT1062__ // Teensy 4
+  #define  SMARTMATRIX
+#else
+  #define  APA1023030
+#endif
+
+#include "neomatrix_config.h"
+
+
 #include<FastLED.h>
 
 //---LED SETUP STUFF
@@ -5,15 +14,15 @@
 #define COLOR_ORDER BGR
 
 // the size of your matrix
-#define kMatrixWidth  30
-#define kMatrixHeight 30
+#define kMatrixWidth  mw
+#define kMatrixHeight mh
 
 // used in FillNoise for central zooming
 byte CentreX =  (kMatrixWidth / 2) - 1;
 byte CentreY = (kMatrixHeight / 2) - 1;
 
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
-CRGB leds[kMatrixWidth * kMatrixHeight];
+#define leds matrixleds
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
@@ -81,13 +90,8 @@ void setup() {
   Serial.println("Setup");
   controlSetup();
 
-  FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-
-  // switch dithering off to avoid flicking at low fps
-  FastLED.setDither(0);
-
-  FastLED.setBrightness(55);
-
+  matrix_setup();
+  
   //  leds[XY(0,0)] = CRGB::White;
   //  leds[XY(29,0)] = CRGB::Blue;
   //  leds[XY(29,8)] = CRGB::Yellow;
@@ -124,56 +128,63 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
   return result;
 }
 
-typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = {
-  autoRun, // must be first
-  showStars,
-  EQ,
-  VU,
-  FunkyPlank,
-  DJLight,
-  MirroredNoise,
+typedef void (*Pattern)();
+typedef Pattern PatternList[];
+typedef struct {
+  Pattern pattern;
+  String name;
+} PatternAndName;
+typedef PatternAndName PatternAndNameList[];
+
+PatternAndNameList gPatterns = {
+  { autoRun, "autoRun"}, // must be first
+  { showStars, "showStars"},
+  { EQ, "EQ"},
+  { VU, "VU"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+  { MirroredNoise, "MirroredNoise"},
 //  RedClouds,
 //  Lavalamp1,
-  Lavalamp2,
-  Lavalamp3,
-  Lavalamp4,
-  Lavalamp5,
-  Constrained1,
-  RelativeMotion1,
-  Water,
+  { Lavalamp2, "Lavalamp2"},
+  { Lavalamp3, "Lavalamp3"},
+  { Lavalamp4, "Lavalamp4"},
+  { Lavalamp5, "Lavalamp5"},
+  { Constrained1, "Constrained1"},
+  { RelativeMotion1, "RelativeMotion1"},
+  { Water, "Water"},
   //    Bubbles,
-  TripleMotion,
-  CrossNoise,
-  CrossNoise2,
-  RandomAnimation,
-  MilliTimer,
-  Caleido1,
-  Caleido2,
-  Caleido3,
-  Caleido5,
-  vortex,
-  squares,
+  { TripleMotion, "TripleMotion"},
+  { CrossNoise, "CrossNoise"},
+  { CrossNoise2, "CrossNoise2"},
+  { RandomAnimation, "RandomAnimation"},
+  { MilliTimer, "MilliTimer"},
+  { Caleido1, "Caleido1"},
+  { Caleido2, "Caleido2"},
+  { Caleido3, "Caleido3"},
+  { Caleido5, "Caleido5"},
+  { vortex, "vortex"},
+  { squares, "squares"},
 
   //      // Audio
-  MSGEQtest,
-  MSGEQtest2,
+  { MSGEQtest, "MSGEQtest"},
+  { MSGEQtest2, "MSGEQtest2"},
   //   MSGEQtest3,
-  MSGEQtest4,
+  { MSGEQtest4, "MSGEQtest4"},
   // AudioSpiral, // TODO: resize
   //     MSGEQtest5,// TODO: resize
   //     MSGEQtest6, //boring
-  MSGEQtest7, // nice but resize?
-  MSGEQtest8,
+  { MSGEQtest7, "MSGEQtest7"}, // nice but resize?
+  { MSGEQtest8, "MSGEQtest8"},
   //   MSGEQtest9,
   //     CopyTest,
-  Audio1,// TODO: resize
-  Audio2, // cool wave - move
+  { Audio1, "Audio1"},// TODO: resize
+  { Audio2, "Audio2"}, // cool wave - move
   //     Audio3, // boring
   //     Audio4,// TODO: move
   //   CaleidoTest1,
   //  CaleidoTest2,// TODO: move
-  Audio5, // cool wave - move
+  { Audio5, "Audio5"}, // cool wave - move
   //     Audio6,
 
 };
@@ -185,20 +196,23 @@ void loop() {
 
   controlLoop();
 
-  //  Serial.println(gPatterns[pgm]);
-  gPatterns[pgm]();
+  EVERY_N_SECONDS(10) {
+    Serial.println(gPatterns[pgm].name);
+  }
+  gPatterns[pgm].pattern();
   ShowFrame();
 }
 
-int autopgm = random(1, (gPatternCount - 1));
+int autopgm = 1; // random(1, (gPatternCount - 1));
 void autoRun() {
   EVERY_N_SECONDS(90) {
     autopgm = random(1, (gPatternCount - 1));
     // autopgm++;
-    Serial.printf("Next Auto pattern %u\n", autopgm);
     if (autopgm >= gPatternCount) autopgm = 1;
+    Serial.print("Next Auto pattern: ");
+    Serial.println(gPatterns[autopgm].name);
   }
 
-  gPatterns[autopgm]();
+  gPatterns[autopgm].pattern();
 
 }

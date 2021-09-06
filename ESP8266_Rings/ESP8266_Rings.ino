@@ -23,8 +23,9 @@
 int JUMP = 15;
 int SPEED = 100;
 boolean INWARD = true;
-int BRIGHTNESS = 15;
-int pgm = 0;
+int BRIGHTNESS = 10;
+int autopgm = 1; // random(1, (gPatternCount - 1));
+int autoPalette = 0;
 
 #include "wifi.h"
 // Create file with the following
@@ -64,10 +65,100 @@ uint16_t audioSyncPort = 20000;
 bool newReading;
 
 #include "audio.h"
+#include "Spiralight.h"
+#include "F_lying_circular.h"
+#include "Disk.h"
+#include "Clock.h"
+
+typedef void (*Pattern)();
+typedef Pattern PatternList[];
+typedef struct {
+  Pattern pattern;
+  String name;
+} PatternAndName;
+typedef PatternAndName PatternAndNameList[];
+
+void autoRun();
+void ringsx();
+void simpleRings();
+void randomFlow();
+void audioRings();
+
+PatternAndNameList gPatterns = {
+  { autoRun, "autoRun"}, // must be first
+  { halfCircleRainbow360, "halfCircleRainbow360" },
+  { halfCircleRainbow256, "halfCircleRainbow256" },
+  { rimClock, "rimClock" },
+  { arcClock, "arcClock" },
+  { audioRings, "audioRings"},
+  { F_lying_circular, "Flying Circular" },
+  { ringsx, "ringsx"},
+  { simpleRings, "simpleRings" },
+  { randomFlow, "randomFlow" },
+  { do_Spiral_Rainbow_Wave_1, "Spiral_Rainbow_Wave_1"},
+  { do_Spiral_Rainbow_Wave_2, "Spiral_Rainbow_Wave_2"},
+//  { do_Spiral_Rainbow_Wave_3, " _3"},
+  { do_Spiral_MC_Wave_1, "Spiral_MC_Wave_1"},
+  { do_Spiral_MC_Wave_2, "Spiral_MC_Wave_2"},
+//  { do_Spiral_MC_Wave_3, "Spiral_MC_Wave_3"},
+  { do_Linear_Rainbow_Gradient_1, "Linear_Rainbow_Gradient_1"},
+//  { do_Linear_Rainbow_Gradient_2, "Linear_Rainbow_Gradient_2"},
+  { do_Linear_Rainbow_Gradient_3, "Linear_Rainbow_Gradient_3"},
+  { do_Linear_MC_Gradient_1, "Linear_MC_Gradient_1"},
+//  { do_Linear_MC_Gradient_2, "Linear_MC_Gradient_2"},
+  { do_Linear_MC_Gradient_3, "Linear_MC_Gradient_3"},
+//  { do_Indiv_Jump_Rainbow, "Indiv_Jump_Rainbow"},
+//  { do_Indiv_Jump_MC, "Indiv_Jump_MC"},
+//  { do_All_Jump_Rainbow, "All_Jump_Rainbow"},
+//  { do_Strobe_Static, "Strobe_Static"},
+//  { do_Strobe_MC, "Strobe_MC"},
+//  { do_Strobe_Rainbow, "Strobe_Rainbow"},
+//  { do_Marquee_MC, "Marquee_MC"},
+//  { do_Marquee_Rainbow, "Marquee_Rainbow"},
+//  { do_Marquee_Static, "Marquee_Static"},
+  { do_Segment_Rainbow, "Segment_Rainbow"},
+  { do_Segment_MC, "Segment_MC"},
+//  { do_Segment_Static, "Segment_Static"},
+  { do_Visor_MC, "Visor_MC"},
+  { do_Visor_Rainbow, "Visor_Rainbow"}, 
+//  { do_Visor_Static, "Visor_Static"},
+  { do_Bounce_Linear_MC, "Bounce_Linear_MC"},
+//  { do_Bounce_Spiral_Static, "Bounce_Spiral_Static"},
+  { do_Bounce_Spiral_Rainbow, "Bounce_Spiral_Rainbow"},
+  { do_Bounce_Spiral_MC, "Bounce_Spiral_MC"},
+  { do_Bounce_Linear_MC, "Bounce_Linear_MC"},
+  { do_Ripple_Rainbow, "Ripple_Rainbow"},
+  { do_Ripple_MC, "Ripple_MC"},
+//  { do_Ripple_Static, "Ripple_Static"},
+  { do_Pulse_Rainbow, "Pulse_Rainbow"},
+//  { do_Pulse_MC, "Pulse_MC"},
+//  { do_Pulse_Static, "Pulse_Static"},
+  { do_Rain_Rainbow, "Rain_Rainbow"},
+  { do_Rain_MC, "Rain_MC"},
+//  { do_Rain_Static, "Rain_Static"},
+//  { do_Special_Xmas, "Special_Xmas"},
+//  { do_Special_Special, "Special_Special"},
+//  { do_Sparkle, "Sparkle"},
+  { do_Shift_MC, "Shift_MC"},
+  { do_Shift_Rainbow, "Shift_Rainbow"},
+
+};
+
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+int gPatternCount = ARRAY_SIZE(gPatterns);
+int gPalletteCount = ARRAY_SIZE(palettes);
+int pgm = 0;
+
 void setup() {
   Serial.begin(115200);
   delay(10);
 
+  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
+  FastLED.setBrightness( BRIGHTNESS );
+
+  leds[0] = CRGB::Blue;
+  FastLED.show();
+  
   // Make sure you're in station mode
   WiFi.mode(WIFI_STA);
 
@@ -91,6 +182,11 @@ void setup() {
   Serial.println("\nDone");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+  leds[0] = CRGB::Green;
+  FastLED.show();
+
+  timeClient.begin();
+  
   // Choose one to begin listening for E1.31 data
   //if (e131.begin(E131_UNICAST)) {
   if (e131.begin(E131_MULTICAST, UNIVERSE, UNIVERSE_COUNT)) {  // Listen via Multicast
@@ -99,8 +195,6 @@ void setup() {
   else {
     Serial.println(F("*** e131.begin failed ***"));
   }
-  FastLED.addLeds<CHIPSET, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); //.setCorrection(TypicalSMD5050);
-  FastLED.setBrightness( BRIGHTNESS );
 
   int h = 0;
   for (int r = 0; r < RINGS; r++) {
@@ -108,7 +202,12 @@ void setup() {
     h += JUMP;
   }
 
+  Serial.printf("There are %u patterns\n", gPatternCount);
+
   fftUdp.beginMulticast(WiFi.localIP(), IPAddress(239, 0, 0, 1), audioSyncPort);
+
+
+  setupRings();
 
   ArduinoOTA.onStart([]() {
     String type;
@@ -151,12 +250,14 @@ void loop() {
     e131_packet_t packet;
     e131.pull(&packet);     // Pull packet from ring buffer
 
-    Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
+    EVERY_N_SECONDS( 10 ) { 
+      Serial.printf("Universe %u / %u Channels | Packet#: %u / Errors: %u / CH1: %u\n",
                   htons(packet.universe),                 // The Universe for this packet
                   htons(packet.property_value_count) - 1, // Start code is ignored, we're interested in dimmer data
                   e131.stats.num_packets,                 // Packet counter
                   e131.stats.packet_errors,               // Packet error counter
                   packet.property_values[1]);             // Dimmer data for Channel 1
+    }
 
     /* Parse a packet and update pixels */
     BRIGHTNESS = getValue(packet, 1, 0, 255);
@@ -171,16 +272,10 @@ void loop() {
     }
     currentPalette = palettes[getValue(packet, 6,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
     FastLED.setBrightness(BRIGHTNESS);
+    pgm = getValue(packet, 6,  0, gPatternCount);
   }
-  EVERY_N_SECONDS( 2 ) {
-    Serial.print("BRIGHTNESS = ");
-    Serial.print(BRIGHTNESS);
-
-    Serial.print("  JUMP = ");
-    Serial.print(JUMP);
-
-    Serial.print("  SPEED = ");
-    Serial.print(SPEED);
+  EVERY_N_SECONDS( 10 ) {
+    Serial.printf("BRIGHTNESS = %u   JUMP = %u   SPEED = %u", BRIGHTNESS, JUMP, SPEED);
 
     Serial.print("  INWARD = ");
     Serial.print(INWARD);
@@ -188,10 +283,46 @@ void loop() {
     Serial.println();
   }
   readAudioUDP();
+<<<<<<< HEAD
   gPatterns[pgm]();
+=======
+  EVERY_N_SECONDS(10) {
+    Serial.print("Pattern: ");
+    if(pgm != 0) {
+      Serial.println(gPatterns[pgm].name);
+    }
+    else {
+      Serial.println(gPatterns[autopgm].name);
+    }
+  }
+  gPatterns[pgm].pattern();
+  timeClient.update();
+>>>>>>> ce563ea3b1dc615dae0f11603a2c56eb31033664
 }
 
-void rings() {
+void autoRun() {
+  
+  EVERY_N_SECONDS(90) {
+    // autopgm = random(1, (gPatternCount - 1));
+    autopgm++;
+    if (autopgm >= gPatternCount) autopgm = 1;
+    Serial.print("Next Auto pattern: ");
+    Serial.println(gPatterns[autopgm].name);
+  }
+
+  EVERY_N_SECONDS(130) {
+    autoPalette = random(0, (gPalletteCount - 1));
+    //  autoPalette++;
+    if (autoPalette >= gPalletteCount) autoPalette = 0;
+    Serial.println("Next Auto pallette");
+    currentPalette = palettes[0];
+  }
+  
+  gPatterns[autopgm].pattern();
+
+}
+
+void ringsx() {
   for (int r = 0; r < RINGS; r++) {
     setRing(r, ColorFromPalette(currentPalette, hue[r], 255, currentBlending));
   }
@@ -232,10 +363,35 @@ void randomFlow() {
 }
 
 void audioRings() {
+<<<<<<< HEAD
   if (newReading) {
     newReading = false;
     for (int i = 0; i < 7; i++) {
       setRingFromFtt((i * 2), i);
+=======
+  if(!audioRec && pgm == 0 && millis() > 5000) {
+    Serial.println("Skip audioRings as no data");
+    autopgm++;
+  }
+  if(newReading) {
+    newReading = false;
+    for (int i = 0; i < 7; i++) {
+
+      uint8_t val;
+      if(INWARD) {
+        val = fftResult[(i*2)];
+      }
+      else {
+        int b = 14 -(i*2);
+        val = fftResult[b];
+      }
+  
+      // Visualize leds to the beat
+      CRGB color = ColorFromPalette(currentPalette, val, val, currentBlending);
+//      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
+//      color.nscale8_video(val);
+      setRing(i, color);
+>>>>>>> ce563ea3b1dc615dae0f11603a2c56eb31033664
     }
 
     setRingFromFtt(2, 7); // set outer ring to base

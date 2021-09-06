@@ -35,33 +35,8 @@ Helpfull functions to keep the actual animation code short.
 //}
 
 bool kMatrixSerpentineLayout = true;
-uint16_t XY( uint8_t x, uint8_t y)
-{
-  uint16_t i;
-  if(x > kMatrixWidth) return 0;
-  if(y > kMatrixHeight) return 0;
-
-  if ( kMatrixSerpentineLayout == false) {
-    i = (y * kMatrixWidth) + x;
-  }
-
-  if ( kMatrixSerpentineLayout == true) {
-    if ( y & 0x01) {
-      // Odd rows run backwards
-      uint8_t reverseX = (kMatrixWidth - 1) - x;
-      i = (y * kMatrixWidth) + reverseX;
-    } else {
-      // Even rows run forwards
-      i = (y * kMatrixWidth) + x;
-    }
-  }
-
-  if(i >= (NUM_LEDS - 1)) return 0;
-  return i;
-}
 
 // Fill the x/y array with 16-bit noise values 
-
 void FillNoise(byte layer) {
 
   for(uint8_t i = 0; i < kMatrixWidth; i++) {
@@ -134,11 +109,7 @@ void BasicVariablesSetup() {
 
 void ShowFrame() {
 
-  // update leds
-  LEDS.show();
-
-  // count and output the fps
-  LEDS.countFPS();
+  matrix->show();
 
   // output debugging infos
   // ShowMenuValues();
