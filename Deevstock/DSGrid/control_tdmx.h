@@ -1,5 +1,6 @@
 #pragma message Teensy 3.2 + MSGEQ7
 #include <TeensyDmx.h>
+//#define MSGEQ7_10BIT
 // MSGEQ7
 #include "MSGEQ7.h"
 
@@ -40,14 +41,19 @@ boolean MSGEQ7read() {
 }
 
 int MSGEQ7get(int band) {
-  return MSGEQ7.get(band);
+  return mapNoise(MSGEQ7.get(band));
 }
 
 int MSGEQ7get(int band, int channel) {
-  return MSGEQ7.get(band, channel);
+  return mapNoise(MSGEQ7.get(band, channel));
 }
 
 int led = 0;
+
+// storage of the 7 10Bit (0-1023) audio band values
+int left[7];
+int right[7];
+
 void controlLoop() {
   int gPatternCount = 32; // FIXME
   Dmx.loop();
@@ -67,5 +73,10 @@ void controlLoop() {
     FADE = getValue(4, 0, 255);  // fade = 4
 
   }
-
+  if(MSGEQ7read()) {
+    for (int b = 0; b < 7; b++) {
+      left[b] = map(MSGEQ7.get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      right[b] = map(MSGEQ7.get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
+    }
+  }
 }

@@ -99,15 +99,8 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
  -------------------------------------------------------------------
  */
 
-// storage of the 7 10Bit (0-1023) audio band values
-int left[7];    
-int right[7];
-
 void ReadAudio() {
-  for(byte band = 0; band < 7; band++) {
-    left[band] = MSGEQ7get(band, 0);
-    left[band] = MSGEQ7get(band, 1);
-  }
+// handled in controlLoop
 }
 
 /*

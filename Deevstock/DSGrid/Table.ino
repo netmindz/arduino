@@ -41,7 +41,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(mapNoise(MSGEQ7get(band)), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7get(band)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
       for (int b = 0; b < barWidth; b++) {
         xpos = blockWidth - (barWidth * band) - b;
@@ -67,7 +67,7 @@ void EQ() {
     // display values of left channel on DMD
     for ( band = 0; band < 7; band++ )
     {
-      int count = map(mapNoise(MSGEQ7get(band)), 0, 255, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ7get(band)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
 
       for (int b = 0; b < barWidth; b++) {
@@ -116,19 +116,19 @@ void VU() {
 
   // Led strip output
   if (newReading) {
-    //fill_solid(leds, kMatrixWidth, CRGB::Black);
-
-    int displayPeakL = map(MSGEQ7get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
+    int displayPeakL = map(MSGEQ7get(MSGEQ7_MID, 0), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
     moveUp();
     int offset = round(HEIGHT / 2);
 
-        for (int i = 1; i <= HEIGHT; i++){
-            drawPixel(0, i, CRGB::Black);
-        }
+    // reset first row to black
+    for (int i = 0; i <= WIDTH; i++) {
+        drawPixel(i, 0, CRGB::Black);
+    }
 
     for (int i = 0; i < HEIGHT; i++) {
       drawPixel(offset, i, CRGB::Blue);
@@ -211,7 +211,7 @@ void FunkyPlank() {
     for ( band = 0; band < 7; band++ )
     {
       int hue = MSGEQ7get(band, 0);
-      int v = map(MSGEQ7get(band, 0), 0, 255, 10, 255);
+      int v = map(MSGEQ7get(band, 0), 0, MSGEQ7_OUT_MAX, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int  xpos = blockWidth - (barWidth * band) - b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
@@ -223,7 +223,7 @@ void FunkyPlank() {
     for ( band = 0; band < 7; band++ )
     {
       int hue = MSGEQ7get(band, 1);
-      int v = map(MSGEQ7get(band, 1), 0, 255, 10, 255);
+      int v = map(MSGEQ7get(band, 1), 0, MSGEQ7_OUT_MAX, 10, 255);
       for (int b = 0; b < barWidth; b++) {
         int xpos = blockWidth + 1 + (barWidth * band) + b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
@@ -262,7 +262,7 @@ void DJLight() {
 //    leds[mid].fadeToBlackBy(bands[3] / 12);
 
     leds[mid] = CRGB(bands[5]/2, bands[2]/2, bands[0]/2);
-    leds[mid].fadeToBlackBy((map(bands[1], 0, 255, 255, 10)));
+    leds[mid].fadeToBlackBy((map(bands[1], 0, MSGEQ7_OUT_MAX, 255, 10)));
     
     //move to the left
     for (int i = NUM_LEDS - 1; i > mid; i--) {
