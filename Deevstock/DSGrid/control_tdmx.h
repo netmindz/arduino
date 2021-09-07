@@ -1,5 +1,7 @@
 #pragma message Teensy 3.2 + MSGEQ7
+
 #include <TeensyDmx.h>
+
 //#define MSGEQ7_10BIT
 // MSGEQ7
 #include "MSGEQ7.h"
@@ -10,9 +12,9 @@
 #define AUDIO_LEFT_PIN    A2
 #define AUDIO_RIGHT_PIN   A1
 #define MSGEQ7_INTERVAL ReadsPerSecond(50)
-#define MSGEQ7_SMOOTH true
+#define MSGEQ7_SMOOTH 0
 
-CMSGEQ7<true, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
+CMSGEQ7<MSGEQ7_SMOOTH, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
 
 TeensyDmx Dmx(Serial1);
 
