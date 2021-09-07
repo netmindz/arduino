@@ -113,12 +113,8 @@ typedef PatternAndName PatternAndNameList[];
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
   { showStars, "showStars"},
-#ifndef TEENSY4
-  { EQ, "EQ"}, 
-  { VU, "VU"},
-  { FunkyPlank, "FunkyPlank"},
-  { DJLight, "DJLight"},
-#endif
+  { vortex, "vortex"},
+  { squares, "squares"},
   { MirroredNoise, "MirroredNoise"},
 //  RedClouds,
 //  Lavalamp1,
@@ -138,11 +134,13 @@ PatternAndNameList gPatterns = {
   { Caleido1, "Caleido1"},
   { Caleido2, "Caleido2"},
   { Caleido3, "Caleido3"},
-  { Caleido5, "Caleido5"},
-  { vortex, "vortex"},
-  { squares, "squares"},
-
+  { Caleido5, "Caleido5"},    
 #ifndef TEENSY4
+  { EQ, "EQ"}, 
+  { VU, "VU"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+
   //      // Audio
   { MSGEQtest, "MSGEQtest"},
   { MSGEQtest2, "MSGEQtest2"},
@@ -164,6 +162,7 @@ PatternAndNameList gPatterns = {
   { Audio5, "Audio5"}, // cool wave - move
   //     Audio6,
 #endif
+
 };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
