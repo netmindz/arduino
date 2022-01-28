@@ -29,13 +29,16 @@ const bool    kMatrixSerpentineLayout = true;
 #define USE_OCTOWS2811
 #include<OctoWS2811.h>
 
-#include <TeensyDmx.h>
+#include <TeensyDMX.h>
 #include <FastLED.h>
 #include <Audio.h>
 
 // **********************************************************************************************************
 
-TeensyDmx Dmx(Serial1);
+namespace teensydmx = qindesign::teensydmx;
+
+teensydmx::Receiver dmxRx{Serial1};
+uint8_t dmxRxBuf[513];  // Buffer up to 513 channels, including the start code
 
 CRGB leds[NUM_LEDS];
 CRGB ledsAudio[NUM_AUDIO_LEDS];
@@ -204,7 +207,7 @@ void setup() {
   /* USB serial */
   Serial.begin(115200);
 
-  Dmx.setMode(TeensyDmx::DMX_IN);
+  dmxRx.begin();
 
 //  pinMode(LED_BUILTIN, OUTPUT); --- BREAKS AUDIO ?!
 
@@ -235,24 +238,34 @@ elapsedMillis elapsed;
 // **********************************************************************************************************
 // Main
 // **********************************************************************************************************
+
+// Checks if there's a new DMX frame and returns the frame size.
+static int newFrame(teensydmx::Receiver dmxRx) {
+  return dmxRx.readPacket(dmxRxBuf, 0, 513);
+      // Note: It's less efficient to read bytes you don't need;
+      // this is only here because it was requested to make the
+      // code look better. Ideally, you should call
+      // `readPacket(buf, 0, size_needed)` instead.
+}
+
 int pattern = 0;
 void loop()
 {
-    Dmx.loop();
-  if (Dmx.newFrame()) {
-
+  // Read at least to 7 bytes (6 channels) starting from channel 0 (start code)
+  int read = newFrame(dmxRx);
+  if (read >= 7 && dmxRxBuf[0] == 0) {  // Ensure start code is zero
     led = !led;
     digitalWrite(LED_BUILTIN, led);
-    int b = Dmx.getBuffer()[0]; // brightness = 1
+    int b = dmxRxBuf[1]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
       FastLED.setBrightness(BRIGHTNESS);
       Serial.printf("Brightness: %u\n", BRIGHTNESS);
     }
-    STEPS = Dmx.getBuffer()[1]; // steps = 2
-    SPEEDO = Dmx.getBuffer()[2]; //speed = 3
-    FADE = Dmx.getBuffer()[3]; // fade = 4
-    int p = Dmx.getBuffer()[4]; // pattern = 5
+    STEPS = dmxRxBuf[2]; // steps = 2
+    SPEEDO = dmxRxBuf[3]; //speed = 3
+    FADE = dmxRxBuf[4]; // fade = 4
+    int p = dmxRxBuf[5]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
     if(p > (gPatternCount - 1)) { 
       p = 0;
@@ -260,11 +273,11 @@ void loop()
     else {
       pattern = p;
     }
-    currentPalette = palettes[map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1))]; // channel 6
+    currentPalette = palettes[map(dmxRxBuf[6], 0, 255, 0, (paletteCount - 1))]; // channel 6
 
-    RED = Dmx.getBuffer()[6];
-    GREEN = Dmx.getBuffer()[7];
-    BLUE = Dmx.getBuffer()[8];
+    RED = dmxRxBuf[7];
+    GREEN = dmxRxBuf[8];
+    BLUE = dmxRxBuf[9];
 
 //    EVERY_N_SECONDS( 2 ) {
 //      Serial.println(p);
