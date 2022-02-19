@@ -134,7 +134,7 @@ bool MSGEQ7read() {
 
 int MSGEQ7get(int band) {
 //  ReadAudio();
-  return left[band];
+  return map(left[band], 0, 1023, 0, MSGEQ7_OUT_MAX);
 }
 
 int MSGEQ7get(int band, int channel) {

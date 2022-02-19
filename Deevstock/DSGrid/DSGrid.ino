@@ -76,10 +76,13 @@ byte red_level;
 byte green_level;
 byte blue_level;
 
-int BRIGHTNESS = 150;
-int SPEED = 50;
+int BRIGHTNESS = 250;
+int SPEED = 30;
 int FADE = 50;
 
+// storage of the 7 10Bit (0-1023) audio band values
+int left[7];
+int right[7];
 
 #if defined(CORE_TEENSY)
 #ifdef TEENSY4
@@ -130,7 +133,7 @@ PatternAndNameList gPatterns = {
 //  RedClouds,
 //  Lavalamp1,
   { Lavalamp2, "Lavalamp2"},
-  { Lavalamp3, "Lavalamp3"},
+//  { Lavalamp3, "Lavalamp3"}, //just white and green
   { Lavalamp4, "Lavalamp4"},
   { Lavalamp5, "Lavalamp5"},
   { Constrained1, "Constrained1"},
@@ -144,7 +147,7 @@ PatternAndNameList gPatterns = {
   { MilliTimer, "MilliTimer"},
   { Caleido1, "Caleido1"},
   { Caleido2, "Caleido2"},
-  { Caleido3, "Caleido3"},
+//  { Caleido3, "Caleido3"}, just black on ESP/Smartmatrix
   { Caleido5, "Caleido5"},
   { vortex, "vortex"},
   { squares, "squares"},

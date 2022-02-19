@@ -102,30 +102,13 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 void ReadAudio() {
   if(MSGEQ7read()) {
     for (int b = 0; b < 7; b++) {
-      left[b] = map(MSGEQ7.get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
-      right[b] = map(MSGEQ7.get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      left[b] = map(MSGEQ7get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      right[b] = map(MSGEQ7get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
     }
   }
 }
 
-/*
--------------------------------------------------------------------
- The main program
- -------------------------------------------------------------------
- */
-//void loop()
-//{
-//  AutoRunAudio();
-/////  AutoRun();
-//  // Comment AutoRun out and test examples seperately here
-//
-//// SlowMandala(); //    red slow
-//// Dots1(); //          2 arround one
-//// Dots2(); //          stacking sines
-//// SlowMandala2(); //   just nice and soft
-//// SlowMandala3(); //   just nice and soft
-//// Mandala8(); //       copy one triangle all over
-//}
+
 
 /*
 -------------------------------------------------------------------
@@ -380,48 +363,6 @@ void RainbowTriangle() {
  Audio6
  -------------------------------------------------------------------
  */
-
-// all examples together
-void AutoRun() {
-  // all oscillator based:
-//  Serial.println("Dot1");
-//   for(int i = 0; i < 300; i++) {Dots1();}
-  Serial.println("Dot2");
-   for(int i = 0; i < 300; i++) {Dots2();}
-
-  Serial.println("SlowMandala");
-   SlowMandala();
-
-  Serial.println("SlowMandala2");
-   SlowMandala2();
-   
-  Serial.println("SlowMandala3");
-   SlowMandala3();
-
-  Serial.println("Mandala8");
-   for(int i = 0; i < 300; i++) {Mandala8();}
-   
-   AutoRunAudio();
-   /*
-   for(int i = 0; i < 500; i++) {
-   NoiseExample1();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample2();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample3();
-   }
-   //SpeedTest();
-   for(int i = 0; i < 500; i++) {
-   NoiseExample4();
-   }
-   for(int i = 0; i < 500; i++) {NoiseExample5();}
-   
-  NoiseExample6();
-  NoiseExample7();
-  */
-}
 
 void AutoRunAudio() {
      // all MSGEQ7 based:

@@ -50,10 +50,6 @@ int MSGEQ7get(int band, int channel) {
 
 int led = 0;
 
-// storage of the 7 10Bit (0-1023) audio band values
-int left[7];
-int right[7];
-
 void controlLoop() {
   int gPatternCount = 32; // FIXME
   Dmx.loop();
