@@ -1,4 +1,3 @@
-#include "MSGEQ7.h"
 
 //BUTTON SETUP STUFF\w43fed
 byte prevKeyState = HIGH;

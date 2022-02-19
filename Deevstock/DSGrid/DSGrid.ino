@@ -6,6 +6,10 @@
 //  #define  WS1616
 #endif
 
+#ifdef ESP32
+#include <WiFi.h> // ugly to add here, but later causes error about param count to swap method
+#endif
+
 #define DISABLE_MATRIX_TEST // No grey on start
 #include "neomatrix_config.h"
 
@@ -87,8 +91,9 @@ int FADE = 50;
 #include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
 #endif
 
-#include "stars.h"
-
+#ifndef ESP32
+#include "stars.h" // needs too much ram for ESP32
+#endif
 
 // basically beatsin16 with an additional phase
 
@@ -112,7 +117,9 @@ typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
+#ifndef ESP32
   { showStars, "showStars"},
+#endif
 #ifndef TEENSY4
   { EQ, "EQ"}, 
   { VU, "VU"},
@@ -173,33 +180,25 @@ int autopgm = random(1, (gPatternCount - 1));
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
-  
+  delay(1000);
   Serial.println("Setup");
+  delay(1000);
   controlSetup();
-
-  matrix_setup();
+  delay(1000);
+  Serial.println("matrix_setup");
+  delay(500);
+  matrix_setup(false);
   
-  //  leds[XY(0,0)] = CRGB::White;
-  //  leds[XY(29,0)] = CRGB::Blue;
-  //  leds[XY(29,8)] = CRGB::Yellow;
-  //  leds[XY(0, 9)] = CRGB::Green;
-  //  leds[XY(0, 28)] = CRGB::Green;
-  //  leds[XY(0, 29)] = CRGB::Red;
-  //  leds[XY(29, 29)] = CRGB::Blue;
-  //  FastLED.delay(10000);
-
-    ledtest();
-
-  //  // Initialize our noise coordinates to some random values
-  //  fx = random16();
-  //  fy = random16();
-  //  fz = random16();
-
-  //  x2 = random16();
-  //  y2 = random16();
-  //  z2 = random16();
-
-  //AutoRunAudio();
+//  // Initialize our noise coordinates to some random values
+//  fx = random16();
+//  fy = random16();
+//  fz = random16();
+//
+//  x2 = random16();
+//  y2 = random16();
+//  z2 = random16();
+  
+  Serial.println("\n\nEnd of setup");
   Serial.printf("There are %u patterns\n", gPatternCount);
 }
 

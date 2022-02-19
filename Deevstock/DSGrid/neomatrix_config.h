@@ -424,10 +424,10 @@ uint32_t tft_spi_speed;
     uint8_t matrix_brightness = 255;
 
     #ifdef ESP32
-    #pragma message "SmartMatrix for ESP32 with 64x32 16 scan panel and 64x96 resolution"
-    const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_MOD16SCAN;   // use SMARTMATRIX_HUB75_16ROW_MOD8SCAN for common 16x32 panels
+    #pragma message "SmartMatrix for ESP32 with SMARTMATRIX_HUB75_64ROW_MOD32SCAN"
+    const uint8_t kPanelType = SMARTMATRIX_HUB75_64ROW_MOD32SCAN;   // use SMARTMATRIX_HUB75_16ROW_MOD8SCAN for common 16x32 panels
     const uint16_t MATRIX_TILE_WIDTH = 64; // width of EACH NEOPIXEL MATRIX (not total display)
-    const uint16_t MATRIX_TILE_HEIGHT= 96; // height of each matrix
+    const uint16_t MATRIX_TILE_HEIGHT= 64; // height of each matrix
     #elif defined(__MK66FX1M0__) // my teensy 3.6 is connected to a 64x64 panel
     #pragma message "SmartMatrix for Teensy with 64x64 32 scan panel"
     //const uint8_t kPanelType = SMARTMATRIX_HUB75_32ROW_MOD16SCAN;   // use SMARTMATRIX_HUB75_16ROW_MOD8SCAN for common 16x32 panels

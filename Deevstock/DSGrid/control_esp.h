@@ -1,4 +1,11 @@
 #pragma message ESP platform - all in one
+
+#define MSGEQ7_OUT_MAX 255
+#define MSGEQ7_BASS 0
+#define MSGEQ7_LOW 0
+#define MSGEQ7_MID 3
+#define MSGEQ7_HIGH 5
+
 #if defined(ESP8266) // ESP8266
 #include <ESP8266WiFi.h>
 
@@ -74,12 +81,17 @@ void controlSetup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  delay(2000);
+  
   pgm = 0; // 0 = autoRun
 
   setupOTA();
 
   udpSyncConnected = true; // TODO - sometimes the wifi starts but ip is still 0.0.0.0
+  Serial.println("beginMulticast");
   fftUdp.beginMulticast(IPAddress(239, 0, 0, 1), audioSyncPort);
+
+  Serial.println("End of ESP control setup");
 }
 
 
@@ -112,11 +124,6 @@ void readDMX() {
   }
 }
 
-// storage of the 7 10Bit (0-1023) audio band values
-// modified only by AudioRead()
-int left[7];
-int right[7];
-
 #include "audio.h"
 
 // FAKE MSGEQ for now
@@ -126,7 +133,7 @@ bool MSGEQ7read() {
 }
 
 int MSGEQ7get(int band) {
-  ReadAudio();
+//  ReadAudio();
   return left[band];
 }
 
@@ -192,6 +199,10 @@ void readAudioUDP() {
     }
   }
 
+}
+
+int mapNoise(int v) {
+  return v;
 }
 
 
