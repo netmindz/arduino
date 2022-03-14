@@ -9,10 +9,10 @@
 	url = https://github.com/jimparis/DmxReceiver.git
 [submodule "libraries/E131"]
 	path = libraries/E131
-	url = git@github.com:forkineye/E131.git
+	url = https://github.com/netmindz/E131.git
 [submodule "libraries/ESPAsyncE131"]
 	path = libraries/ESPAsyncE131
-	url = https://github.com/forkineye/ESPAsyncE131.git
+	url = https://github.com/netmindz/ESPAsyncE131.git
 [submodule "libraries/ESPAsyncUDP"]
 	path = libraries/ESPAsyncUDP
 	url = https://github.com/me-no-dev/ESPAsyncUDP.git
@@ -68,8 +68,6 @@
 [submodule "libraries/NeoPixelBus"]
 	path = libraries/NeoPixelBus
 	url = https://github.com/Makuna/NeoPixelBus.git
-[submodule "ESPAsyncE131"]
-	url = https://github.com/forkineye/ESPAsyncE131.git
 [submodule "WLED-Audio"]
 	path = WLED-Audio
 	url = https://github.com/netmindz/WLED.git
@@ -168,3 +166,21 @@
 [submodule "libraries/ESP32-HUB75-MatrixPanel-I2S-DMA"]
 	path = libraries/ESP32-HUB75-MatrixPanel-I2S-DMA
 	url = https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA.git
+[submodule "libraries/mqtt-client"]
+	path = libraries/mqtt-client
+	url = https://bitbucket.org/amotzek/mqtt-client.git
+[submodule "libraries/EspMQTTClient"]
+	path = libraries/EspMQTTClient
+	url = https://github.com/plapointe6/EspMQTTClient.git
+[submodule "libraries/pubsubclient"]
+	path = libraries/pubsubclient
+	url = https://github.com/knolleary/pubsubclient.git
+[submodule "libraries/arduino-home-assistant"]
+	path = libraries/arduino-home-assistant
+	url = https://github.com/dawidchyrzynski/arduino-home-assistant.git
+[submodule "libraries/espsoftwareserial"]
+	path = libraries/espsoftwareserial
+	url = https://github.com/plerup/espsoftwareserial.git
+[submodule "libraries/arduinoWebSockets"]
+	path = libraries/arduinoWebSockets
+	url = https://github.com/Links2004/arduinoWebSockets
