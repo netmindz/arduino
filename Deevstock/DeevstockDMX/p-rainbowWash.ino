@@ -8,7 +8,7 @@ void DrawOneFrame( byte startHue8, int8_t yHueDelta8, int8_t xHueDelta8)
     byte pixelHue = lineStartHue;
     for ( byte x = 0; x < kMatrixWidth; x++) {
       pixelHue += xHueDelta8;
-      leds[ XY(x, y)]  = ColorFromPalette(currentPalette, pixelHue, 255, currentBlending);
+      leds[ XY(x, y)]  = ColorFromPalette(currentPalette, pixelHue, 75, currentBlending);
     }
   }
 }
@@ -22,4 +22,3 @@ void RainbowWash()
   DrawOneFrame( ms / 65536, yHueDelta32 / 32768, xHueDelta32 / 32768);
   FastLED.delay(map(SPEEDO,0,255, 500, 0)); // TWEAK ME was 20
 }
-
