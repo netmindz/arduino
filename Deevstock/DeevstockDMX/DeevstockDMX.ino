@@ -161,21 +161,21 @@ PatternAndNameList gPatterns = {
 
 // shimmer, confetti, sinelon,
 PatternAndNameList gAutoPatterns = {
-  { pixels, "pixels"},         // Long line of colours
-  { fillnoise, "fillnoise"},      // Center to edges with base color and twinkle
-  { jugglep, "jugglep"},        // Long line of sinewaves
-  { ripple, "ripple"},         // Juggle with twinkles
-  { pixel, "pixel"},          // Long line of colours
-  { matrix, "matrix"},         // Start to end with twinkles
-  { onesine, "onesine"},        // Long line of shortlines
-  { noisefire, "noisefire"},      // Start to end
-  { rainbowbit, "rainbowbit"},     // Long line of short lines with twinkles
-  { noisefiretest, "noisefiretest"},  // Center to edges
-  { rainbowg, "rainbowg"},       // Long line with flashes
-  { noisewide, "noisewide"},      // Center to edges
-  { plasma, "plasma"},         // Long line of short lines
-  { besin, "besin"},          // center to edges with black
-  { noisepal, "noisepal"},       // Long line
+//  { pixels, "pixels"},         // Long line of colours
+//  { fillnoise, "fillnoise"},      // Center to edges with base color and twinkle
+//  { jugglep, "jugglep"},        // Long line of sinewaves
+//  { ripple, "ripple"},         // Juggle with twinkles
+//  { pixel, "pixel"},          // Long line of colours
+//  { matrix, "matrix"},         // Start to end with twinkles
+//  { onesine, "onesine"},        // Long line of shortlines
+//  { noisefire, "noisefire"},      // Start to end
+//  { rainbowbit, "rainbowbit"},     // Long line of short lines with twinkles
+//  { noisefiretest, "noisefiretest"},  // Center to edges
+//  { rainbowg, "rainbowg"},       // Long line with flashes
+//  { noisewide, "noisewide"},      // Center to edges
+//  { plasma, "plasma"},         // Long line of short lines
+//  { besin, "besin"},          // center to edges with black
+//  { noisepal, "noisepal"},       // Long line
   { rainbowSweep, "rainbowSweep"},
   { Rainbow, "Rainbow"},
   { dsnake, "dsnake"},
