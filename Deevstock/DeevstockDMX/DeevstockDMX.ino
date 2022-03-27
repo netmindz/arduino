@@ -11,7 +11,6 @@
 #define FASTLED_ALLOW_INTERRUPTS   1 // setting 0 fixes flutter, causes crash
 //#define FASTLED_INTERRUPT_RETRY_COUNT 0
 
-#define MIC_PIN  A0
 const uint8_t kMatrixWidth = 50; // length of string
 const uint8_t kMatrixHeight = 16; // number of strings
 #define NUM_LEDS_PER_STRIP 100
@@ -40,9 +39,6 @@ TeensyDmx Dmx(Serial1);
 
 CRGB leds[NUM_LEDS];
 CRGB ledsAudio[NUM_AUDIO_LEDS];
-
-AudioControlSGTL5000 audioShield;
-AudioAnalyzeFFT1024    fft;
 
 // **********************************************************************************************************
 
@@ -191,7 +187,6 @@ PatternAndNameList gAutoPatterns = {
  };
 
 
-CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
 
 // **********************************************************************************************************
 // Setup
