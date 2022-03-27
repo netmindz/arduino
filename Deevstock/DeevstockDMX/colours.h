@@ -5,7 +5,6 @@ DEFINE_GRADIENT_PALETTE( pinks_p ) {
   255,   255, 255, 255
 };
 
-
 DEFINE_GRADIENT_PALETTE( pinkPurple_p ) {
   0,   84, 0, 153,
   64, 153, 0, 142,

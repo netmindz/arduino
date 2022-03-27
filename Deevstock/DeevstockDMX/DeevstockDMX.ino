@@ -264,11 +264,17 @@ void loop()
   }
 
     EVERY_N_SECONDS( 2 ) {
-      Serial.print("pattern = ");
-      Serial.println(gPatterns[pattern].name);
+      if(pattern == 0) {
+        Serial.print("auto pattern = ");
+        Serial.println(gAutoPatterns[gCurrentPatternNumber].name);        
+      }
+      else {
+        Serial.print("pattern = ");
+        Serial.println(gPatterns[pattern].name);
+      }
     }
     EVERY_N_SECONDS( 10 ) {
-      Serial.println(LEDS.getFPS());
+      Serial.printf("FPS: %u\n", LEDS.getFPS());
     }
   soundmems();
   gPatterns[pattern].pattern();
