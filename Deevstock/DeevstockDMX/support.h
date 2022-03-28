@@ -89,11 +89,13 @@ void showSegments() {
   for (int s = 0; s < NUM_STRIPS; s++) {
     for (int i = 0; i < NUM_AUDIO_LEDS; i++) {
       int p = (s * NUM_AUDIO_LEDS) + i;
-      leds[getPixel(p)] = ledsAudio[i];
+      if(RED > 0 || GREEN > 0 || BLUE > 0) {
+        leds[getPixel(p)] = blend(ledsAudio[i], CRGB(RED, GREEN, BLUE), 100);
+      }
+      else {
+        leds[getPixel(p)] = ledsAudio[i];
+      }
     }
   }
   FastLED.show();
 }
-
-
-

@@ -47,6 +47,11 @@ uint8_t BRIGHTNESS = 255;
 uint8_t SPEEDO = 180;
 uint8_t FADE = 180;
 
+uint8_t RED = 0;
+uint8_t GREEN = 0;
+uint8_t BLUE = 0;
+
+
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
@@ -256,6 +261,11 @@ void loop()
       pattern = p;
     }
     currentPalette = palettes[map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1))]; // channel 6
+
+    RED = Dmx.getBuffer()[6];
+    GREEN = Dmx.getBuffer()[7];
+    BLUE = Dmx.getBuffer()[8];
+
 //    EVERY_N_SECONDS( 2 ) {
 //      Serial.println(p);
 //      Serial.print("b=");
