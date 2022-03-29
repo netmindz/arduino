@@ -2,17 +2,15 @@ boolean MSGEQ7read() {
   return fft_available;
 }
 
-
 #define MSGEQ7_OUT_MAX 255
 
 int MSGEQ7get(int band, int channel) {
-  int value = map((fftData[band] * 100), 0, 100, 0, MSGEQ7_OUT_MAX);
+  int value = map((fftData[band] * 1000), 0, 100, 0, MSGEQ7_OUT_MAX); // TODO: should be 100, but testing at home
 //  Serial.printf("Band: %u = %u\n", band, value);
   return value;
 }
 
-int barWidth = (kMatrixWidth / 8) / 2;
-int blockWidth = barWidth * 8;
+int barWidth = (kMatrixHeight / 8);
 
 void drawPixel(int x, int y, CRGB color) {
   leds[XY(x, y)] = color;
@@ -34,38 +32,23 @@ void FunkyPlank() {
       int hue = MSGEQ7get(band, 0);
       int v = map(MSGEQ7get(band, 0), 0, MSGEQ7_OUT_MAX, 10, 255);
       for (int b = 0; b < barWidth; b++) {
-        int  xpos = blockWidth - (barWidth * band) - b;
-        drawPixel(xpos, 0, CHSV(hue, 255, v));
-//        Serial.printf("band: %u, hue: %u v: %u\n", band, hue, v);
+        int  pos = (barWidth * band) + b;
+        drawPixel(0, pos, CHSV(hue, 255, v));
+        Serial.printf("pos: %u band: %u hue: %u v: %u\n", pos, band, hue, v);
         //      drawPixel((offset + band + 1), 0, CHSV(hue, 255, 255));
       }
     }
 
-    // display values of left channel on DMD
-    for (int band = 0; band < 8; band++ )
-    {
-      int hue = MSGEQ7get(band, 1);
-      int v = map(MSGEQ7get(band, 1), 0, MSGEQ7_OUT_MAX, 10, 255);
-      for (int b = 0; b < barWidth; b++) {
-        int xpos = blockWidth + 1 + (barWidth * band) + b;
-        drawPixel(xpos, 0, CHSV(hue, 255, v));
+    // Update the display:
+    for (int i = (kMatrixHeight - 1); i >= 0; i--) {
+      for (int j = (kMatrixWidth - 1); j >= 0; j--) {
+        int src = XY((j - 1), i);
+        int dst = XY(j, i);
+        leds[dst] = leds[src];
       }
     }
+    FastLED.show(); // TODO: needs non-blocking delay
 
-    FastLED.show();
-    moveUp();
-
-  }
-}
-
-void moveUp() {
-  // Update the display:
-  for (int i = (kMatrixHeight - 1); i >= 0; i--) {
-    for (int j = (kMatrixWidth - 1); j >= 0; j--) {
-      int src = XY(j, (i - 1));
-      int dst = XY(j, i);
-      leds[dst] = leds[src];
-    }
   }
 }
 
@@ -85,9 +68,8 @@ void DJLight() {
   if (newReading) {
 
     int bands[8];
-    for (int band = 0; band < 8; band++ )
-    {
-      bands[band] = MSGEQ7get(band, 1);
+    for (int band = 0; band < 8; band++ ) {
+      bands[band] = MSGEQ7get(band, 1) / 2;
     }
 
 
@@ -95,10 +77,10 @@ void DJLight() {
 //    leds[mid].fadeToBlackBy(bands[3] / 12);
 
 
-    ledsAudio[mid] = CRGB(bands[5]/2, bands[2]/2, bands[0]/2);
+    ledsAudio[mid] = CRGB(bands[5], bands[2], bands[0]);
     ledsAudio[mid].fadeToBlackBy((map(bands[1], 0, MSGEQ7_OUT_MAX, 255, 10)));
 
-     Serial.printf("RGB: %u %u %u\n", bands[5]/2, bands[2]/2, bands[0]/2);
+     Serial.printf("RGB: %u %u %u\n", bands[5], bands[2], bands[0]);
 
     
     //move to the left
