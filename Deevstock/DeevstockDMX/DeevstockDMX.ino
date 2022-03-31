@@ -206,7 +206,7 @@ void setup() {
 
   Dmx.setMode(TeensyDmx::DMX_IN);
 
-  pinMode(LED_BUILTIN, OUTPUT);
+//  pinMode(LED_BUILTIN, OUTPUT); --- BREAKS AUDIO ?!
 
   // FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
   LEDS.addLeds<OCTOWS2811, RGB>(leds, NUM_LEDS_PER_STRIP);
