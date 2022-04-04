@@ -16,9 +16,6 @@ void InitMSGEQ7() {
 void controlSetup() {
   dmxRx.begin();
   pgm = 0;
-
-  
-//  delay(1000);
   Serial.println("controlSetup done");
 }
 
@@ -64,12 +61,13 @@ void controlLoop() {
   // Read at least 5 bytes (4 channels) starting from channel 0 (start code)
   int read = newFrame(dmxRx);
   if (read >= 5 && dmxRxBuf[0] == 0) {  // Ensure start code is zero
+    brightness = getValue(1, 0, 100);
     EVERY_N_SECONDS( 2 ) {
-      Serial.printf("Brighness: %u\n", getValue(1, 0, 255)); // Dimmer data for Channel 1
+      Serial.printf("Brighness: %u\n", brightness); // Dimmer data for Channel 1
     }
     led = !led;
     // digitalWrite(LED_BUILTIN, led); - breaks audio - move pin
-    FastLED.setBrightness(getValue(1, 0, 100));
+    FastLED.setBrightness(brightness);
     pgm = getValue(2, 0, (getPatternCount() - 1));
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
