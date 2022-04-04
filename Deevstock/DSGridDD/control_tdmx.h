@@ -1,68 +1,75 @@
-#pragma message Teensy 3.2 + MSGEQ7
-#include <TeensyDmx.h>
-//#define MSGEQ7_10BIT
-// MSGEQ7
-#include "MSGEQ7.h"
+#pragma message Teensy 4.0
+#define LED_PIN 7
+#define CLOCK_PIN 14
 
-// MSGEQ7 wiring on spectrum analyser shield
-#define MSGEQ7_RESET_PIN  5
-#define MSGEQ7_STROBE_PIN 6
-#define AUDIO_LEFT_PIN    A2
-#define AUDIO_RIGHT_PIN   A1
-#define MSGEQ7_INTERVAL ReadsPerSecond(40)
-#define MSGEQ7_SMOOTH true
+#include <TeensyDMX.h>
 
-CMSGEQ7<true, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
+namespace teensydmx = qindesign::teensydmx;
 
-TeensyDmx Dmx(Serial1);
+teensydmx::Receiver dmxRx{Serial1};
+uint8_t dmxRxBuf[513];  // Buffer up to 513 channels, including the start code
 
 void InitMSGEQ7() { 
-  MSGEQ7.begin();
+ 
 }
 
 void controlSetup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  Dmx.setMode(TeensyDmx::DMX_IN);
+  dmxRx.begin();
   pgm = 0;
 
-  InitMSGEQ7();
   
-  delay(1000);
-  Serial.println("Startup");
+//  delay(1000);
+  Serial.println("controlSetup done");
 }
 
 int getValue(int chan, int minV, int maxV) {
-  return map(Dmx.getBuffer()[(chan - 1)], 0, 255, minV, maxV);
+  return map(dmxRxBuf[chan], 0, 255, minV, maxV);
 }
 
-
+unsigned long samplems = 0;
 boolean MSGEQ7read() {
-  return MSGEQ7.read(MSGEQ7_INTERVAL);
+  if(fft1024.available() && (millis() - samplems) > 30) {
+    samplems = millis();
+    return true;
+  }
+  return false;
 }
 
 int MSGEQ7get(int band) {
-  return mapNoise(MSGEQ7.get(band));
+  int a = map(spectrumValue[(band * 2)], 0, 100, 0, 255); // TODO check range
+  int b = map(spectrumValue[(band * 2) + 1], 0, 100, 0, 255); // TODO check range
+  return max(a, b);
 }
 
 int MSGEQ7get(int band, int channel) {
-  return mapNoise(MSGEQ7.get(band, channel));
+  return MSGEQ7get(band);
 }
 
 int led = 0;
 
+// storage of the 7 10Bit (0-1023) audio band values
+int left[7];
+int right[7];
+
+//// Checks if there's a new DMX frame and returns the frame size.
+static int newFrame(teensydmx::Receiver &dmxRx) {
+  return dmxRx.readPacket(dmxRxBuf, 0, 513);
+      // Note: It's less efficient to read bytes you don't need;
+      // this is only here because it was requested to make the
+      // code look better. Ideally, you should call
+      // `readPacket(buf, 0, size_needed)` instead.
+}
+
 void controlLoop() {
-  Dmx.loop();
-  if (Dmx.newFrame()) {
+  // Read at least 5 bytes (4 channels) starting from channel 0 (start code)
+  int read = newFrame(dmxRx);
+  if (read >= 5 && dmxRxBuf[0] == 0) {  // Ensure start code is zero
     EVERY_N_SECONDS( 2 ) {
       Serial.printf("Brighness: %u\n", getValue(1, 0, 255)); // Dimmer data for Channel 1
     }
     led = !led;
-    digitalWrite(LED_BUILTIN, led);
-    int b =  getValue(1, 0, 255); // brightness = 1
-    if (b != BRIGHTNESS) {
-      BRIGHTNESS = b;
-      FastLED.setBrightness(BRIGHTNESS);
-    }
+    // digitalWrite(LED_BUILTIN, led); - breaks audio - move pin
+    FastLED.setBrightness(getValue(1, 0, 100));
     pgm = getValue(2, 0, (getPatternCount() - 1));
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
