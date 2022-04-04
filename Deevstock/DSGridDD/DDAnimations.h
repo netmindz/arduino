@@ -191,5 +191,19 @@ void spectrumAnalyzer(bool dir) {
 }
 
 void placeHolder() {
+	Serial.println("Silence");
+}
 
+void spectrumAnalyzer() {
+  spectrumAnalyzer(true);
+}
+
+void fullSparklesFrame() {
+  fullSparkles();
+  blend2(255);
+}
+
+void drawCirclesFrame() {
+  drawCircles();
+  blend3(255);
 }
