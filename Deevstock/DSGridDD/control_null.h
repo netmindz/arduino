@@ -16,3 +16,15 @@ void controlLoop() {
   pgm = 3;
 }
 
+// FAKE MSGEQ for now
+int MSGEQ7get(int band) {
+  return 0;
+}
+
+int MSGEQ7get(int band, int channel) {
+  return MSGEQ7get(band);
+}
+
+boolean MSGEQ7read() {
+  return false;
+}
