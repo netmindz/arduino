@@ -28,6 +28,8 @@ CRGB leds3[kMatrixWidth * kMatrixHeight];
 int coords[kMatrixWidth][kMatrixHeight]; // map of x,y
 const int height = kMatrixHeight;
 const int width = kMatrixWidth;
+bool kMatrixSerpentineLayout = true;
+
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
@@ -99,50 +101,6 @@ double mult = 1.00;
 
 #include "stars.h"
 
-void setup() {
-  // enable debugging info output
-  Serial.begin(115200);
-  
-  Serial.println("Setup");
-  controlSetup();
-
-  // This function in 'DDAudio.h' sets the input (aux/mic), and configures the audio adapter
-  audioSetup();
-  
-  // If there's a mapping function used to set (x,y) or (x,y,z) coordinates for each LED pixel, put here:
-  // mapXY() is a function that sets an LED # to every x,y coordinate on a matrix.
-  mapXY();
-
-  FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
-
-  // switch dithering off to avoid flicking at low fps
-  FastLED.setDither(0);
-
-  FastLED.setBrightness(55);
-
-  //  leds[XY(0,0)] = CRGB::White;
-  //  leds[XY(29,0)] = CRGB::Blue;
-  //  leds[XY(29,8)] = CRGB::Yellow;
-  //  leds[XY(0, 9)] = CRGB::Green;
-  //  leds[XY(0, 28)] = CRGB::Green;
-  //  leds[XY(0, 29)] = CRGB::Red;
-  //  leds[XY(29, 29)] = CRGB::Blue;
-  //  FastLED.delay(10000);
-
-  ledtest();
-
-  //  // Initialize our noise coordinates to some random values
-  //  fx = random16();
-  //  fy = random16();
-  //  fz = random16();
-
-  //  x2 = random16();
-  //  y2 = random16();
-  //  z2 = random16();
-
-  //AutoRunAudio();
-
-}
 
 // basically beatsin16 with an additional phase
 
@@ -156,88 +114,127 @@ uint16_t beatsin(accum88 beats_per_minute, uint16_t lowest = 0, uint16_t highest
   return result;
 }
 
-typedef void (*SimplePatternList[])();
-SimplePatternList gPatterns = {
-  autoRun, // must be first
-  showStars,
-  EQ,
-  VU,
-  FunkyPlank,
-  DJLight,
-  MirroredNoise,
-//  RedClouds,
-//  Lavalamp1,
-  Lavalamp2,
-  Lavalamp3,
-  Lavalamp4,
-  Lavalamp5,
-  Constrained1,
-  RelativeMotion1,
-  Water,
-  //    Bubbles,
-  TripleMotion,
-  CrossNoise,
-  CrossNoise2,
-  RandomAnimation,
-  MilliTimer,
-  Caleido1,
-  Caleido2,
-  Caleido3,
-  Caleido5,
-  vortex,
-  squares,
+typedef void (*Pattern)();
+typedef Pattern PatternList[];
+typedef struct {
+  Pattern pattern;
+  String name;
+} PatternAndName;
+typedef PatternAndName PatternAndNameList[];
 
+PatternAndNameList gPatterns = {
+  { autoRun, "autoRun"}, // must be first
+//  { fullSparklesFrame, "fullSparkles"},
+  { drawCirclesFrame, "drawCircles" },
+  { fallingMusic, "fallingMusic" },
+//  { spectrumAnalyzer, "spectrumAnalyzer"}, // crashes unit
+  { showStars, "showStars"},
+  { EQ, "EQ"}, 
+  { VU, "VU"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+  { vortex, "vortex"},
+  { squares, "squares"},
+  { MirroredNoise, "MirroredNoise"},
+////  RedClouds,
+////  Lavalamp1,
+//  { Lavalamp2, "Lavalamp2"},
+////  { Lavalamp3, "Lavalamp3"}, //just white and green
+//  { Lavalamp4, "Lavalamp4"},
+  { Lavalamp5, "Lavalamp5"},
+  { Constrained1, "Constrained1"},
+//  { RelativeMotion1, "RelativeMotion1"}, -- too bright
+  { Water, "Water"},
+//  { Bubbles1, "Bubbles1"},
+  { TripleMotion, "TripleMotion"},
+  { CrossNoise, "CrossNoise"},
+  { CrossNoise2, "CrossNoise2"},
+  { RandomAnimation, "RandomAnimation"},
+  { MilliTimer, "MilliTimer"},
+  { Caleido1, "Caleido1"},
+  { Caleido2, "Caleido2"},
+////  { Caleido3, "Caleido3"}, just black on ESP/Smartmatrix
+  { Caleido5, "Caleido5"},
+
+  { Mandala8, "Mandala8"},
+  { SlowMandala2, "SlowMandala2"}, // swirls in corner that leave "trails"
+  { SlowMandala3, "SlowMandala3"},
+  
   //      // Audio
-  MSGEQtest,
-  MSGEQtest2,
+//  { MSGEQtest, "MSGEQtest"}, // - odd red trails
+  { MSGEQtest2, "MSGEQtest2"},
   //   MSGEQtest3,
-  MSGEQtest4,
-  // AudioSpiral, // TODO: resize
-  //     MSGEQtest5,// TODO: resize
+  { MSGEQtest4, "MSGEQtest4"},
+//  { AudioSpiral, "AudioSpiral"}, // AudioSpiral, // TODO: resize & move
+//  { MSGEQtest5, "MSGEQtest5"}, //     MSGEQtest5,// TODO: resize & move
   //     MSGEQtest6, //boring
-  MSGEQtest7, // nice but resize?
-  MSGEQtest8,
+  { MSGEQtest7, "MSGEQtest7"}, // nice but resize?
+  { MSGEQtest8, "MSGEQtest8"},
   //   MSGEQtest9,
   //     CopyTest,
-  Audio1,// TODO: resize
-  Audio2, // cool wave - move
+//  { Audio1, "Audio1"},// TODO: resize
+  { Audio2, "Audio2"}, // cool wave - move
   //     Audio3, // boring
-  //     Audio4,// TODO: move
-  //   CaleidoTest1,
-  //  CaleidoTest2,// TODO: move
-  Audio5, // cool wave - move
-  //     Audio6,
-
+//  {Audio4, "Audio4"}, //     Audio4,// TODO: move
+  {CaleidoTest1, "CaleidoTest1"}, //   CaleidoTest1,
+  {CaleidoTest2,"CaleidoTest2"}, //  CaleidoTest2,// TODO: move
+//  { Audio5, "Audio5"}, // cool wave - move
+  {Audio6, "Audio6"}, //     Audio6,
 };
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
+int autopgm = 1; // random(1, (gPatternCount - 1));
+
+void setup() {
+  FastLED.addLeds<APA102, LED_PIN, CLOCK_PIN, COLOR_ORDER, DATA_RATE_MHZ(8)>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  // enable debugging info output
+  Serial.begin(115200);
+  delay(2000);
+  Serial.println("Setup starting ....");
+  delay(1000);
+  controlSetup();
+  audioSetup();
+  mapXY();
+  Serial.println("C");
+
+//  ledtest();
+//  Serial.println("D");
+  BasicVariablesSetup(); 
+  delay(1000);
+  Serial.println("\nEnd of setup");
+  Serial.printf("There are %u patterns\n", gPatternCount);
+  delay(1000);
+}
 
 void loop() {
 
   controlLoop();
-  // Music Analysis code
   musicAnalytics();
-  
-//  Serial.println(gPatterns[pgm]);
-  gPatterns[pgm]();
-//  FastLED.setMaxRefreshRate(120);
-//  fullSparkles();
-//  blend2(255);
-//  
+
+  EVERY_N_SECONDS(2) {
+    if(pgm != 0) {
+      Serial.println(gPatterns[pgm].name);
+    }
+    else {
+      Serial.print("Auto: ");
+      Serial.println(gPatterns[autopgm].name);
+    }
+  }
+  gPatterns[pgm].pattern();
   ShowFrame();
 }
 
-int autopgm = 1; //random(1, (gPatternCount - 1));
 void autoRun() {
-  EVERY_N_SECONDS(90) {
+  EVERY_N_SECONDS(60) {
     autopgm = random(1, (gPatternCount - 1));
-    // autopgm++;
-    Serial.printf("Next Auto pattern %u\n", autopgm);
+//     autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
+    Serial.print("Next Auto pattern: ");
+    Serial.println(gPatterns[autopgm].name);
   }
 
-  gPatterns[autopgm]();
+  gPatterns[autopgm].pattern();
 
 }
 
