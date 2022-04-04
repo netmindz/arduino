@@ -259,6 +259,9 @@ void Lavalamp5() {
 
   MergeMethod2(3);
   //Show3Layers();
+
+  delay(10); //todo review
+
 }
 
 
@@ -300,6 +303,8 @@ void Constrained1() {
 
   // map layer 1 (blue) for noise values between 100 and 200
   ConstrainedMapping( 1, 100, 200, 1);
+
+  FastLED.delay(20); // todo - maybe more
 }
 
 
@@ -494,6 +499,9 @@ void RandomAnimation() {
 
 
   ShowLayer(0, 2);
+
+  delay(20); //todo review
+
 }
 
 
@@ -539,6 +547,8 @@ void Caleido1() {
 
   ShowLayer(0, 1);
   Caleidoscope2();
+
+  delay(20); //todo review
 }
 
 
@@ -561,6 +571,8 @@ void Caleido2() {
 
   ShowLayer(0, 1);
   Caleidoscope1();
+
+  delay(20); //todo review
 }
 
 
@@ -717,4 +729,3 @@ void Caleido7() {
   Caleidoscope1();
   FilterAll();
 }
-
