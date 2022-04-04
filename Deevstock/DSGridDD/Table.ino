@@ -119,7 +119,7 @@ void VU() {
     //fill_solid(leds, kMatrixWidth, CRGB::Black);
 
     int displayPeakL = map(MSGEQ7get(MSGEQ7_LOW, 0), 0, 255, 0, round(HEIGHT / 2));
-    int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, 255, 0, round(HEIGHT / 2));
+    int displayPeakR = map(MSGEQ7get(MSGEQ7_MID, 1), 0, 255, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
     Serial.println(displayPeakL);
 
@@ -139,8 +139,8 @@ void VU() {
         color = CHSV(map(i, 1, (HEIGHT / 2), 0, 230), 255, 255);
       }
       else {
-        unsigned int g = map(i, 1, HEIGHT, 254, 0);
-        color = CRGB(map(i , 1, HEIGHT, 0, 254), g, 0);
+        unsigned int g = map(i, 1, (HEIGHT / 2), 254, 0);
+        color = CRGB(map(i , 1, (HEIGHT / 2), 0, 254), g, 0);
       }
       drawPixel((offset - i), 0, color);
     }
@@ -242,8 +242,6 @@ void FunkyPlank() {
 void DJLight() {
 
   bool newReading = MSGEQ7read();
-
-//  int offset = 8;
 
   int mid = NUM_LEDS / 2;
 
