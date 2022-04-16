@@ -341,48 +341,6 @@ void RainbowTriangle() {
  -------------------------------------------------------------------
  */
 
-// all examples together
-void AutoRun() {
-  // all oscillator based:
-//  Serial.println("Dot1");
-//   for(int i = 0; i < 300; i++) {Dots1();}
-  Serial.println("Dot2");
-   for(int i = 0; i < 300; i++) {Dots2();}
-
-  Serial.println("SlowMandala");
-   SlowMandala();
-
-  Serial.println("SlowMandala2");
-   SlowMandala2();
-   
-  Serial.println("SlowMandala3");
-   SlowMandala3();
-
-  Serial.println("Mandala8");
-   for(int i = 0; i < 300; i++) {Mandala8();}
-   
-   AutoRunAudio();
-   /*
-   for(int i = 0; i < 500; i++) {
-   NoiseExample1();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample2();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample3();
-   }
-   //SpeedTest();
-   for(int i = 0; i < 500; i++) {
-   NoiseExample4();
-   }
-   for(int i = 0; i < 500; i++) {NoiseExample5();}
-   
-  NoiseExample6();
-  NoiseExample7();
-  */
-}
-
 void AutoRunAudio() {
      // all MSGEQ7 based:
   Serial.println("MSGEQtest");
