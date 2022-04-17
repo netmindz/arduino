@@ -3,7 +3,12 @@
 */
 #define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
+#ifdef ESP32
+#include <WiFi.h>
+#include <ESPmDNS.h>
+#else
 #include <ESP8266WiFi.h>
+#endif
 #include <ESPAsyncE131.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
@@ -12,7 +17,12 @@
 #define UNIVERSE_COUNT 1  // Total number of Universes to listen for, starting at UNIVERSE
 
 #define CHANNEL_START 1 /* Channel to start listening at */
+
+#ifdef ESP32
+#define LED_PIN 26
+#else
 #define LED_PIN 2
+#endif
 
 #define COLOR_ORDER GRB
 #define CHIPSET     WS2811
@@ -24,7 +34,6 @@ int JUMP = 15;
 int SPEED = 100;
 boolean INWARD = true;
 int BRIGHTNESS = 10;
-int autopgm = 1; // random(1, (gPatternCount - 1));
 int autoPalette = 0;
 
 #include "wifi.h"
@@ -58,8 +67,7 @@ void rings();
 void audioRings();
 void simpleRings();
 void randomFlow();
-SimplePatternList gPatterns = { autoRun, rings, audioRings, simpleRings, randomFlow};
-int gPatternCount = ARRAY_SIZE(gPatterns);
+//SimplePatternList gPatterns = { autoRun, rings, audioRings, simpleRings, randomFlow};
 
 uint16_t audioSyncPort = 20000;
 bool newReading;
@@ -148,6 +156,8 @@ PatternAndNameList gPatterns = {
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gPalletteCount = ARRAY_SIZE(palettes);
 int pgm = 0;
+int autopgm = 2; // random(1, (gPatternCount - 1));
+
 
 void setup() {
   Serial.begin(115200);
@@ -204,8 +214,11 @@ void setup() {
 
   Serial.printf("There are %u patterns\n", gPatternCount);
 
+#ifdef ESP32
+  fftUdp.beginMulticast(IPAddress(239, 0, 0, 1), audioSyncPort);
+#else
   fftUdp.beginMulticast(WiFi.localIP(), IPAddress(239, 0, 0, 1), audioSyncPort);
-
+#endif
 
   setupRings();
 
@@ -283,9 +296,6 @@ void loop() {
     Serial.println();
   }
   readAudioUDP();
-<<<<<<< HEAD
-  gPatterns[pgm]();
-=======
   EVERY_N_SECONDS(10) {
     Serial.print("Pattern: ");
     if(pgm != 0) {
@@ -297,7 +307,6 @@ void loop() {
   }
   gPatterns[pgm].pattern();
   timeClient.update();
->>>>>>> ce563ea3b1dc615dae0f11603a2c56eb31033664
 }
 
 void autoRun() {
@@ -310,7 +319,7 @@ void autoRun() {
     Serial.println(gPatterns[autopgm].name);
   }
 
-  EVERY_N_SECONDS(130) {
+  EVERY_N_SECONDS(160) {
     autoPalette = random(0, (gPalletteCount - 1));
     //  autoPalette++;
     if (autoPalette >= gPalletteCount) autoPalette = 0;
@@ -363,12 +372,6 @@ void randomFlow() {
 }
 
 void audioRings() {
-<<<<<<< HEAD
-  if (newReading) {
-    newReading = false;
-    for (int i = 0; i < 7; i++) {
-      setRingFromFtt((i * 2), i);
-=======
   if(!audioRec && pgm == 0 && millis() > 5000) {
     Serial.println("Skip audioRings as no data");
     autopgm++;
@@ -391,7 +394,7 @@ void audioRings() {
 //      CRGB color = ColorFromPalette(currentPalette, val, 255, currentBlending);
 //      color.nscale8_video(val);
       setRing(i, color);
->>>>>>> ce563ea3b1dc615dae0f11603a2c56eb31033664
+//        setRingFromFtt((i * 2), i); 
     }
 
     setRingFromFtt(2, 7); // set outer ring to base
@@ -410,22 +413,6 @@ void setRingFromFtt(int index, int ring) {
   setRing(ring, color);
 }
 
-int autopgm = 2; // random(1, (gPatternCount - 1));
-void autoRun() {
-  EVERY_N_SECONDS(90) {
-    autopgm = random(1, (gPatternCount - 1));
-    // autopgm++;
-    Serial.printf("Next Auto pattern %u\n", autopgm);
-    if (autopgm >= gPatternCount) autopgm = 1;
-  }
-  
-  EVERY_N_SECONDS(160) {
-    Serial.printf("New Palette\n", autopgm);
-    currentPalette = palettes[random(0, (gPaletteCount - 1))];
-  }
-  gPatterns[autopgm]();
-
-}
 void setRing(int ring, CRGB colour) {
   int offset = 0;
   int count = 0;
