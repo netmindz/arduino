@@ -21,13 +21,12 @@ DEFINE_GRADIENT_PALETTE( redblue_gp ) {
   128,   DEFAULT2R, DEFAULT2G,  DEFAULT2B,
   255,   DEFAULT1R,  DEFAULT1G,  DEFAULT1B
 }; //red
-CRGBPalette16 MC_p = redblue_gp;
+
 DEFINE_GRADIENT_PALETTE( redblue1_gp ) {
   0,     DEFAULT1R,  DEFAULT1G,  DEFAULT1B,   //blue
   255,   DEFAULT2R, DEFAULT2G,  DEFAULT2B
 
 }; //red
-CRGBPalette16 MC1_p = redblue1_gp;
 
 int static_r = 255;
 int static_g = 255;
@@ -1754,11 +1753,11 @@ void do_Segment_MC() {
     spos++;
     if (spos >= 24)
       spos = 0;
-    leds[0] = ColorFromPalette( MC_p, 128, 255, LINEARBLEND);
+    leds[0] = ColorFromPalette( currentPalette, 128, 255, LINEARBLEND);
     for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
-      leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val, 255, LINEARBLEND);
       if  (((i - 1) * (360 / 6) >= 15 * spos and ((i - 1) * (360 / 6)) <= 15 * (spos + 4)) == 0) {
         if ((spos == 20 and i - 1 == 0) == 0)
           if ((spos == 21 and i - 1 == 0) == 0)
@@ -1770,7 +1769,7 @@ void do_Segment_MC() {
     for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val, 255, LINEARBLEND);
       if  (((i - 7) * (360 / 12) >= 15 * spos and ((i - 7) * (360 / 12)) <= 15 * (spos + 4)) == 0) {
         if ((spos == 20 and i - 7 == 0) == 0)
           if ((spos == 21 and i - 7 == 0) == 0)
@@ -1785,7 +1784,7 @@ void do_Segment_MC() {
     for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val, 255, LINEARBLEND);
       if  (((i - 19) * (360 / 18) >= 15 * spos and ((i - 19) * (360 / 18)) <= 15 * (spos + 4)) == 0) {
         if ((spos == 20 and i - 19 == 0) == 0)
           if ((spos == 21 and i - 19 == 0) == 0)
@@ -1801,7 +1800,7 @@ void do_Segment_MC() {
     for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val, 255, LINEARBLEND);
       if  (((i - 37) * (360 / 24) >= 15 * spos and ((i - 37) * (360 / 24)) <= 15 * (spos + 4)) == 0) {
         if ((spos == 20 and i - 37 == 0) == 0)
           if ((spos == 21 and i - 37 == 0) == 0)
@@ -2078,27 +2077,27 @@ void do_Linear_MC_Gradient_1() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    leds[0] = ColorFromPalette( MC_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
+    leds[0] = ColorFromPalette( currentPalette, 128 + (180 - colorIndex), 255, LINEARBLEND);
     for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((90 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((90 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
     for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((90 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     colorIndex += 28;
     FastLED.show();
@@ -2116,27 +2115,27 @@ void do_Linear_MC_Gradient_3() {
   if (millis() - mil >= 10) {
     mil = millis();
     colorIndex = startIndex;
-    leds[0] = ColorFromPalette( MC_p, 128 + (180 - colorIndex), 255, LINEARBLEND);
+    leds[0] = ColorFromPalette( currentPalette, 128 + (180 - colorIndex), 255, LINEARBLEND);
     for ( int i = RING_1_END; i < RING_2_END; i++) {
 
       float val = ((((3 * cos(((180 + ((i - 1) * (360.0 / 6.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55   ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     for ( int i = RING_2_END; i < RING_3_END; i++) {
 
       float val = ((((6 * cos(((180 + ((i - 7) * (360.0 / 12.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
 
     for ( int i = RING_3_END; i < RING_4_END; i++) {
 
       float val = ((((9 * cos(((180 + ((i - 19) * (360.0 / 18.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     for ( int i = RING_4_END; i < RING_5_END; i++) {
 
       float val = ((((12 * cos(((180 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
-      leds[i] = ColorFromPalette( MC_p, val + (180 - colorIndex), 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, val + (180 - colorIndex), 255, LINEARBLEND);
     }
     colorIndex += 28;
     FastLED.show();
@@ -2262,7 +2261,7 @@ void do_Spiral_MC_Wave_1() {
     for ( int i = 0; i < RING_1_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 1;  //how fast to advance through palette  3
     }
@@ -2270,14 +2269,14 @@ void do_Spiral_MC_Wave_1() {
     for ( int i = RING_1_END; i < RING_2_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 42;  //how fast to advance through palette  3
     }
     for ( int i = RING_2_END; i < RING_3_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 21;  //how fast to advance through palette  3
     }
@@ -2285,7 +2284,7 @@ void do_Spiral_MC_Wave_1() {
     for ( int i = RING_3_END; i < RING_4_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 14;  //how fast to advance through palette  3
     }
@@ -2293,7 +2292,7 @@ void do_Spiral_MC_Wave_1() {
     for ( int i = RING_4_END; i < RING_5_END; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
@@ -2314,7 +2313,7 @@ void do_Spiral_MC_Wave_2() {
     for ( int i = 0; i < NUM_LEDS; i++) {
       //ColorFromPalette( paletteName, colorIndex[0-255], brightness[0-255], blendType[NOBLEND or LINEARBLEND])
 
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
 
       colorIndex = colorIndex + 4
                    ;  //how fast to advance through palette  3
@@ -2334,23 +2333,23 @@ void do_Spiral_MC_Wave_3() {
     mil = millis();
     colorIndex = startIndex;
     for ( int i = 0; i < RING_1_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     for ( int i = RING_1_END; i < RING_2_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     for ( int i = RING_2_END; i < RING_3_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     for ( int i = RING_3_END; i < RING_4_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     for ( int i = RING_4_END; i < RING_5_END; i++) {
-      leds[i] = ColorFromPalette( MC_p, colorIndex, 255, LINEARBLEND);
+      leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
     }
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     int wavspeedint = map(anispeed, 0, 100, 2, 30);

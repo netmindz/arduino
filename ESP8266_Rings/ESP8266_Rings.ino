@@ -53,13 +53,7 @@ int hue[RINGS];
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p };
-int gPaletteCount = ARRAY_SIZE(palettes);
-
-CRGBPalette16 currentPalette = palettes[1];
-TBlendType    currentBlending =  LINEARBLEND;
-
-
+CRGBPalette16 currentPalette = RainbowColors_p;
 
 typedef void (*SimplePatternList[])();
 void  autoRun();
@@ -77,6 +71,12 @@ bool newReading;
 #include "F_lying_circular.h"
 #include "Disk.h"
 #include "Clock.h"
+
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, redblue_gp, redblue1_gp };
+int gPaletteCount = ARRAY_SIZE(palettes);
+
+TBlendType    currentBlending =  LINEARBLEND;
+
 
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
