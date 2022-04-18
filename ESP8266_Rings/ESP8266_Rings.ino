@@ -324,7 +324,7 @@ void autoRun() {
     //  autoPalette++;
     if (autoPalette >= gPalletteCount) autoPalette = 0;
     Serial.println("Next Auto pallette");
-    currentPalette = palettes[0];
+    currentPalette = palettes[autoPalette];
   }
   
   gPatterns[autopgm].pattern();
