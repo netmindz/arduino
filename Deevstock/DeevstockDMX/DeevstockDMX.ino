@@ -75,6 +75,9 @@ void shimmer();
 void sinwave_1();
 void snake();
 void dsnake();
+void DJLight();
+void FunkyPlank();
+void EQ();
 
 // ***********************
 // Audio values
@@ -135,6 +138,9 @@ typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList gPatterns = { 
   { autoRun, "auotrun"}, 
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+  { EQ, "EQ"},
   { pixels,"pixels"},         // Long line of colours
   { fillnoise,"fillnoise"},      // Center to edges with base color and twinkle
   { jugglep,"jugglep"},        // Long line of sinewaves
@@ -242,7 +248,7 @@ void loop()
   if (Dmx.newFrame()) {
 
     led = !led;
-    digitalWrite(LED_BUILTIN, led);
+//    digitalWrite(LED_BUILTIN, led);
     int b = Dmx.getBuffer()[0]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
