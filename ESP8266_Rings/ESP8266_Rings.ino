@@ -77,12 +77,14 @@ int gPaletteCount = ARRAY_SIZE(palettes);
 
 TBlendType    currentBlending =  LINEARBLEND;
 
+#define DEFAULT_DURATION 60
 
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
 typedef struct {
   Pattern pattern;
   String name;
+  int duration;
 } PatternAndName;
 typedef PatternAndName PatternAndNameList[];
 
@@ -93,62 +95,62 @@ void randomFlow();
 void audioRings();
 
 PatternAndNameList gPatterns = {
-  { autoRun, "autoRun"}, // must be first
-  { halfCircleRainbow360, "halfCircleRainbow360" },
-  { halfCircleRainbow256, "halfCircleRainbow256" },
-  { rimClock, "rimClock" },
-  { arcClock, "arcClock" },
-  { audioRings, "audioRings"},
+  { autoRun, "autoRun",DEFAULT_DURATION}, // must be first
+  { halfCircleRainbow360, "halfCircleRainbow360",DEFAULT_DURATION},
+  { halfCircleRainbow256, "halfCircleRainbow256",DEFAULT_DURATION},
+//  { rimClock, "rimClock" },
+//  { arcClock, "arcClock" },
+  { audioRings, "audioRings", 300},
   { F_lying_circular, "Flying Circular" },
-  { ringsx, "ringsx"},
-  { simpleRings, "simpleRings" },
-  { randomFlow, "randomFlow" },
-  { do_Spiral_Rainbow_Wave_1, "Spiral_Rainbow_Wave_1"},
-  { do_Spiral_Rainbow_Wave_2, "Spiral_Rainbow_Wave_2"},
-//  { do_Spiral_Rainbow_Wave_3, " _3"},
-  { do_Spiral_MC_Wave_1, "Spiral_MC_Wave_1"},
-  { do_Spiral_MC_Wave_2, "Spiral_MC_Wave_2"},
-//  { do_Spiral_MC_Wave_3, "Spiral_MC_Wave_3"},
-  { do_Linear_Rainbow_Gradient_1, "Linear_Rainbow_Gradient_1"},
-//  { do_Linear_Rainbow_Gradient_2, "Linear_Rainbow_Gradient_2"},
-  { do_Linear_Rainbow_Gradient_3, "Linear_Rainbow_Gradient_3"},
-  { do_Linear_MC_Gradient_1, "Linear_MC_Gradient_1"},
-//  { do_Linear_MC_Gradient_2, "Linear_MC_Gradient_2"},
-  { do_Linear_MC_Gradient_3, "Linear_MC_Gradient_3"},
-//  { do_Indiv_Jump_Rainbow, "Indiv_Jump_Rainbow"},
-//  { do_Indiv_Jump_MC, "Indiv_Jump_MC"},
-//  { do_All_Jump_Rainbow, "All_Jump_Rainbow"},
-//  { do_Strobe_Static, "Strobe_Static"},
-//  { do_Strobe_MC, "Strobe_MC"},
-//  { do_Strobe_Rainbow, "Strobe_Rainbow"},
-//  { do_Marquee_MC, "Marquee_MC"},
-//  { do_Marquee_Rainbow, "Marquee_Rainbow"},
-//  { do_Marquee_Static, "Marquee_Static"},
-  { do_Segment_Rainbow, "Segment_Rainbow"},
-  { do_Segment_MC, "Segment_MC"},
-//  { do_Segment_Static, "Segment_Static"},
-  { do_Visor_MC, "Visor_MC"},
-  { do_Visor_Rainbow, "Visor_Rainbow"}, 
-//  { do_Visor_Static, "Visor_Static"},
-  { do_Bounce_Linear_MC, "Bounce_Linear_MC"},
-//  { do_Bounce_Spiral_Static, "Bounce_Spiral_Static"},
-  { do_Bounce_Spiral_Rainbow, "Bounce_Spiral_Rainbow"},
-  { do_Bounce_Spiral_MC, "Bounce_Spiral_MC"},
-  { do_Bounce_Linear_MC, "Bounce_Linear_MC"},
-  { do_Ripple_Rainbow, "Ripple_Rainbow"},
-  { do_Ripple_MC, "Ripple_MC"},
-//  { do_Ripple_Static, "Ripple_Static"},
-  { do_Pulse_Rainbow, "Pulse_Rainbow"},
-//  { do_Pulse_MC, "Pulse_MC"},
-//  { do_Pulse_Static, "Pulse_Static"},
-  { do_Rain_Rainbow, "Rain_Rainbow"},
-  { do_Rain_MC, "Rain_MC"},
-//  { do_Rain_Static, "Rain_Static"},
-//  { do_Special_Xmas, "Special_Xmas"},
-//  { do_Special_Special, "Special_Special"},
-//  { do_Sparkle, "Sparkle"},
-  { do_Shift_MC, "Shift_MC"},
-  { do_Shift_Rainbow, "Shift_Rainbow"},
+  { ringsx, "ringsx",DEFAULT_DURATION},
+  { simpleRings, "simpleRings", 300 },
+  { randomFlow, "randomFlow", 300 },
+  { do_Spiral_Rainbow_Wave_1, "Spiral_Rainbow_Wave_1",DEFAULT_DURATION},
+  { do_Spiral_Rainbow_Wave_2, "Spiral_Rainbow_Wave_2",DEFAULT_DURATION},
+//  { do_Spiral_Rainbow_Wave_3, " _3",DEFAULT_DURATION},
+  { do_Spiral_MC_Wave_1, "Spiral_MC_Wave_1",DEFAULT_DURATION},
+  { do_Spiral_MC_Wave_2, "Spiral_MC_Wave_2",DEFAULT_DURATION},
+//  { do_Spiral_MC_Wave_3, "Spiral_MC_Wave_3",DEFAULT_DURATION},
+  { do_Linear_Rainbow_Gradient_1, "Linear_Rainbow_Gradient_1",DEFAULT_DURATION},
+//  { do_Linear_Rainbow_Gradient_2, "Linear_Rainbow_Gradient_2",DEFAULT_DURATION},
+  { do_Linear_Rainbow_Gradient_3, "Linear_Rainbow_Gradient_3",DEFAULT_DURATION},
+  { do_Linear_MC_Gradient_1, "Linear_MC_Gradient_1",DEFAULT_DURATION},
+//  { do_Linear_MC_Gradient_2, "Linear_MC_Gradient_2",DEFAULT_DURATION},
+  { do_Linear_MC_Gradient_3, "Linear_MC_Gradient_3",DEFAULT_DURATION},
+//  { do_Indiv_Jump_Rainbow, "Indiv_Jump_Rainbow",DEFAULT_DURATION},
+//  { do_Indiv_Jump_MC, "Indiv_Jump_MC",DEFAULT_DURATION},
+//  { do_All_Jump_Rainbow, "All_Jump_Rainbow",DEFAULT_DURATION},
+//  { do_Strobe_Static, "Strobe_Static",DEFAULT_DURATION},
+//  { do_Strobe_MC, "Strobe_MC",DEFAULT_DURATION},
+//  { do_Strobe_Rainbow, "Strobe_Rainbow",DEFAULT_DURATION},
+//  { do_Marquee_MC, "Marquee_MC",DEFAULT_DURATION},
+//  { do_Marquee_Rainbow, "Marquee_Rainbow",DEFAULT_DURATION},
+//  { do_Marquee_Static, "Marquee_Static",DEFAULT_DURATION},
+  { do_Segment_Rainbow, "Segment_Rainbow",DEFAULT_DURATION},
+  { do_Segment_MC, "Segment_MC",DEFAULT_DURATION},
+//  { do_Segment_Static, "Segment_Static",DEFAULT_DURATION},
+  { do_Visor_MC, "Visor_MC",DEFAULT_DURATION},
+  { do_Visor_Rainbow, "Visor_Rainbow",DEFAULT_DURATION}, 
+//  { do_Visor_Static, "Visor_Static",DEFAULT_DURATION},
+  { do_Bounce_Linear_MC, "Bounce_Linear_MC",DEFAULT_DURATION},
+//  { do_Bounce_Spiral_Static, "Bounce_Spiral_Static",DEFAULT_DURATION},
+  { do_Bounce_Spiral_Rainbow, "Bounce_Spiral_Rainbow",DEFAULT_DURATION},
+  { do_Bounce_Spiral_MC, "Bounce_Spiral_MC",DEFAULT_DURATION},
+  { do_Bounce_Linear_MC, "Bounce_Linear_MC",DEFAULT_DURATION},
+  { do_Ripple_Rainbow, "Ripple_Rainbow",DEFAULT_DURATION},
+  { do_Ripple_MC, "Ripple_MC",DEFAULT_DURATION},
+//  { do_Ripple_Static, "Ripple_Static",DEFAULT_DURATION},
+//  { do_Pulse_Rainbow, "Pulse_Rainbow",DEFAULT_DURATION}, bit dull
+//  { do_Pulse_MC, "Pulse_MC",DEFAULT_DURATION},
+//  { do_Pulse_Static, "Pulse_Static",DEFAULT_DURATION},
+  { do_Rain_Rainbow, "Rain_Rainbow",DEFAULT_DURATION},
+  { do_Rain_MC, "Rain_MC",DEFAULT_DURATION},
+//  { do_Rain_Static, "Rain_Static",DEFAULT_DURATION},
+//  { do_Special_Xmas, "Special_Xmas",DEFAULT_DURATION},
+//  { do_Special_Special, "Special_Special",DEFAULT_DURATION},
+//  { do_Sparkle, "Sparkle",DEFAULT_DURATION},
+  { do_Shift_MC, "Shift_MC",DEFAULT_DURATION},
+  { do_Shift_Rainbow, "Shift_Rainbow",DEFAULT_DURATION},
 
 };
 
@@ -285,10 +287,9 @@ void loop() {
     }
     currentPalette = palettes[getValue(packet, 6,  0, (ARRAY_SIZE(palettes) - 1))]; // channel 6
     FastLED.setBrightness(BRIGHTNESS);
-    pgm = getValue(packet, 6,  0, gPatternCount);
   }
   EVERY_N_SECONDS( 10 ) {
-    Serial.printf("BRIGHTNESS = %u   JUMP = %u   SPEED = %u", BRIGHTNESS, JUMP, SPEED);
+    Serial.printf("PG=%u BRIGHTNESS = %u   JUMP = %u   SPEED = %u", pgm, BRIGHTNESS, JUMP, SPEED);
 
     Serial.print("  INWARD = ");
     Serial.print(INWARD);
@@ -306,14 +307,16 @@ void loop() {
     }
   }
   gPatterns[pgm].pattern();
-  timeClient.update();
+  if(WiFi.status() == WL_CONNECTED) {
+    timeClient.update();
+  }
 }
 
 void autoRun() {
   
-  EVERY_N_SECONDS(90) {
-    // autopgm = random(1, (gPatternCount - 1));
-    autopgm++;
+  EVERY_N_SECONDS_I(autoPattern, gPatterns[autopgm].duration) { // 90
+    autopgm = random(1, (gPatternCount - 1));
+    //autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
@@ -374,7 +377,8 @@ void randomFlow() {
 void audioRings() {
   if(!audioRec && pgm == 0 && millis() > 5000) {
     Serial.println("Skip audioRings as no data");
-    autopgm++;
+//    autopgm++;
+    autopgm = random(1, (gPatternCount - 1));
   }
   if(newReading) {
     newReading = false;
