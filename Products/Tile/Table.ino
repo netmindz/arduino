@@ -202,7 +202,7 @@ void FunkyPlank() {
 
   bool newReading = MSGEQ7read();
 
-  int offset = 8;
+  int offset = blockWidth + barWidth;
   // Led strip output
   if (newReading) {
 
