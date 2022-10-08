@@ -15,8 +15,13 @@ int smillis = 0;
 int slastmillis = 0;
 
 
-int barWidth = (WIDTH / 7) / 2;
-int blockWidth = barWidth * 7;
+int bands = 7;
+int barWidth = (WIDTH / bands) / 2;
+int blockWidth = barWidth * bands;
+
+int HQbands = 16;
+int HQbarWidth = (WIDTH / HQbands) / 2;
+int HQblockWidth = HQbarWidth * HQbands;
 
 
 // EQ ------------------------------------------------------------------------------------
@@ -25,9 +30,10 @@ void EQ() {
 
   int xpos;
 
-
   // analyze without delay
   bool newReading = MSGEQ7read();
+
+  int colourInc = 255 / HQbands;
 
   // Led strip output
   if (newReading) {
@@ -37,23 +43,19 @@ void EQ() {
       if (eq_hue > 255) eq_hue = 0;
       eq_hue_wait = 0;
     }
-    // display values of left channel on DMD
-    for ( band = 0; band < 7; band++ )
+
+    for ( band = 0; band < HQbands; band++ )
     {
-      int count = map(mapNoise(MSGEQ7get(band)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ16get(band, 0)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
-      for (int b = 0; b < barWidth; b++) {
-        xpos = blockWidth - (barWidth * band) - b;
-        if (b == 0 && band == 0 && xpos != 14) {
-          Serial.print("Wrong xpos for band0 = ");
-          Serial.println(xpos);
-        }
-        for (int i = 0; i <= WIDTH; i++) {
+      for (int b = 0; b < HQbarWidth; b++) {
+        xpos = HQblockWidth - (HQbarWidth * band) - b;
+        for (int i = 0; i <= HEIGHT; i++) {
           if (i <= count) {
             // unsigned int g = map(band, 0, 6, 254, 0);
             // CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
-            CRGB color = CHSV((band * 35), 255, 255);
+            CRGB color = CHSV((band * colourInc), 255, 255);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
@@ -63,21 +65,20 @@ void EQ() {
       }
     }
 
-    // display values of left channel on DMD
-    for ( band = 0; band < 7; band++ )
+    for ( band = 0; band < HQbands; band++ )
     {
-      int count = map(mapNoise(MSGEQ7get(band)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
+      int count = map(mapNoise(MSGEQ16get(band, 1)), 0, MSGEQ7_OUT_MAX, 0, HEIGHT);
       //int count = map(band, 0, 6, 1, HEIGHT);
 
-      for (int b = 0; b < barWidth; b++) {
-        xpos = blockWidth + 1 + (barWidth * band) + b;
+      for (int b = 0; b < HQbarWidth; b++) {
+        xpos = HQblockWidth + 1 + (HQbarWidth * band) + b;
         for (int i = 0; i <= WIDTH; i++) {
           if (i <= count) {
             //          unsigned int g = map(band, 0, 6, 254, 0);
             //          CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
             //          CRGB color = CHSV(map(count,0, HEIGHT, 0, 255) , 255,255);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
-            CRGB color = CHSV((band * 35), 255, 255);
+            CRGB color = CHSV((band * colourInc), 255, 255);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
@@ -115,7 +116,7 @@ void VU() {
 
   // Led strip output
   if (newReading) {
-Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
+// Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
     int displayPeakL = map(MSGEQ7get(MSGEQ7_MID, 0), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
     int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
     Serial.print("Display peak: ");
@@ -202,29 +203,28 @@ void FunkyPlank() {
 
   bool newReading = MSGEQ7read();
 
-  int offset = blockWidth + barWidth;
+  int offset = HQblockWidth + HQbarWidth;
+
   // Led strip output
   if (newReading) {
 
-    // display values of left channel on DMD
-    for ( band = 0; band < 7; band++ )
+    for ( band = 0; band < HQbands; band++ )
     {
-      int hue = MSGEQ7get(band, 0);
-      int v = map(MSGEQ7get(band, 0), 0, MSGEQ7_OUT_MAX, 10, 255);
-      for (int b = 0; b < barWidth; b++) {
-        int  xpos = blockWidth - (barWidth * band) - b;
+      int hue = MSGEQ16get(band, 0);
+      int v = map(MSGEQ16get(band, 0), 0, MSGEQ7_OUT_MAX, 10, 255);
+      for (int b = 0; b < HQbarWidth; b++) {
+        int  xpos = HQblockWidth - (HQbarWidth * band) - b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
         //      drawPixel((offset + band + 1), 0, CHSV(hue, 255, 255));
       }
     }
 
-    // display values of left channel on DMD
-    for ( band = 0; band < 7; band++ )
+    for ( band = 0; band < HQbands; band++ )
     {
-      int hue = MSGEQ7get(band, 1);
-      int v = map(MSGEQ7get(band, 1), 0, MSGEQ7_OUT_MAX, 10, 255);
-      for (int b = 0; b < barWidth; b++) {
-        int xpos = blockWidth + 1 + (barWidth * band) + b;
+      int hue = MSGEQ16get(band, 1);
+      int v = map(MSGEQ16get(band, 1), 0, MSGEQ7_OUT_MAX, 10, 255);
+      for (int b = 0; b < HQbarWidth; b++) {
+        int xpos = HQblockWidth + 1 + (HQbarWidth * band) + b;
         drawPixel(xpos, 0, CHSV(hue, 255, v));
       }
     }

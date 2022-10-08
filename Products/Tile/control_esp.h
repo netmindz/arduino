@@ -141,6 +141,15 @@ int MSGEQ7get(int band, int channel) {
   return MSGEQ7get(band);
 }
 
+int MSGEQ16get(int band) {
+//  ReadAudio();
+  return map(fftResult[band], 0, 255, 0, MSGEQ7_OUT_MAX);
+}
+
+int MSGEQ16get(int band, int channel) {
+  return MSGEQ16get(band);
+}
+
 
 // Read the UDP audio data sent by WLED-Audio
 void readAudioUDP() {
