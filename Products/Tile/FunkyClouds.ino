@@ -62,8 +62,8 @@ TODO:
 
 // all 2D effects will be calculated in this matrix size
 // do not touch
-const uint8_t WIDTH  = 30;
-const uint8_t HEIGHT = 30;
+const uint8_t WIDTH  = kMatrixWidth;
+const uint8_t HEIGHT = kMatrixHeight;
 
 // the oscillators: linear ramps 0-255
 // modified only by MoveOscillators()
