@@ -240,9 +240,9 @@ void FunkyPlank() {
 
 void DJLight() {
 
+  // Would this be better rendered as 32x32 then scaled?
+  
   bool newReading = MSGEQ7read();
-
-//  int offset = 8;
 
   int mid = NUM_LEDS / 2;
 
@@ -250,15 +250,9 @@ void DJLight() {
   if (newReading) {
 
     int bands[8];
-    for ( band = 0; band < 7; band++ )
-    {
+    for ( band = 0; band < 7; band++ ) {
       bands[band] = MSGEQ7get(band, 1);
     }
-
-
-
-//    leds[mid] = CRGB(bands[6], bands[5] / 8, bands[1] / 2);
-//    leds[mid].fadeToBlackBy(bands[3] / 12);
 
     leds[mid] = CRGB(bands[5]/2, bands[2]/2, bands[0]/2);
     leds[mid].fadeToBlackBy((map(bands[1], 0, MSGEQ7_OUT_MAX, 255, 10)));
@@ -272,8 +266,8 @@ void DJLight() {
       leds[i] = leds[i + 1];
     }
 
-   EVERY_N_MILLISECONDS(300) {
-    fade_down(10); // TODO: map to fade
+   EVERY_N_MILLISECONDS(1000) { // Two values depend on size of matrix (450 px to end vs 2000 30x30 vs 64x64)
+    fade_down(6);
    }
   }
 }
