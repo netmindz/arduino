@@ -13,7 +13,7 @@ void setupOTA() {
   // ArduinoOTA.setPort(3232);
 
   // Hostname defaults to esp3232-[MAC]
-  ArduinoOTA.setHostname("DSGrid");
+  ArduinoOTA.setHostname("Tile");
 
   // No authentication by default
   // ArduinoOTA.setPassword("admin");

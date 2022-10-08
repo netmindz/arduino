@@ -1,16 +1,12 @@
-#ifdef __IMXRT1062__ // Teensy 4
-  #define  SMARTMATRIX
-  #define TEENSY4
-#else
-  #define  APA1023030
-//  #define  WS1616
-#endif
+// Code for Smartmatrix Tile 
+
 
 #ifdef ESP32
 #include <WiFi.h> // ugly to add here, but later causes error about param count to swap method
 #endif
 
 #define DISABLE_MATRIX_TEST // No grey on start
+#define SMARTMATRIX
 #include "neomatrix_config.h"
 
 
