@@ -9,12 +9,6 @@
 
 #define UDP_SYNC_HEADER "00002"
 
-//int sample;                                         // Current sample
-//float sampleAvg = 0;                                // Smoothed Average
-//bool samplePeak = 0;                                // Boolean flag for peak. Responding routine must reset this flag
-////int sampleAdj;                                      // Gain adjusted sample value.
-//int sampleAgc;                                      // Our AGC sample
-
 long lastTime = 0;
 int delayMs = 10;                                   // I don't want to sample too often and overload WLED.
 
