@@ -7,13 +7,13 @@
 //#define FFT_SAMPLING_LOG
 //#define MIC_SAMPLING_LOG
 
-#define UDP_SYNC_HEADER "00001"
+#define UDP_SYNC_HEADER "00002"
 
-int sample;                                         // Current sample
-float sampleAvg = 0;                                // Smoothed Average
-bool samplePeak = 0;                                // Boolean flag for peak. Responding routine must reset this flag
-//int sampleAdj;                                      // Gain adjusted sample value.
-int sampleAgc;                                      // Our AGC sample
+//int sample;                                         // Current sample
+//float sampleAvg = 0;                                // Smoothed Average
+//bool samplePeak = 0;                                // Boolean flag for peak. Responding routine must reset this flag
+////int sampleAdj;                                      // Gain adjusted sample value.
+//int sampleAgc;                                      // Our AGC sample
 
 long lastTime = 0;
 int delayMs = 10;                                   // I don't want to sample too often and overload WLED.
@@ -21,15 +21,14 @@ int delayMs = 10;                                   // I don't want to sample to
 uint8_t myVals[32];                                 // Used to store a pile of samples as WLED frame rate and WLED sample rate are not synchronized
 
 struct audioSyncPacket {
-  char header[6] = UDP_SYNC_HEADER;
-  uint8_t myVals[32];     //  32 Bytes
-  int sampleAgc;          //  04 Bytes
-  int sample;             //  04 Bytes
-  float sampleAvg;        //  04 Bytes
-  bool samplePeak;        //  01 Bytes
+  char    header[6];      //  06 Bytes
+  float   sampleRaw;      //  04 Bytes  - either "sampleRaw" or "rawSampleAgc" depending on soundAgc setting
+  float   sampleSmth;     //  04 Bytes  - either "sampleAvg" or "sampleAgc" depending on soundAgc setting
+  uint8_t samplePeak;     //  01 Bytes  - 0 no peak; >=1 peak detected. In future, this will also provide peak Magnitude
+  uint8_t reserved1;      //  01 Bytes  - for future extensions - not used yet
   uint8_t fftResult[16];  //  16 Bytes
-  double FFT_Magnitude;   //  08 Bytes
-  double FFT_MajorPeak;   //  08 Bytes
+  float  FFT_Magnitude;   //  04 Bytes
+  float  FFT_MajorPeak;   //  04 Bytes
 };
 
 bool isValidUdpSyncVersion(char header[6]) {
@@ -42,15 +41,11 @@ const uint16_t samples = 512;                     // This value MUST ALWAYS be a
 unsigned int sampling_period_us;
 unsigned long microseconds;
 
-double FFT_MajorPeak = 0;
-double FFT_Magnitude = 0;
+float FFT_MajorPeak = 0;
+float FFT_Magnitude = 0;
 uint16_t mAvg = 0;
 
-double fftResult[16];
-
-//  // This is used for normalization of the result bins. It was created by sending the results of a signal generator to within 6" of a MAX9814 @ 40db gain.
-//  // This is the maximum raw results for each of the result bins and is used for normalization of the results.
-//  long maxChannel[] = {26000,  44000,  66000,  72000,  60000,  48000,  41000,  30000,  25000, 22000, 16000,  14000,  10000,  8000,  7000,  5000}; // Find maximum value for each bin with MAX9814 @ 40db gain.
+uint8_t fftResult[16];
 
 void logAudio() {
 

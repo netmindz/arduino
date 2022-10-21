@@ -167,28 +167,28 @@ void readAudioUDP() {
         fftUdp.read(fftBuff, packetSize);
         audioSyncPacket receivedPacket;
         memcpy(&receivedPacket, fftBuff, packetSize);
-        for (int i = 0; i < 32; i++ ) {
-          myVals[i] = receivedPacket.myVals[i];
-        }
-        sampleAgc = receivedPacket.sampleAgc;
-        sample = receivedPacket.sample;
-        sampleAvg = receivedPacket.sampleAvg;
+//        for (int i = 0; i < 32; i++ ) {
+//          myVals[i] = receivedPacket.myVals[i];
+//        }
+//        sampleAgc = receivedPacket.sampleAgc;
+//        sample = receivedPacket.sample;
+//        sampleAvg = receivedPacket.sampleAvg;
         // VERIFY THAT THIS IS A COMPATIBLE PACKET
         char packetHeader[6];
         memcpy(&receivedPacket, packetHeader, 6);
         if (!(isValidUdpSyncVersion(packetHeader))) {
           memcpy(&receivedPacket, fftBuff, packetSize);
-          for (int i = 0; i < 32; i++ ) {
-            myVals[i] = receivedPacket.myVals[i];
-          }
-          sampleAgc = receivedPacket.sampleAgc;
-          sample = receivedPacket.sample;
-          sampleAvg = receivedPacket.sampleAvg;
+//          for (int i = 0; i < 32; i++ ) {
+//            myVals[i] = receivedPacket.myVals[i];
+//          }
+//          sampleAgc = receivedPacket.sampleAgc;
+//          sample = receivedPacket.sample;
+//          sampleAvg = receivedPacket.sampleAvg;
 
-          // Only change samplePeak IF it's currently false.  If it's true already, then the animation still needs to respond
-          if (!samplePeak) {
-            samplePeak = receivedPacket.samplePeak;
-          }
+//          // Only change samplePeak IF it's currently false.  If it's true already, then the animation still needs to respond
+//          if (!samplePeak) {
+//            samplePeak = receivedPacket.samplePeak;
+//          }
 
           for (int i = 0; i < 16; i++) {
             fftResult[i] = receivedPacket.fftResult[i];
