@@ -184,3 +184,18 @@
 [submodule "libraries/arduinoWebSockets"]
 	path = libraries/arduinoWebSockets
 	url = https://github.com/Links2004/arduinoWebSockets
+[submodule "libraries/arduino-audiokit"]
+	path = libraries/arduino-audiokit
+	url = https://github.com/pschatzmann/arduino-audiokit.git
+[submodule "libraries/es8388"]
+	path = libraries/es8388
+	url = https://github.com/thaaraak/es8388.git
+[submodule "libraries/arduino-audio-tools"]
+	path = libraries/arduino-audio-tools
+	url = https://github.com/pschatzmann/arduino-audio-tools.git
+[submodule "libraries/ESP32-A2DP"]
+	path = libraries/ESP32-A2DP
+	url = https://github.com/pschatzmann/ESP32-A2DP.git
+[submodule "libraries/Adafruit_BusIO"]
+	path = libraries/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO.git
