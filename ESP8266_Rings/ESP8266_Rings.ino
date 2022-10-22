@@ -10,7 +10,7 @@
 #include <ESP8266WiFi.h>
 #endif
 #include <ESPAsyncE131.h>
-#include <WiFiUdp.h>
+#include <WLED-sync.h>
 #include <ArduinoOTA.h>
 
 #define UNIVERSE 1        // First DMX Universe to listen for
@@ -46,7 +46,7 @@ const char ssid[] = SECRET_SSID;         /* Replace with your SSID */
 const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
 
 ESPAsyncE131 e131(UNIVERSE_COUNT);
-WiFiUDP fftUdp;
+WLEDSync sync;
 
 CRGB leds[NUM_LEDS];      //naming our LED array
 int hue[RINGS];
@@ -63,7 +63,6 @@ void simpleRings();
 void randomFlow();
 //SimplePatternList gPatterns = { autoRun, rings, audioRings, simpleRings, randomFlow};
 
-uint16_t audioSyncPort = 20000;
 bool newReading;
 
 #include "audio.h"
@@ -216,11 +215,7 @@ void setup() {
 
   Serial.printf("There are %u patterns\n", gPatternCount);
 
-#ifdef ESP32
-  fftUdp.beginMulticast(IPAddress(239, 0, 0, 1), audioSyncPort);
-#else
-  fftUdp.beginMulticast(WiFi.localIP(), IPAddress(239, 0, 0, 1), audioSyncPort);
-#endif
+  sync.begin();
 
   setupRings();
 
