@@ -100,7 +100,7 @@ PatternAndNameList gPatterns = {
 //  { rimClock, "rimClock" },
 //  { arcClock, "arcClock" },
   { audioRings, "audioRings", 300},
-  { F_lying_circular, "Flying Circular" },
+  { F_lying_circular, "Flying Circular", DEFAULT_DURATION},
   { ringsx, "ringsx",DEFAULT_DURATION},
   { simpleRings, "simpleRings", 300 },
   { randomFlow, "randomFlow", 300 },
