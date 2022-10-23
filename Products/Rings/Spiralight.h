@@ -153,8 +153,6 @@ void do_Shift_Rainbow() {
       }
 
     }
-
-    FastLED.show();
   }
 }
 
@@ -208,8 +206,6 @@ void do_Shift_MC() {
       }
 
     }
-
-    FastLED.show();
   }
 }
 
@@ -261,8 +257,6 @@ void do_Sparkle() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Special_Special() {
@@ -313,8 +307,6 @@ void do_Special_Special() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Special_Xmas() {
@@ -361,8 +353,6 @@ void do_Special_Xmas() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 
@@ -400,8 +390,6 @@ void do_Rain_Rainbow() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Rain_MC() {
@@ -441,8 +429,6 @@ void do_Rain_MC() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Rain_Static() {
@@ -481,8 +467,6 @@ void do_Rain_Static() {
 
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Pulse_MC() {
@@ -533,7 +517,6 @@ void do_Pulse_MC() {
       leds[i] = ColorFromPalette( currentPalette, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
-    FastLED.show();
     FastLED.setBrightness(BRIGHTNESS);
 
   }
@@ -563,7 +546,6 @@ void do_Pulse_Static() {
       }
     }
     fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
-    FastLED.show();
     FastLED.setBrightness(BRIGHTNESS);
 
   }
@@ -616,7 +598,6 @@ void do_Pulse_Rainbow() {
       leds[i] = ColorFromPalette( RainbowColors_p, colorIndex, 255, LINEARBLEND);
       colorIndex = colorIndex + 11;  //how fast to advance through palette  3
     }
-    FastLED.show();
     FastLED.setBrightness(BRIGHTNESS);
 
   }
@@ -678,8 +659,6 @@ void do_Bounce_Spiral_Static() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 void do_Bounce_Spiral_MC() {
@@ -738,8 +717,6 @@ void do_Bounce_Spiral_MC() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 
@@ -799,8 +776,6 @@ void do_Bounce_Spiral_Rainbow() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 
@@ -861,8 +836,6 @@ void do_Ripple_Rainbow() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 void do_Ripple_MC() {
@@ -921,8 +894,6 @@ void do_Ripple_MC() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 void do_Ripple_Static() {
@@ -981,8 +952,6 @@ void do_Ripple_Static() {
       else
         leds[i] = CRGB::Black;
     }
-    FastLED.show();
-
   }
 }
 void do_Bounce_Linear_MC() {
@@ -1168,7 +1137,6 @@ void do_Bounce_Linear_MC() {
       }
     }
 
-    FastLED.show();
 
   }
 }
@@ -1356,9 +1324,6 @@ void do_Bounce_Linear_Rainbow() {
         FastLED.show();
       }
     }
-
-    FastLED.show();
-
   }
 }
 
@@ -1546,9 +1511,6 @@ void do_Bounce_Linear_Static() {
         FastLED.show();
       }
     }
-
-    FastLED.show();
-
   }
 }
 void do_Visor_MC() {
@@ -1593,9 +1555,6 @@ void do_Visor_MC() {
 //        Serial.println(vispos);
       }
     }
-
-    FastLED.show();
-
   }
 }
 
@@ -1622,9 +1581,6 @@ void do_Visor_Static() {
 //        Serial.println(vispos);
       }
     }
-
-    FastLED.show();
-
   }
 }
 void do_Visor_Rainbow() {
@@ -1670,9 +1626,6 @@ void do_Visor_Rainbow() {
 //        Serial.println(vispos);
       }
     }
-
-    FastLED.show();
-
   }
 }
 void do_Segment_Rainbow() {
@@ -1743,8 +1696,6 @@ void do_Segment_Rainbow() {
                             leds[i] = CRGB::Black;
       }
     }
-
-    FastLED.show();
   }
 }
 void do_Segment_MC() {
@@ -1815,8 +1766,6 @@ void do_Segment_MC() {
                             leds[i] = CRGB::Black;
       }
     }
-
-    FastLED.show();
   }
 }
 
@@ -1888,8 +1837,6 @@ void do_Segment_Static() {
                             leds[i] = CRGB::Black;
       }
     }
-
-    FastLED.show();
   }
 }
 
@@ -1923,8 +1870,6 @@ void do_Marquee_Rainbow() {
 
         leds[i] = CRGB::Black;
     }
-
-    FastLED.show();
   }
 }
 void do_Marquee_MC() {
@@ -1958,8 +1903,6 @@ void do_Marquee_MC() {
 
         leds[i] = CRGB::Black;
     }
-
-    FastLED.show();
   }
 }
 
@@ -1974,7 +1917,6 @@ void do_Strobe_Rainbow() {
       strpos = 1;
       fill_solid(leds, NUM_LEDS, CRGB(random(255), random(255), random(255)));
     }
-    FastLED.show();
   }
 }
 void do_Strobe_MC() {
@@ -1991,7 +1933,6 @@ void do_Strobe_MC() {
       else
         fill_solid(leds, NUM_LEDS, default_col_2);
     }
-    FastLED.show();
   }
 }
 void do_Strobe_Static() {
@@ -2005,7 +1946,6 @@ void do_Strobe_Static() {
       strpos = 1;
       fill_solid(leds, NUM_LEDS, CRGB(static_r, static_g, static_b));
     }
-    FastLED.show();
   }
 }
 void do_Indiv_Jump_MC() {
@@ -2021,7 +1961,6 @@ void do_Indiv_Jump_MC() {
         leds[i] = default_col_2;
 
     }
-    FastLED.show();
   }
 }
 void do_Indiv_Jump_Rainbow() {
@@ -2030,7 +1969,6 @@ void do_Indiv_Jump_Rainbow() {
     for ( int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB(randomcols[random(3)], randomcols[random(3)], randomcols[random(3)]);
     }
-    FastLED.show();
   }
 }
 void do_All_Jump_Rainbow() {
@@ -2039,7 +1977,6 @@ void do_All_Jump_Rainbow() {
 
     fill_solid(leds, NUM_LEDS, CRGB(random(255), random(255), random(255)));
 
-    FastLED.show();
   }
 }
 void do_Linear_MC_Gradient_2() {
@@ -2068,8 +2005,6 @@ void do_Linear_MC_Gradient_2() {
       float val = (((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24   ;
       fade(i, default_col_1, default_col_2, val );
     }
-    FastLED.show();
-
   }
 
 }
@@ -2211,8 +2146,6 @@ void do_Linear_Rainbow_Gradient_2() {
       float val = ((((12 * cos(((90 + ((i - 37) * (360.0 / 24.0))) * 71) / 4068 )) + 12) * 100) / 24) * 2.55    ;
       leds[i] = ColorFromPalette( RainbowColors_p, val, 255, LINEARBLEND);
     }
-    FastLED.show();
-
   }
 
 }
@@ -2298,7 +2231,6 @@ void do_Spiral_MC_Wave_1() {
     }
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2320,7 +2252,6 @@ void do_Spiral_MC_Wave_2() {
     }
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2354,7 +2285,6 @@ void do_Spiral_MC_Wave_3() {
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2405,7 +2335,6 @@ void do_Spiral_Rainbow_Wave_1() {
     }
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2426,7 +2355,6 @@ void do_Spiral_Rainbow_Wave_2() {
     }
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2459,7 +2387,6 @@ void do_Spiral_Rainbow_Wave_3() {
     colorIndex = colorIndex + 51;  //how fast to advance through palette  3
     int wavspeedint = map(anispeed, 0, 100, 2, 30);
     float wavspeed = wavspeedint / 10.0;
-    FastLED.show();
     startIndex = startIndex + wavspeed;  //how fast to move the palette down the strip
     if (startIndex > 255) {
       startIndex = 0;
@@ -2488,8 +2415,6 @@ void do_MC_Fade() {
       }
     }
     fill_solid( leds, NUM_LEDS, CRGB(default_col_1.r + ((default_col_2.r - default_col_1.r) * (MCFadePos / 100.0)), default_col_1.g + ((default_col_2.g - default_col_1.g) * (MCFadePos / 100.0)), default_col_1.b + ((default_col_2.b - default_col_1.b) * (MCFadePos / 100.0)) ));
-    FastLED.show();
-
   }
 }
 
@@ -2497,7 +2422,6 @@ void do_Rainbow_Fade() {
   if (millis() - mil >= map(anispeed, 0, 100, 24, 1)) {
     mil = millis();
     fill_solid( leds, NUM_LEDS, CRGB(rainbow_r, rainbow_g, rainbow_b));
-    FastLED.show();
     if (r2b) {
       rainbow_r -= rainbow_sp;
       rainbow_b += rainbow_sp;

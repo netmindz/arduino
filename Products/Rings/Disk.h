@@ -219,8 +219,6 @@ void halfCircleRainbow360() {
   if (angle360 >= 360)
     angle360 = 0;
 //  return 4;
-  FastLED.delay(0);
-  FastLED.clear();
 
 }
 
@@ -234,7 +232,5 @@ void halfCircleRainbow256() {
   fillRing256(4, CRGB::Orange, angle256 - 64, angle256 + 64);
   fillRing256(3, CRGB::Red, angle256 - 64, angle256 + 64);
   angle256++;
-  FastLED.delay(0);
-  FastLED.clear();
 //  return 4;
 }

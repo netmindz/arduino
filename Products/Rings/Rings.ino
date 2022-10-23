@@ -48,7 +48,10 @@ const char passphrase[] = SECRET_PSK;   /* Replace with your WPA2 passphrase */
 ESPAsyncE131 e131(UNIVERSE_COUNT);
 WLEDSync sync;
 
-CRGB leds[NUM_LEDS];      //naming our LED array
+CRGB leds[NUM_LEDS];  // main data
+// Crossfade based off code by Preyy - https://www.reddit.com/r/FastLED/comments/fa0p0i/i_made_a_more_versatile_crossfader_video_code/
+CRGB leds2[NUM_LEDS]; // temp store used during crossfade
+
 int hue[RINGS];
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
@@ -61,7 +64,6 @@ void rings();
 void audioRings();
 void simpleRings();
 void randomFlow();
-//SimplePatternList gPatterns = { autoRun, rings, audioRings, simpleRings, randomFlow};
 
 bool newReading;
 
@@ -76,7 +78,7 @@ int gPaletteCount = ARRAY_SIZE(palettes);
 
 TBlendType    currentBlending =  LINEARBLEND;
 
-#define DEFAULT_DURATION 60
+#define DEFAULT_DURATION 20
 
 typedef void (*Pattern)();
 typedef Pattern PatternList[];
@@ -302,19 +304,55 @@ void loop() {
     }
   }
   gPatterns[pgm].pattern();
+  // Update Leds
+  FastLED.show();
+
   if(WiFi.status() == WL_CONNECTED) {
     timeClient.update();
   }
 }
 
+uint16_t crossct = 255;
+int gOldPatternNumber;
 void autoRun() {
-  
-  EVERY_N_SECONDS_I(autoPattern, gPatterns[autopgm].duration) { // 90
-    autopgm = random(1, (gPatternCount - 1));
-    //autopgm++;
-    if (autopgm >= gPatternCount) autopgm = 1;
-    Serial.print("Next Auto pattern: ");
-    Serial.println(gPatterns[autopgm].name);
+
+  if (crossct >= 255) {
+    // Run pattern as normal
+    gPatterns[autopgm].pattern();
+
+    EVERY_N_SECONDS_I(autoPattern, gPatterns[autopgm].duration) { // 90
+      gOldPatternNumber = autopgm;
+      autopgm = random(1, (gPatternCount - 1));
+      //autopgm++;
+      if (autopgm >= gPatternCount) autopgm = 1;
+      Serial.print("Next Auto pattern: ");
+      Serial.println(gPatterns[autopgm].name);
+      crossct = 0;  // reset the blend amount
+      FastLED.clear();
+    }
+
+  }
+  else  {
+    EVERY_N_MILLIS(100) {
+      crossct += 10;         // higher increase faster xfade
+      if (crossct > 255) { // overflow prevention
+        crossct = 255;
+      }
+    }
+    uint8_t blendamt = crossct;
+
+    // Run the old pattern and save to array
+    gPatterns[gOldPatternNumber].pattern();
+
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds2[i] = leds[i]; // Think there is a built in function for copy, but can't see in docs
+    }
+
+    gPatterns[autopgm].pattern();   // Run the new pattern and save to array
+
+    for (int i = 0; i < NUM_LEDS; i++) {   // blend oldpattern into main output
+      leds[i] = blend(leds2[i], leds[i], blendamt);   // Blend arrays of LEDs, third value is blend %
+    }
   }
 
   EVERY_N_SECONDS(160) {
@@ -325,15 +363,13 @@ void autoRun() {
     currentPalette = palettes[autoPalette];
   }
   
-  gPatterns[autopgm].pattern();
-
 }
 
 void ringsx() {
   for (int r = 0; r < RINGS; r++) {
     setRing(r, ColorFromPalette(currentPalette, hue[r], 255, currentBlending));
   }
-  FastLED.delay(SPEED);
+  delay(SPEED);
   if (INWARD) {
     for (int r = 0; r < RINGS; r++) {
       hue[(r - 1)] = hue[r]; // set ring one less to that of the outer
@@ -354,7 +390,7 @@ void simpleRings() {
     setRing(r, ColorFromPalette(currentPalette, j + (r * JUMP), 255, currentBlending));
   }
   j += JUMP;
-  FastLED.delay(SPEED);
+  delay(SPEED);
 }
 
 
@@ -366,7 +402,7 @@ void randomFlow() {
   for (int r = (RINGS - 1); r >= 1; r--) {
     hue[r] = hue[(r - 1)]; // set this ruing based on the inner
   }
-  FastLED.delay(SPEED);
+  delay(SPEED);
 }
 
 void audioRings() {
@@ -399,8 +435,6 @@ void audioRings() {
     setRingFromFtt(2, 7); // set outer ring to base
     setRingFromFtt(0, 8); // set outer ring to base
 
-    // Update Leds
-    FastLED.show();
   }
 }
 

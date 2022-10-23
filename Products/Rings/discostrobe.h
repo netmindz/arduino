@@ -207,7 +207,6 @@ void discostrobe()
     // we call the 'worker' function that does the next part of the work.
     discoWorker( dashperiod, dashwidth, dashmotionspeed, strobesPerPosition, hueShift);
   } 
-  FastLED.show();
 }
 
 
