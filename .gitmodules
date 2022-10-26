@@ -199,3 +199,6 @@
 [submodule "libraries/Adafruit_BusIO"]
 	path = libraries/Adafruit_BusIO
 	url = https://github.com/adafruit/Adafruit_BusIO.git
+[submodule "libraries/SparkFun_APDS-9960_Sensor_Arduino_Library"]
+	path = libraries/SparkFun_APDS-9960_Sensor_Arduino_Library
+	url = https://github.com/netmindz/SparkFun_APDS-9960_Sensor_Arduino_Library.git
