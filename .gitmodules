@@ -202,3 +202,6 @@
 [submodule "libraries/SparkFun_APDS-9960_Sensor_Arduino_Library"]
 	path = libraries/SparkFun_APDS-9960_Sensor_Arduino_Library
 	url = https://github.com/netmindz/SparkFun_APDS-9960_Sensor_Arduino_Library.git
+[submodule "libraries/WLED-sync"]
+	path = libraries/WLED-sync
+	url = https://github.com/netmindz/WLED-sync.git
