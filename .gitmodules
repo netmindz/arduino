@@ -205,3 +205,6 @@
 [submodule "libraries/WLED-sync"]
 	path = libraries/WLED-sync
 	url = https://github.com/netmindz/WLED-sync.git
+[submodule "3rdParty/esp32-cam-mjpeg-multiclient"]
+	path = 3rdParty/esp32-cam-mjpeg-multiclient
+	url = https://github.com/arkhipenko/esp32-cam-mjpeg-multiclient.git
