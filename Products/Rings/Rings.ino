@@ -57,6 +57,7 @@ int hue[RINGS];
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 CRGBPalette16 currentPalette = RainbowColors_p;
+CRGBPalette16 targetPalette = RainbowColors_p;
 
 typedef void (*SimplePatternList[])();
 void  autoRun();
@@ -361,9 +362,9 @@ void autoRun() {
     //  autoPalette++;
     if (autoPalette >= gPalletteCount) autoPalette = 0;
     Serial.println("Next Auto pallette");
-    currentPalette = palettes[autoPalette];
+    targetPalette = palettes[autoPalette];
   }
-  
+  nblendPaletteTowardPalette(currentPalette, targetPalette, 5);
 }
 
 void ringsx() {
