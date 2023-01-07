@@ -449,47 +449,8 @@ void setRingFromFtt(int index, int ring) {
 }
 
 void setRing(int ring, CRGB colour) {
-  int offset = 0;
-  int count = 0;
-  switch (ring) {
-    case 0:
-      count = 1;
-      break;
-    case 1:
-      offset = 1;
-      count = 8;
-      break;
-    case 2:
-      offset = 9;
-      count = 12;
-      break;
-    case 3:
-      offset = 21;
-      count = 16;
-      break;
-    case 4:
-      offset = 37;
-      count = 24;
-      break;
-    case 5:
-      offset = 61;
-      count = 32;
-      break;
-    case 6:
-      offset = 93;
-      count = 40;
-      break;
-    case 7:
-      offset = 133;
-      count = 48;
-      break;
-    case 8:
-      offset = 181;
-      count = 60;
-      break;
-  }
-  for (int i = 0; i < count; i++) {
-    leds[(offset + i)] = colour;
+  for (int i = ringMap[ring][0]; i <= ringMap[ring][1]; i++) {
+    leds[i] = colour;
   }
 }
 
