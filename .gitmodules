@@ -208,3 +208,12 @@
 [submodule "3rdParty/esp32-cam-mjpeg-multiclient"]
 	path = 3rdParty/esp32-cam-mjpeg-multiclient
 	url = https://github.com/arkhipenko/esp32-cam-mjpeg-multiclient.git
+[submodule "Products/Rings"]
+	path = Products/Rings
+	url = https://github.com/netmindz/rings.git
+[submodule "libraries/LEDSnakeGame"]
+	path = libraries/LEDSnakeGame
+	url = https://github.com/netmindz/LEDSnakeGame.git
+[submodule "libraries/arduino_midi_library"]
+	path = libraries/arduino_midi_library
+	url = https://github.com/FortySevenEffects/arduino_midi_library.git
