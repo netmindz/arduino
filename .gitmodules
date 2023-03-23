@@ -217,3 +217,6 @@
 [submodule "libraries/arduino_midi_library"]
 	path = libraries/arduino_midi_library
 	url = https://github.com/FortySevenEffects/arduino_midi_library.git
+[submodule "libraries/es8388arduino"]
+	path = libraries/es8388arduino
+	url = https://github.com/netmindz/es8388arduino.git
