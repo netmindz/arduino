@@ -488,7 +488,7 @@ void MSGEQtest2() {
   if (left[6]>200) {
     Pixel(5,0,200);
   }
-  SpiralStream((4 * blockWidth), (4 * blockWidth), (4 * blockWidth), (128 / blockWidth));
+  SpiralStream((4 * barWidth), (4 * barWidth), (4 * barWidth), 127);
   Caleidoscope1();
   ShowFrame();
 }
@@ -506,11 +506,13 @@ void MSGEQtest3() {
   VerticalStream(120);
 }
 
-// analyzer x 4 (as showed on youtube)
+// analyzer x 4
 void MSGEQtest4() {
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(7-i, 8-right[i]/128, i*10);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((7*barWidth)-i, (8*barWidth)-right[i]/(128/barWidth), i*15);
+    }
   } 
   Caleidoscope2();
   ShowFrame();
