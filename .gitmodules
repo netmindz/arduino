@@ -162,3 +162,66 @@
 [submodule "libraries/TeensyDMX"]
 	path = libraries/TeensyDMX
 	url = https://github.com/ssilverman/TeensyDMX.git
+[submodule "libraries/AnimatedGIF"]
+	path = libraries/AnimatedGIF
+	url = https://github.com/bitbank2/AnimatedGIF.git
+[submodule "libraries/ESP32-HUB75-MatrixPanel-I2S-DMA"]
+	path = libraries/ESP32-HUB75-MatrixPanel-I2S-DMA
+	url = https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA.git
+[submodule "libraries/mqtt-client"]
+	path = libraries/mqtt-client
+	url = https://bitbucket.org/amotzek/mqtt-client.git
+[submodule "libraries/EspMQTTClient"]
+	path = libraries/EspMQTTClient
+	url = https://github.com/plapointe6/EspMQTTClient.git
+[submodule "libraries/pubsubclient"]
+	path = libraries/pubsubclient
+	url = https://github.com/knolleary/pubsubclient.git
+[submodule "libraries/arduino-home-assistant"]
+	path = libraries/arduino-home-assistant
+	url = https://github.com/dawidchyrzynski/arduino-home-assistant.git
+[submodule "libraries/espsoftwareserial"]
+	path = libraries/espsoftwareserial
+	url = https://github.com/plerup/espsoftwareserial.git
+[submodule "libraries/arduinoWebSockets"]
+	path = libraries/arduinoWebSockets
+	url = https://github.com/Links2004/arduinoWebSockets
+[submodule "libraries/arduino-audiokit"]
+	path = libraries/arduino-audiokit
+	url = https://github.com/pschatzmann/arduino-audiokit.git
+[submodule "libraries/es8388"]
+	path = libraries/es8388
+	url = https://github.com/thaaraak/es8388.git
+[submodule "libraries/arduino-audio-tools"]
+	path = libraries/arduino-audio-tools
+	url = https://github.com/pschatzmann/arduino-audio-tools.git
+[submodule "libraries/ESP32-A2DP"]
+	path = libraries/ESP32-A2DP
+	url = https://github.com/pschatzmann/ESP32-A2DP.git
+[submodule "libraries/Adafruit_BusIO"]
+	path = libraries/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO.git
+[submodule "libraries/SparkFun_APDS-9960_Sensor_Arduino_Library"]
+	path = libraries/SparkFun_APDS-9960_Sensor_Arduino_Library
+	url = https://github.com/netmindz/SparkFun_APDS-9960_Sensor_Arduino_Library.git
+[submodule "libraries/WLED-sync"]
+	path = libraries/WLED-sync
+	url = https://github.com/netmindz/WLED-sync.git
+[submodule "3rdParty/esp32-cam-mjpeg-multiclient"]
+	path = 3rdParty/esp32-cam-mjpeg-multiclient
+	url = https://github.com/arkhipenko/esp32-cam-mjpeg-multiclient.git
+[submodule "Products/Rings"]
+	path = Products/Rings
+	url = https://github.com/netmindz/rings.git
+[submodule "libraries/LEDSnakeGame"]
+	path = libraries/LEDSnakeGame
+	url = https://github.com/netmindz/LEDSnakeGame.git
+[submodule "libraries/arduino_midi_library"]
+	path = libraries/arduino_midi_library
+	url = https://github.com/FortySevenEffects/arduino_midi_library.git
+[submodule "libraries/es8388arduino"]
+	path = libraries/es8388arduino
+	url = https://github.com/netmindz/es8388arduino.git
+[submodule "libraries/esp_dmx"]
+	path = libraries/esp_dmx
+	url = https://github.com/someweisguy/esp_dmx.git

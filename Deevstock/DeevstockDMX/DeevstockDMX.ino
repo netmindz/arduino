@@ -46,10 +46,10 @@ AudioAnalyzeFFT1024    fft;
 
 // **********************************************************************************************************
 
-uint8_t STEPS = 150;
+uint8_t STEPS = 125;
 uint8_t BRIGHTNESS = 255;
-uint8_t SPEEDO = 180;
-uint8_t FADE = 180;
+uint8_t SPEEDO = 125;
+uint8_t FADE = 125;
 
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
@@ -183,13 +183,17 @@ PatternAndNameList gAutoPatterns = {
   { rainbowSweep, "rainbowSweep"},
   { Rainbow, "Rainbow"},
   { dsnake, "dsnake"},
-  { RainbowWash, "RainbowWash"},
+//  { RainbowWash, "RainbowWash"},
   { Ripple, "Ripple"},
   { sinwave_1, "sinwave_1"},
-  { rainbow, "rainbow"},
+  //  { rainbow, "rainbow"},
   { bpm, "bpm"}
- };
+};
 
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+int gPatternCount = ARRAY_SIZE(gPatterns);
+int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
+int paletteCount = ARRAY_SIZE(palettes);
 
 CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
 
@@ -206,7 +210,7 @@ void setup() {
 
   Dmx.setMode(TeensyDmx::DMX_IN);
 
-  pinMode(LED_BUILTIN, OUTPUT);
+  //  pinMode(LED_BUILTIN, OUTPUT); --- BREAKS AUDIO ?!
 
   // FastLED.addLeds<CHIPSET, LED_PIN>(leds, NUM_LEDS).setCorrection(TypicalSMD5050);
   LEDS.addLeds<OCTOWS2811, RGB>(leds, NUM_LEDS_PER_STRIP);
@@ -220,14 +224,11 @@ void setup() {
   audioShield.enable();
   audioShield.inputSelect(AUDIO_INPUT_MIC);
   audioShield.volume(0.5);
-  
-  ledtest();
-}
 
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-int gPatternCount = ARRAY_SIZE(gPatterns);
-int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
-int paletteCount = ARRAY_SIZE(palettes);
+  delay(1000);
+  Serial.printf("There are %u palettes\n,", paletteCount);
+//    ledtest();
+}
 
 int led = 0;
 elapsedMillis elapsed;
@@ -236,13 +237,14 @@ elapsedMillis elapsed;
 // Main
 // **********************************************************************************************************
 int pattern = 0;
+int pNumber = 0;
 void loop()
 {
     Dmx.loop();
   if (Dmx.newFrame()) {
 
     led = !led;
-    digitalWrite(LED_BUILTIN, led);
+    //    digitalWrite(LED_BUILTIN, led);
     int b = Dmx.getBuffer()[0]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
@@ -254,27 +256,30 @@ void loop()
     FADE = Dmx.getBuffer()[3]; // fade = 4
     int p = Dmx.getBuffer()[4]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
-    if(p > (gPatternCount - 1)) { 
-      p = 0;
-    }
-    else {
-      pattern = p;
-    }
-    currentPalette = palettes[map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1))]; // channel 6
-//    EVERY_N_SECONDS( 2 ) {
-//      Serial.println(p);
-//      Serial.print("b=");
-//      Serial.println(b);
-//    }
+    pNumber = map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1)); // channel 6
+    currentPalette = palettes[pNumber];
+
+    RED = Dmx.getBuffer()[6];
+    GREEN = Dmx.getBuffer()[7];
+    BLUE = Dmx.getBuffer()[8];
   }
 
-    EVERY_N_SECONDS( 2 ) {
+  EVERY_N_SECONDS( 5 ) {
+    Serial.printf("currentPalette:%u\n", pNumber);
+  }
+  EVERY_N_SECONDS( 2 ) {
+    if (pattern == 0) {
+      Serial.print("auto pattern = ");
+      Serial.println(gAutoPatterns[gCurrentPatternNumber].name);
+    }
+    else {
       Serial.print("pattern = ");
       Serial.println(gPatterns[pattern].name);
     }
-    EVERY_N_SECONDS( 10 ) {
-      Serial.println(LEDS.getFPS());
-    }
+  }
+  //    EVERY_N_SECONDS( 10 ) {
+  //      Serial.printf("FPS: %u\n", LEDS.getFPS());
+  //    }
   soundmems();
   gPatterns[pattern].pattern();
 
@@ -293,21 +298,30 @@ void loop()
 void nextPattern()
 {
   // add one to the current pattern number, and wrap around at the end
-//  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gAutoPatternCount;
+  //  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gAutoPatternCount;
   gCurrentPatternNumber++;
-  if(gCurrentPatternNumber >= gAutoPatternCount) gCurrentPatternNumber = 0;
+  if (gCurrentPatternNumber >= gAutoPatternCount) gCurrentPatternNumber = 0;
 }
 
+int autoPalette = 0;
 void autoRun() {
 
   gAutoPatterns[gCurrentPatternNumber].pattern();
   // change patterns periodically
-//  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
+  //  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
   EVERY_N_SECONDS(60) {
     nextPattern();
     Serial.print("Swapping to pattern ");
     Serial.println(gAutoPatterns[gCurrentPatternNumber].name);
-  } 
+  }
+
+  EVERY_N_SECONDS(160) {
+    autoPalette = random(0, (paletteCount - 1));
+    //  autoPalette++;
+    if (autoPalette >= paletteCount) autoPalette = 0;
+    Serial.println("Next Auto pallette");
+    currentPalette = palettes[autoPalette];
+  }
 
 }
 // **********************************************************************************************************
