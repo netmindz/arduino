@@ -149,7 +149,8 @@ void EQ() {
             safeSetPixel(xytopixel(i, xpos), color);
           }
           else {
-            safeSetPixel(xytopixel(i, xpos) , CRGB::Black);
+//            safeSetPixel(xytopixel(i, xpos) , CRGB::Black);
+            leds[xytopixel(i, xpos)].fadeToBlackBy(map(FADE, 0, 255, 100, 5));
           }
         }
       }
@@ -173,7 +174,8 @@ void EQ() {
             safeSetPixel(xytopixel(i, xpos), color);
           }
           else {
-            safeSetPixel(xytopixel(i, xpos), CRGB::Black);
+//            safeSetPixel(xytopixel(i, xpos), CRGB::Black);
+            leds[xytopixel(i, xpos)].fadeToBlackBy(map(FADE, 0, 255, 100, 5));
           }
         }
       }
