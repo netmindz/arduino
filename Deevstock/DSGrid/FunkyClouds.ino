@@ -584,7 +584,7 @@ void MSGEQtest8() {
   Caleidoscope5();
   Caleidoscope2();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // falling spectogram
@@ -690,7 +690,7 @@ void CaleidoTest1() {
   RotateTriangle();
   Caleidoscope2();  //copy + rotate
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 void CaleidoTest2() {
@@ -702,7 +702,7 @@ void CaleidoTest2() {
   MirrorTriangle();
   Caleidoscope1();  //mirror + rotate
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 void Audio5() {
