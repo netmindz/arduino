@@ -471,7 +471,7 @@ void MSGEQtest2() {
   if (left[6]>200) {
     Pixel(5,0,200);
   }
-  SpiralStream(4, 4, 4, 127);
+  SpiralStream((4 * blockWidth), (4 * blockWidth), (4 * blockWidth), (128 / blockWidth));
   Caleidoscope1();
   ShowFrame();
 }
