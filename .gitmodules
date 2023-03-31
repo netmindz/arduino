@@ -220,3 +220,6 @@
 [submodule "libraries/es8388arduino"]
 	path = libraries/es8388arduino
 	url = https://github.com/netmindz/es8388arduino.git
+[submodule "libraries/esp_dmx"]
+	path = libraries/esp_dmx
+	url = https://github.com/someweisguy/esp_dmx.git
