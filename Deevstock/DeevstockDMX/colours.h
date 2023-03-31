@@ -19,4 +19,13 @@ DEFINE_GRADIENT_PALETTE( greenBlue_p ) {
   255, 0, 0, 255
 };
 
-CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
+DEFINE_GRADIENT_PALETTE( greenBlueYellow_p ) {
+  0,   0, 255, 0,
+  64,  0, 0, 255,
+  128, 0, 255, 255,
+  255, 0, 0, 255,
+  0, 215, 252, 3
+};
+
+
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p};
