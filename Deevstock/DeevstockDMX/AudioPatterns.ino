@@ -96,9 +96,8 @@ void DJLight() {
       leds[i] = leds[i + 1];
     }
 
-   EVERY_N_MILLISECONDS(300) {
-    // TODO: map to fade
-    for (int i = 0; i < NUM_AUDIO_LEDS; i++) {
+   EVERY_N_MILLISECONDS_I(DJLight_fade, map(FADE, 0, 255, 1000, 10)) {     // TODO: tweak fade rate
+    for (int i = 0; i < NUM_LEDS; i++) {
       leds[i].fadeToBlackBy(10);
     }
    }
