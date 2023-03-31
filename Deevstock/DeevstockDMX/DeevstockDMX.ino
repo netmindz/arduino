@@ -197,6 +197,10 @@ PatternAndNameList gAutoPatterns = {
   { bpm, "bpm"}
  };
 
+#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+int gPatternCount = ARRAY_SIZE(gPatterns);
+int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
+int paletteCount = ARRAY_SIZE(palettes);
 
 
 // **********************************************************************************************************
@@ -226,14 +230,11 @@ void setup() {
   audioShield.enable();
   audioShield.inputSelect(AUDIO_INPUT_MIC);
   audioShield.volume(0.5);
-  
-  ledtest();
-}
 
-#define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
-int gPatternCount = ARRAY_SIZE(gPatterns);
-int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
-int paletteCount = ARRAY_SIZE(palettes);
+  delay(1000);
+  Serial.printf("There are %u palettes\n,", paletteCount);
+//    ledtest();
+}
 
 int led = 0;
 elapsedMillis elapsed;
