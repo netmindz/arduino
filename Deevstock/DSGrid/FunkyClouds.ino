@@ -505,11 +505,15 @@ void Mandala8() {
 void MSGEQtest() {
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(i, 15-left[i]/64, left[i]/4);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((i * barWidth)+w, 15-left[i]/64, left[i]/4);
+    }
   }
   for(int i = 0; i < 7; i++) {
-    int xpos = map((i  + 1), 1, 7, 7, 1) + 8;
-    Pixel(xpos, 15-right[i]/64, right[i]/4);
+    for(int w = 0; w < barWidth;  w++) {
+      int xpos = map((i  + 1), 1, 7, (7 * barWidth), 1) + (7 * barWidth) + w;
+      Pixel(xpos, 15-right[i]/64, right[i]/4);
+    }
   }  
   ShowFrame();
   VerticalStream(120);

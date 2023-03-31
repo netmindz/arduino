@@ -28,6 +28,9 @@
 byte CentreX =  (kMatrixWidth / 2) - 1;
 byte CentreY = (kMatrixHeight / 2) - 1;
 
+int barWidth = (kMatrixWidth / 7) / 2;
+int blockWidth = barWidth * 7;
+
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 #define leds matrixleds
 
