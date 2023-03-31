@@ -42,10 +42,10 @@ CRGB ledsAudio[NUM_AUDIO_LEDS];
 
 // **********************************************************************************************************
 
-uint8_t STEPS = 150;
+uint8_t STEPS = 125;
 uint8_t BRIGHTNESS = 255;
-uint8_t SPEEDO = 180;
-uint8_t FADE = 180;
+uint8_t SPEEDO = 125;
+uint8_t FADE = 125;
 
 uint8_t RED = 0;
 uint8_t GREEN = 0;
