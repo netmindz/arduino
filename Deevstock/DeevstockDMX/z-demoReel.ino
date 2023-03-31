@@ -2,6 +2,7 @@ void rainbow()
 {
   // FastLED's built-in rainbow generator
   fill_rainbow( leds, NUM_LEDS, gHue, map(SPEEDO,0,255, 1, 100));
+  fadeToBlackBy( leds, NUM_LEDS, 70);
   demoShow();
 }
 
