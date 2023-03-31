@@ -564,12 +564,14 @@ void MSGEQtest7() {
   MoveOscillators();
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(7-i, 8-right[i]/128, i*10+right[1]/8);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((7 * barWidth) - (i * barWidth), (8*barWidth)-right[i]/(128/barWidth), i*10+right[1]/8);
+    }
   } 
   Caleidoscope5();
   Caleidoscope1();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // spectrum mandala, color linked to osci
