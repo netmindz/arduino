@@ -16,8 +16,7 @@ int smillis = 0;
 int slastmillis = 0;
 
 
-int barWidth = (WIDTH / 7) / 2;
-int blockWidth = barWidth * 7;
+
 
 
 // EQ ------------------------------------------------------------------------------------

@@ -381,109 +381,6 @@ void RainbowTriangle() {
  -------------------------------------------------------------------
  */
 
-// all examples together
-void AutoRun() {
-  // all oscillator based:
-//  Serial.println("Dot1");
-//   for(int i = 0; i < 300; i++) {Dots1();}
-  Serial.println("Dot2");
-   for(int i = 0; i < 300; i++) {Dots2();}
-
-  Serial.println("SlowMandala");
-   SlowMandala();
-
-  Serial.println("SlowMandala2");
-   SlowMandala2();
-   
-  Serial.println("SlowMandala3");
-   SlowMandala3();
-
-  Serial.println("Mandala8");
-   for(int i = 0; i < 300; i++) {Mandala8();}
-   
-   AutoRunAudio();
-   /*
-   for(int i = 0; i < 500; i++) {
-   NoiseExample1();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample2();
-   }
-   for(int i = 0; i < 500; i++) {
-   NoiseExample3();
-   }
-   //SpeedTest();
-   for(int i = 0; i < 500; i++) {
-   NoiseExample4();
-   }
-   for(int i = 0; i < 500; i++) {NoiseExample5();}
-   
-  NoiseExample6();
-  NoiseExample7();
-  */
-}
-
-void AutoRunAudio() {
-     // all MSGEQ7 based:
-  Serial.println("MSGEQtest");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest();}
-   
-  Serial.println("MSGEQtest2");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest2();}
-   
-//  Serial.println("MSGEQtest3");
-//   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest3();}
-   
-  Serial.println("MSGEQtest4");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest4();}
-   
-  Serial.println("AudioSpiral");
-   for(int i = 0; i < LOOP_COUNT; i++) {AudioSpiral();}
-   
-  Serial.println("MSGEQtest5");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest5();}
-   
-  Serial.println("MSGEQtest6");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest6();}
-   
-  Serial.println("MSGEQtest7");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest7();}
-   
-  Serial.println("MSGEQtest8");
-   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest8();}
-  
-// Just showing black 
-//  Serial.println("MSGEQtest9");
-//   for(int i = 0; i < LOOP_COUNT; i++) {MSGEQtest9();}
-   
-  Serial.println("CopyTest");
-   for(int i = 0; i < LOOP_COUNT; i++) {CopyTest();}
-   
-  Serial.println("Audio1");
-   for(int i = 0; i < LOOP_COUNT; i++) {Audio1();}
-   
-  Serial.println("Audio2");
-   for(int i = 0; i < LOOP_COUNT; i++) {Audio2();}
-   
-  Serial.println("Audio3");
-   for(int i = 0; i < (LOOP_COUNT * 2); i++) {Audio3();}
-   
-  Serial.println("Audio4");
-   for(int i = 0; i < (LOOP_COUNT * 2); i++) {Audio4();}
-   
-  Serial.println("CaleidoTest1");
-   for(int i = 0; i < LOOP_COUNT; i++) {CaleidoTest1();}
-   
-  Serial.println("CaleidoTest2");
-   for(int i = 0; i < LOOP_COUNT; i++) {CaleidoTest2();}
-   
-  Serial.println("Audio5");
-   for(int i = 0; i < (LOOP_COUNT * 2); i++) {Audio5();}
-   
-  Serial.println("Audio6");
-   for(int i = 0; i < (LOOP_COUNT * 2); i++) {Audio6();}
-}
-
 // red, 4 spirals, one dot emitter
 // demonstrates SpiralStream and Caleidoscope
 // (psychedelic)
@@ -564,11 +461,15 @@ void Mandala8() {
 void MSGEQtest() {
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(i, 15-left[i]/64, left[i]/4);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((i * barWidth)+w, 15-left[i]/64, left[i]/4);
+    }
   }
   for(int i = 0; i < 7; i++) {
-    int xpos = map((i  + 1), 1, 7, 7, 1) + 8;
-    Pixel(xpos, 15-right[i]/64, right[i]/4);
+    for(int w = 0; w < barWidth;  w++) {
+      int xpos = map((i  + 1), 1, 7, (7 * barWidth), 1) + (7 * barWidth) + w;
+      Pixel(xpos, 15-right[i]/64, right[i]/4);
+    }
   }  
   ShowFrame();
   VerticalStream(120);
