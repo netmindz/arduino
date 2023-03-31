@@ -858,13 +858,50 @@ DEFINE_GRADIENT_PALETTE( candy2_gp ) {
   211,  39, 33, 34,
   255,   1,  1,  1};
 
- //WLEDMM netmindz ar palette
-// Start off as just RGB, but replace in runtime with colors relating to the music
-DEFINE_GRADIENT_PALETTE( audio_responsive_gp ) {
-   0, 255, 0, 0,
-   125, 0, 255, 0,
-   255, 0, 0, 255
-};
+//  //WLEDMM netmindz ar palette
+// // Start off as just RGB, but replace in runtime with colors relating to the music
+// DEFINE_GRADIENT_PALETTE( audio_responsive_gp ) {
+//    0, 255, 0, 0,
+//    125, 0, 255, 0,
+//    255, 0, 0, 255
+// };
 
+// CRGBPalette16 getAudioPalette(int pal) {
+//   // https://forum.makerforums.info/t/hi-is-it-possible-to-define-a-gradient-palette-at-runtime-the-define-gradient-palette-uses-the/63339
+  
+//   um_data_t *um_data;
+//   if (!usermods.getUMData(&um_data, USERMOD_ID_AUDIOREACTIVE)) {
+//     um_data = simulateSound(SEGMENT.soundSim);
+//   }
+//   uint8_t *fftResult = (uint8_t*)um_data->u_data[2];
+
+//   static uint8_t xyz[16];  // Needs to be 4 times however many colors are being used.
+//                            // 3 colors = 12, 4 colors = 16, etc.
+
+//   xyz[0] = 0;  // anchor of first color - must be zero
+//   xyz[1] = 0;
+//   xyz[2] = 0;
+//   xyz[3] = 0;
+  
+//   CRGB rgb = getCRGBForBand(1, fftResult, pal);
+//   xyz[4] = 1;  // anchor of first color
+//   xyz[5] = rgb.r;
+//   xyz[6] = rgb.g;
+//   xyz[7] = rgb.b;
+  
+//   rgb = getCRGBForBand(4, fftResult, pal);
+//   xyz[8] = 128;
+//   xyz[9] = rgb.r;
+//   xyz[10] = rgb.g;
+//   xyz[11] = rgb.b;
+  
+//   rgb = getCRGBForBand(8, fftResult, pal);
+//   xyz[12] = 255;  // anchor of last color - must be 255
+//   xyz[13] = rgb.r;
+//   xyz[14] = rgb.g;
+//   xyz[15] = rgb.b;
+
+//   return loadDynamicGradientPalette(xyz);
+// }
 
 CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p};
