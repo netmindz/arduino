@@ -516,7 +516,7 @@ void MSGEQtest4() {
   } 
   Caleidoscope2();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // basedrum/snare linked to red/green emitters
