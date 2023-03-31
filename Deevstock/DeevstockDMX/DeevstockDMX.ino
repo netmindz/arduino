@@ -248,7 +248,7 @@ void loop()
   if (Dmx.newFrame()) {
 
     led = !led;
-//    digitalWrite(LED_BUILTIN, led);
+    //    digitalWrite(LED_BUILTIN, led);
     int b = Dmx.getBuffer()[0]; // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
