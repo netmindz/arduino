@@ -190,12 +190,12 @@ PatternAndNameList gAutoPatterns = {
   { rainbowSweep, "rainbowSweep"},
   { Rainbow, "Rainbow"},
   { dsnake, "dsnake"},
-  { RainbowWash, "RainbowWash"},
+//  { RainbowWash, "RainbowWash"},
   { Ripple, "Ripple"},
   { sinwave_1, "sinwave_1"},
-  { rainbow, "rainbow"},
+  //  { rainbow, "rainbow"},
   { bpm, "bpm"}
- };
+};
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
