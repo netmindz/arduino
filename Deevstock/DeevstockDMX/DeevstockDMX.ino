@@ -242,6 +242,7 @@ elapsedMillis elapsed;
 // Main
 // **********************************************************************************************************
 int pattern = 0;
+int pNumber = 0;
 void loop()
 {
     Dmx.loop();
@@ -260,38 +261,30 @@ void loop()
     FADE = Dmx.getBuffer()[3]; // fade = 4
     int p = Dmx.getBuffer()[4]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
-    if(p > (gPatternCount - 1)) { 
-      p = 0;
-    }
-    else {
-      pattern = p;
-    }
-    currentPalette = palettes[map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1))]; // channel 6
+    pNumber = map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1)); // channel 6
+    currentPalette = palettes[pNumber];
 
     RED = Dmx.getBuffer()[6];
     GREEN = Dmx.getBuffer()[7];
     BLUE = Dmx.getBuffer()[8];
-
-//    EVERY_N_SECONDS( 2 ) {
-//      Serial.println(p);
-//      Serial.print("b=");
-//      Serial.println(b);
-//    }
   }
 
-    EVERY_N_SECONDS( 2 ) {
-      if(pattern == 0) {
-        Serial.print("auto pattern = ");
-        Serial.println(gAutoPatterns[gCurrentPatternNumber].name);        
-      }
-      else {
-        Serial.print("pattern = ");
-        Serial.println(gPatterns[pattern].name);
-      }
+  EVERY_N_SECONDS( 5 ) {
+    Serial.printf("currentPalette:%u\n", pNumber);
+  }
+  EVERY_N_SECONDS( 2 ) {
+    if (pattern == 0) {
+      Serial.print("auto pattern = ");
+      Serial.println(gAutoPatterns[gCurrentPatternNumber].name);
     }
-    EVERY_N_SECONDS( 10 ) {
-      Serial.printf("FPS: %u\n", LEDS.getFPS());
+    else {
+      Serial.print("pattern = ");
+      Serial.println(gPatterns[pattern].name);
     }
+  }
+  //    EVERY_N_SECONDS( 10 ) {
+  //      Serial.printf("FPS: %u\n", LEDS.getFPS());
+  //    }
   soundmems();
   gPatterns[pattern].pattern();
 
@@ -310,21 +303,30 @@ void loop()
 void nextPattern()
 {
   // add one to the current pattern number, and wrap around at the end
-//  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gAutoPatternCount;
+  //  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % gAutoPatternCount;
   gCurrentPatternNumber++;
-  if(gCurrentPatternNumber >= gAutoPatternCount) gCurrentPatternNumber = 0;
+  if (gCurrentPatternNumber >= gAutoPatternCount) gCurrentPatternNumber = 0;
 }
 
+int autoPalette = 0;
 void autoRun() {
 
   gAutoPatterns[gCurrentPatternNumber].pattern();
   // change patterns periodically
-//  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
+  //  EVERY_N_SECONDS( map(STEPS, 0, 255, 10, 100 )) {
   EVERY_N_SECONDS(60) {
     nextPattern();
     Serial.print("Swapping to pattern ");
     Serial.println(gAutoPatterns[gCurrentPatternNumber].name);
-  } 
+  }
+
+  EVERY_N_SECONDS(160) {
+    autoPalette = random(0, (paletteCount - 1));
+    //  autoPalette++;
+    if (autoPalette >= paletteCount) autoPalette = 0;
+    Serial.println("Next Auto pallette");
+    currentPalette = palettes[autoPalette];
+  }
 
 }
 // **********************************************************************************************************
