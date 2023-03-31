@@ -6,7 +6,7 @@ void FillLEDsFromPaletteColors( uint8_t colorIndex)
 {
   
   for( int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = ColorFromPalette( currentPalette, colorIndex, (BRIGHTNESS / 4), currentBlending);
+    leds[i] = ColorFromPalette( currentPalette, colorIndex, (BRIGHTNESS / 6), currentBlending);
     colorIndex += STEPS;
   }
 }
