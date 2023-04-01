@@ -115,7 +115,10 @@ typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList gPatterns = {
   { autoRun, "autoRun"}, // must be first
+  { autoRunAudio, "autoRunAudio"}, // must be second
+#ifndef ESP32
   { showStars, "showStars"},
+#endif 
   { vortex, "vortex"},
   { squares, "squares"},
   { MirroredNoise, "MirroredNoise"},
@@ -162,15 +165,45 @@ PatternAndNameList gPatterns = {
   //     Audio4,// TODO: move
   //   CaleidoTest1,
   //  CaleidoTest2,// TODO: move
-  { Audio5, "Audio5"}, // cool wave - move
+ // crashing { Audio5, "Audio5"}, // cool wave - move
   //     Audio6,
 #endif
 
 };
 
+PatternAndNameList gAudioPatterns = {
+  { EQ, "EQ"}, 
+  { VU, "VU"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+
+  //      // Audio
+  { MSGEQtest, "MSGEQtest"},
+  { MSGEQtest2, "MSGEQtest2"},
+  //   MSGEQtest3,
+  { MSGEQtest4, "MSGEQtest4"},
+  // AudioSpiral, // TODO: resize
+  //     MSGEQtest5,// TODO: resize
+  //     MSGEQtest6, //boring
+  { MSGEQtest7, "MSGEQtest7"}, // nice but resize?
+  { MSGEQtest8, "MSGEQtest8"},
+  //   MSGEQtest9,
+  //     CopyTest,
+  { Audio1, "Audio1"},// TODO: resize
+  { Audio2, "Audio2"}, // cool wave - move
+  //     Audio3, // boring
+  //     Audio4,// TODO: move
+  //   CaleidoTest1,
+  //  CaleidoTest2,// TODO: move
+ // crashing { Audio5, "Audio5"}, // cool wave - move
+  //     Audio6,
+};
+
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
+int gAudioPatternCount = ARRAY_SIZE(gAudioPatterns);
 int autopgm = random(1, (gPatternCount - 1));
+int autoAudiopgm = 0;
 
 void setup() {
   // enable debugging info output
@@ -210,12 +243,15 @@ void loop() {
   controlLoop();
 
   EVERY_N_SECONDS(10) {
-    if(pgm != 0) {
-      Serial.println(gPatterns[pgm].name);
+    if(pgm == 0) {
+      Serial.println(gPatterns[autopgm].name);
+    }
+    if(pgm == 1) {
+      Serial.println(gAudioPatterns[autoAudiopgm].name);
     }
     else {
       Serial.print("Auto: ");
-      Serial.println(gPatterns[autopgm].name);
+      Serial.println(gPatterns[pgm].name);
     }
   }
   gPatterns[pgm].pattern();
@@ -224,7 +260,7 @@ void loop() {
 
 void autoRun() {
   EVERY_N_SECONDS(90) {
-    autopgm = random(1, (gPatternCount - 1));
+    autopgm = random(2, (gPatternCount - 1));
 //     autopgm++;
     if (autopgm >= gPatternCount) autopgm = 1;
     Serial.print("Next Auto pattern: ");
@@ -232,5 +268,18 @@ void autoRun() {
   }
 
   gPatterns[autopgm].pattern();
+
+}
+
+void autoRunAudio() {
+  EVERY_N_SECONDS(90) {
+    autoAudiopgm = random(0, (gAudioPatternCount - 1));
+//     autopgm++;
+    if (autopgm >= gPatternCount) autopgm = 1;
+    Serial.print("Next Auto pattern: ");
+    Serial.println(gPatterns[autopgm].name);
+  }
+
+  gAudioPatterns[autoAudiopgm].pattern();
 
 }
