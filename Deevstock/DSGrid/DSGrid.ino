@@ -70,7 +70,6 @@ int button3;
 byte mode;
 int pgm = 0;
 byte spd;
-byte brightness;
 byte red_level;
 byte green_level;
 byte blue_level;
