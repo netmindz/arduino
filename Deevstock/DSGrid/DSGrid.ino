@@ -191,7 +191,7 @@ PatternAndNameList gAudioPatterns = {
 };
 
 #include "colours.h"
-CRGBPalette16 palettes[] = {RainbowColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p };
+CRGBPalette16 palettes[] = {RainbowColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p, aqua_flash_gp, Sunset_Real_gp  };
 
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))

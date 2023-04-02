@@ -15,17 +15,17 @@ DEFINE_GRADIENT_PALETTE( pinkPurple_p ) {
 
 DEFINE_GRADIENT_PALETTE( greenBlue_p ) {
   0,   0, 255, 0,
-  64,  0, 0, 255,
-  128, 0, 255, 255,
+//  64,  0, 0, 255,
+//  128, 0, 255, 255,
   255, 0, 0, 255
 };
 
 DEFINE_GRADIENT_PALETTE( greenBlueYellow_p ) {
   0,   0, 255, 0,
-  64,  0, 0, 255,
-  128, 0, 255, 255,
-  255, 0, 0, 255,
-  0, 215, 252, 3
+  128,  0, 0, 255,
+//  128, 0, 255, 255,
+//  200, 0, 0, 255,
+  255, 125, 125, 30
 };
 
 DEFINE_GRADIENT_PALETTE( ib_jul01_gp ) {
@@ -744,8 +744,7 @@ DEFINE_GRADIENT_PALETTE( red_reaf_gp ) {
 // Size: 28 bytes of program space.
 
 DEFINE_GRADIENT_PALETTE( aqua_flash_gp ) {
-    0,   0,  0,  0,
-   66,  57,227,233,
+    0,  57,227,233,
    96, 255,255,  8,
   124, 255,255,255,
   153, 255,255,  8,
