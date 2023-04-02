@@ -244,13 +244,15 @@ void loop() {
 
   EVERY_N_SECONDS(10) {
     if(pgm == 0) {
+     Serial.print("Auto: ");
       Serial.println(gPatterns[autopgm].name);
     }
-    if(pgm == 1) {
+    else if(pgm == 1) {
+     Serial.print("AutoAudio: ");
       Serial.println(gAudioPatterns[autoAudiopgm].name);
     }
     else {
-      Serial.print("Auto: ");
+
       Serial.println(gPatterns[pgm].name);
     }
   }
@@ -272,14 +274,12 @@ void autoRun() {
 }
 
 void autoRunAudio() {
-  EVERY_N_SECONDS(90) {
+  EVERY_N_SECONDS(30) {
     autoAudiopgm = random(0, (gAudioPatternCount - 1));
-//     autopgm++;
-    if (autopgm >= gPatternCount) autopgm = 1;
+//     autoAudiopgm++;
+    if (autoAudiopgm >= gAudioPatternCount) autoAudiopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
   }
-
   gAudioPatterns[autoAudiopgm].pattern();
-
 }
