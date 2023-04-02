@@ -32,7 +32,7 @@ int blockWidth = barWidth * 7;
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
-TBlendType    currentBlending;
+TBlendType    currentBlending = LINEARBLEND;
 
 // can be used for palette rotation
 // "colorshift"

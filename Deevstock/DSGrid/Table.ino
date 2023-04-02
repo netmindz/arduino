@@ -54,7 +54,7 @@ void EQ() {
             // CRGB color = CRGB(map(i , 1, WIDTH, 254, 0), g, 0);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
             //CRGB color = CHSV((band * 35), 255, 255);
-            CRGB color = ColorFromPalette(currentPalette, (band * 35), 255, currentBlending);
+            CRGB color = ColorFromPalette(currentPalette, (band * 35), 255, LINEARBLEND);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
@@ -79,7 +79,7 @@ void EQ() {
             //          CRGB color = CHSV(map(count,0, HEIGHT, 0, 255) , 255,255);
             //CRGB color = CHSV(eq_hue + (band * 15), 255,255);
 //            CRGB color = CHSV((band * 35), 255, 255);
-            CRGB color = ColorFromPalette(currentPalette, (band * 35), 255, currentBlending);
+            CRGB color = ColorFromPalette(currentPalette, (band * 35), 255, LINEARBLEND);
             safeSetPixel(xytopixel(xpos, i), color);
           }
           else {
