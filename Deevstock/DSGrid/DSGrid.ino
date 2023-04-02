@@ -80,15 +80,7 @@ int SPEED = 50;
 int FADE = 50;
 
 
-#if defined(CORE_TEENSY)
-#ifdef TEENSY4
-#include "control_null.h" // Teensy 4.0 - no input
-#else 
-#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
-#endif
-#else
-#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
-#endif
+
 
 #include "stars.h"
 
@@ -199,11 +191,26 @@ PatternAndNameList gAudioPatterns = {
   //     Audio6,
 };
 
+#include "colours.h"
+CRGBPalette16 palettes[] = {RainbowColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p };
+
+
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAudioPatternCount = ARRAY_SIZE(gAudioPatterns);
+int gPaletteCount = ARRAY_SIZE(palettes);
 int autopgm = random(1, (gPatternCount - 1));
 int autoAudiopgm = 0;
+
+#if defined(CORE_TEENSY)
+#ifdef TEENSY4
+#include "control_null.h" // Teensy 4.0 - no input
+#else 
+#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#endif
+#else
+#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
+#endif
 
 void setup() {
   // enable debugging info output

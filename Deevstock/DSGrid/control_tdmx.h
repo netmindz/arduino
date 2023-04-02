@@ -57,7 +57,6 @@ int left[7];
 int right[7];
 
 void controlLoop() {
-  int gPatternCount = 32; // FIXME
   Dmx.loop();
   if (Dmx.newFrame()) {
     EVERY_N_SECONDS( 2 ) {
@@ -73,6 +72,7 @@ void controlLoop() {
     pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
-
+    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
+    currentPalette = palettes[pNumber];
   }
 }
