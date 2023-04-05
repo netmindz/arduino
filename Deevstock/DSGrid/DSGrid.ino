@@ -32,7 +32,7 @@ int blockWidth = barWidth * 7;
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
-TBlendType    currentBlending;
+TBlendType    currentBlending = LINEARBLEND;
 
 // can be used for palette rotation
 // "colorshift"
@@ -70,7 +70,6 @@ int button3;
 byte mode;
 int pgm = 0;
 byte spd;
-byte brightness;
 byte red_level;
 byte green_level;
 byte blue_level;
@@ -79,17 +78,6 @@ int BRIGHTNESS = 150;
 int SPEED = 50;
 int FADE = 50;
 
-
-#if defined(CORE_TEENSY)
-#ifdef TEENSY4
-#include "control_null.h" // Teensy 4.0 - no input
-#else 
-//#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
-#include "control_tdmx_audio.h" // DMX for control and WLED audio sync with Teensy 3.2
-#endif
-#else
-#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
-#endif
 
 #include "stars.h"
 
@@ -200,11 +188,26 @@ PatternAndNameList gAudioPatterns = {
   //     Audio6,
 };
 
+#include "colours.h"
+CRGBPalette16 palettes[] = {RainbowColors_p, audio_responsive_gp, audio_responsive_gp, audio_responsive_gp, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p, aqua_flash_gp, Sunset_Real_gp  };
+
+
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAudioPatternCount = ARRAY_SIZE(gAudioPatterns);
+int gPaletteCount = ARRAY_SIZE(palettes);
 int autopgm = random(1, (gPatternCount - 1));
 int autoAudiopgm = 0;
+
+#if defined(CORE_TEENSY)
+#ifdef TEENSY4
+#include "control_null.h" // Teensy 4.0 - no input
+#else 
+#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#endif
+#else
+#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
+#endif
 
 void setup() {
   // enable debugging info output
@@ -245,13 +248,15 @@ void loop() {
 
   EVERY_N_SECONDS(10) {
     if(pgm == 0) {
+     Serial.print("Auto: ");
       Serial.println(gPatterns[autopgm].name);
     }
-    if(pgm == 1) {
+    else if(pgm == 1) {
+     Serial.print("AutoAudio: ");
       Serial.println(gAudioPatterns[autoAudiopgm].name);
     }
     else {
-      Serial.print("Auto: ");
+
       Serial.println(gPatterns[pgm].name);
     }
   }
@@ -273,14 +278,12 @@ void autoRun() {
 }
 
 void autoRunAudio() {
-  EVERY_N_SECONDS(90) {
+  EVERY_N_SECONDS(30) {
     autoAudiopgm = random(0, (gAudioPatternCount - 1));
-//     autopgm++;
-    if (autopgm >= gPatternCount) autopgm = 1;
+//     autoAudiopgm++;
+    if (autoAudiopgm >= gAudioPatternCount) autoAudiopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
   }
-
   gAudioPatterns[autoAudiopgm].pattern();
-
 }
