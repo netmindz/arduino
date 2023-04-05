@@ -84,7 +84,8 @@ int FADE = 50;
 #ifdef TEENSY4
 #include "control_null.h" // Teensy 4.0 - no input
 #else 
-#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+//#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#include "control_tdmx_audio.h" // DMX for control and WLED audio sync with Teensy 3.2
 #endif
 #else
 #include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
