@@ -7,7 +7,7 @@
 //Map rings on disk to indicies.
 //This is where all the magic happens.
 //Each represents one of the concentric rings.
-uint8_t ringMap[ringCount][2] = {
+uint8_t rings[ringCount][2] = {
   {0, 0},     //0 Center Point
   {1, 8},     //1
   {9, 20},   //2
@@ -39,14 +39,14 @@ uint16_t angleToPixel360(int16_t angle, uint8_t ring)
   if (ring >= ringCount) return 0;
   angle = angle % 360;
   if (angle < 0) angle = 360 + angle;
-  return ringMap[ring][0] + int(angle / ringSteps360[ring]);
+  return rings[ring][0] + int(angle / ringSteps360[ring]);
 }
 
 //256 Degree Helper function to map angle and ring index to pixel
 uint16_t angleToPixel256(uint8_t angle, uint8_t ring)
 {
   if (ring >= ringCount) return 0;
-  return ringMap[ring][0] + int(angle / ringSteps256[ring]);
+  return rings[ring][0] + int(angle / ringSteps256[ring]);
 }
 
 //Fill in the ringSteps arrays for later use.
@@ -56,7 +56,7 @@ inline void setupRings()
   uint8_t count = 0;
   for (int r = 0; r < ringCount; r++)
   {
-    count = (ringMap[r][1] - ringMap[r][0] + 1);
+    count = (rings[r][1] - rings[r][0] + 1);
     ringSteps360[r] = (360.0 / float(count));
   }
 
@@ -64,7 +64,7 @@ inline void setupRings()
   count = 0;
   for (int r = 0; r < ringCount; r++)
   {
-    count = (ringMap[r][1] - ringMap[r][0] + 1);
+    count = (rings[r][1] - rings[r][0] + 1);
     ringSteps256[r] = (256.0 / float(count));
   }
 }
@@ -113,18 +113,18 @@ void fillRing360(uint8_t ring, CRGB color, int16_t startAngle, int16_t endAngle)
   uint8_t end = angleToPixel360(endAngle, ring);
   if (start > end)
   {
-    for (int i = start; i <= ringMap[ring][1]; i++)
+    for (int i = start; i <= rings[ring][1]; i++)
     {
       leds[i] = color;
     }
-    for (int i = ringMap[ring][0]; i <= end; i++)
+    for (int i = rings[ring][0]; i <= end; i++)
     {
       leds[i] = color;
     }
   }
   else if (start == end)
   {
-    for (int i = ringMap[ring][0]; i <= ringMap[ring][1]; i++)
+    for (int i = rings[ring][0]; i <= rings[ring][1]; i++)
     {
       leds[i] = color;
     }
@@ -145,18 +145,18 @@ void fillRing256(uint8_t ring, CRGB color, uint8_t startAngle, uint8_t endAngle)
   uint8_t end = angleToPixel256(endAngle, ring);
   if (start > end)
   {
-    for (int i = start; i <= ringMap[ring][1]; i++)
+    for (int i = start; i <= rings[ring][1]; i++)
     {
       leds[i] = color;
     }
-    for (int i = ringMap[ring][0]; i <= end; i++)
+    for (int i = rings[ring][0]; i <= end; i++)
     {
       leds[i] = color;
     }
   }
   else if (start == end)
   {
-    for (int i = ringMap[ring][0]; i <= ringMap[ring][1]; i++)
+    for (int i = rings[ring][0]; i <= rings[ring][1]; i++)
     {
       leds[i] = color;
     }
@@ -220,8 +220,6 @@ void halfCircleRainbow360() {
     angle360 = 0;
 //  return 4;
   FastLED.delay(0);
-  FastLED.clear();
-
 }
 
 void halfCircleRainbow256() {
@@ -235,6 +233,5 @@ void halfCircleRainbow256() {
   fillRing256(3, CRGB::Red, angle256 - 64, angle256 + 64);
   angle256++;
   FastLED.delay(0);
-  FastLED.clear();
 //  return 4;
 }

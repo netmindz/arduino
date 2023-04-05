@@ -12,10 +12,6 @@
   #define  WS1616
 #endif
 
-#ifdef ESP32
-#include <WiFi.h> // ugly to add here, but later causes error about param count to swap method
-#endif
-
 #define DISABLE_MATRIX_TEST // No grey on start
 #include "neomatrix_config.h"
 
@@ -42,7 +38,7 @@ int blockWidth = barWidth * 7;
 
 // a place to store the color palette
 CRGBPalette16 currentPalette;
-TBlendType    currentBlending;
+TBlendType    currentBlending = LINEARBLEND;
 
 // can be used for palette rotation
 // "colorshift"
@@ -80,32 +76,17 @@ int button3;
 byte mode;
 int pgm = 0;
 byte spd;
-byte brightness;
 byte red_level;
 byte green_level;
 byte blue_level;
 
-int BRIGHTNESS = 250;
-int SPEED = 30;
+int BRIGHTNESS = 150;
+int SPEED = 50;
 int FADE = 50;
 
-// storage of the 7 10Bit (0-1023) audio band values
-int left[7];
-int right[7];
 
-#if defined(CORE_TEENSY)
-#ifdef TEENSY4
-#include "control_null.h" // Teensy 4.0 - no input
-#else 
-#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
-#endif
-#else
-#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
-#endif
+#include "stars.h"
 
-#ifndef ESP32
-#include "stars.h" // needs too much ram for ESP32
-#endif
 
 // basically beatsin16 with an additional phase
 
@@ -132,18 +113,14 @@ PatternAndNameList gPatterns = {
   { autoRunAudio, "autoRunAudio"}, // must be second
 #ifndef ESP32
   { showStars, "showStars"},
-#endif
-#ifndef TEENSY4
-  { EQ, "EQ"}, 
-  { VU, "VU"},
-  { FunkyPlank, "FunkyPlank"},
-  { DJLight, "DJLight"},
-#endif
+#endif 
+  { vortex, "vortex"},
+  { squares, "squares"},
   { MirroredNoise, "MirroredNoise"},
 //  RedClouds,
 //  Lavalamp1,
   { Lavalamp2, "Lavalamp2"},
-//  { Lavalamp3, "Lavalamp3"}, //just white and green
+  { Lavalamp3, "Lavalamp3"},
   { Lavalamp4, "Lavalamp4"},
   { Lavalamp5, "Lavalamp5"},
   { Constrained1, "Constrained1"},
@@ -157,12 +134,14 @@ PatternAndNameList gPatterns = {
   { MilliTimer, "MilliTimer"},
   { Caleido1, "Caleido1"},
   { Caleido2, "Caleido2"},
-//  { Caleido3, "Caleido3"}, just black on ESP/Smartmatrix
-  { Caleido5, "Caleido5"},
-  { vortex, "vortex"},
-  { squares, "squares"},
-
+  { Caleido3, "Caleido3"},
+  { Caleido5, "Caleido5"},    
 #ifndef TEENSY4
+  { EQ, "EQ"}, 
+  { VU, "VU"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"},
+
   //      // Audio
   { MSGEQtest, "MSGEQtest"},
   { MSGEQtest2, "MSGEQtest2"},
@@ -184,6 +163,7 @@ PatternAndNameList gPatterns = {
  // crashing { Audio5, "Audio5"}, // cool wave - move
   //     Audio6,
 #endif
+
 };
 
 PatternAndNameList gAudioPatterns = {
@@ -214,34 +194,57 @@ PatternAndNameList gAudioPatterns = {
   //     Audio6,
 };
 
+#include "colours.h"
+CRGBPalette16 palettes[] = {RainbowColors_p, audio_responsive_gp, audio_responsive_gp, audio_responsive_gp, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p, aqua_flash_gp, Sunset_Real_gp  };
+
+
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAudioPatternCount = ARRAY_SIZE(gAudioPatterns);
+int gPaletteCount = ARRAY_SIZE(palettes);
 int autopgm = random(1, (gPatternCount - 1));
 int autoAudiopgm = 0;
+
+#if defined(CORE_TEENSY)
+#ifdef TEENSY4
+#include "control_null.h" // Teensy 4.0 - no input
+#else 
+#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#endif
+#else
+#include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
+#endif
 
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
-  delay(1000);
+  
   Serial.println("Setup");
-  delay(1000);
   controlSetup();
-  delay(1000);
-  Serial.println("matrix_setup");
-  delay(500);
-  matrix_setup(false);
+
+  matrix_setup();
   
-//  // Initialize our noise coordinates to some random values
-//  fx = random16();
-//  fy = random16();
-//  fz = random16();
-//
-//  x2 = random16();
-//  y2 = random16();
-//  z2 = random16();
-  
-  Serial.println("\n\nEnd of setup");
+  //  leds[XY(0,0)] = CRGB::White;
+  //  leds[XY(29,0)] = CRGB::Blue;
+  //  leds[XY(29,8)] = CRGB::Yellow;
+  //  leds[XY(0, 9)] = CRGB::Green;
+  //  leds[XY(0, 28)] = CRGB::Green;
+  //  leds[XY(0, 29)] = CRGB::Red;
+  //  leds[XY(29, 29)] = CRGB::Blue;
+  //  FastLED.delay(10000);
+
+    ledtest();
+
+  //  // Initialize our noise coordinates to some random values
+  //  fx = random16();
+  //  fy = random16();
+  //  fz = random16();
+
+  //  x2 = random16();
+  //  y2 = random16();
+  //  z2 = random16();
+
+  //AutoRunAudio();
   Serial.printf("There are %u patterns\n", gPatternCount);
 }
 
@@ -251,13 +254,15 @@ void loop() {
 
   EVERY_N_SECONDS(10) {
     if(pgm == 0) {
+     Serial.print("Auto: ");
       Serial.println(gPatterns[autopgm].name);
     }
-    if(pgm == 1) {
+    else if(pgm == 1) {
+     Serial.print("AutoAudio: ");
       Serial.println(gAudioPatterns[autoAudiopgm].name);
     }
     else {
-      Serial.print("Auto: ");
+
       Serial.println(gPatterns[pgm].name);
     }
   }
@@ -279,14 +284,12 @@ void autoRun() {
 }
 
 void autoRunAudio() {
-  EVERY_N_SECONDS(90) {
+  EVERY_N_SECONDS(30) {
     autoAudiopgm = random(0, (gAudioPatternCount - 1));
-//     autopgm++;
-    if (autopgm >= gPatternCount) autopgm = 1;
+//     autoAudiopgm++;
+    if (autoAudiopgm >= gAudioPatternCount) autoAudiopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
   }
-
   gAudioPatterns[autoAudiopgm].pattern();
-
 }

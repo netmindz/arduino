@@ -82,8 +82,6 @@ void controlSetup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  delay(2000);
-  
   pgm = 0; // 0 = autoRun
 
   setupOTA();
@@ -119,19 +117,19 @@ void readDMX() {
     pgm = getValue(packet, 2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(packet, 3, 0, 255); // speed = 3
     FADE = getValue(packet, 4, 0, 255);  // fade = 4
-
+    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
+    currentPalette = getPalette(pNumber);
   }
 }
 
-// FAKE MSGEQ for now
 bool newReading;
 bool MSGEQ7read() {
   return newReading;
 }
 
 int MSGEQ7get(int band) {
-//  ReadAudio();
-  return map(left[band], 0, 1023, 0, MSGEQ7_OUT_MAX);
+  ReadAudio();
+  return left[band];
 }
 
 int MSGEQ7get(int band, int channel) {
@@ -158,10 +156,6 @@ void readAudioUDP() {
   else {
     newReading = false;
   }
-}
-
-int mapNoise(int v) {
-  return v;
 }
 
 

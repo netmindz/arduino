@@ -96,12 +96,9 @@ void BasicVariablesSetup() {
   // everything for the menu
   mode = 0;
   spd = 10;
-  brightness = 25;
   red_level = 255;
   green_level = 255;
   blue_level = 255;
-
-  LEDS.setBrightness(brightness);
 }
 
 

@@ -1,5 +1,7 @@
 #pragma message Teensy 3.2 + MSGEQ7
+
 #include <TeensyDmx.h>
+
 //#define MSGEQ7_10BIT
 // MSGEQ7
 #include "MSGEQ7.h"
@@ -10,9 +12,9 @@
 #define AUDIO_LEFT_PIN    A2
 #define AUDIO_RIGHT_PIN   A1
 #define MSGEQ7_INTERVAL ReadsPerSecond(50)
-#define MSGEQ7_SMOOTH true
+#define MSGEQ7_SMOOTH 0
 
-CMSGEQ7<true, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
+CMSGEQ7<MSGEQ7_SMOOTH, MSGEQ7_RESET_PIN, MSGEQ7_STROBE_PIN, AUDIO_LEFT_PIN, AUDIO_RIGHT_PIN> MSGEQ7;
 
 TeensyDmx Dmx(Serial1);
 
@@ -50,8 +52,11 @@ int MSGEQ7get(int band, int channel) {
 
 int led = 0;
 
+// storage of the 7 10Bit (0-1023) audio band values
+int left[7];
+int right[7];
+
 void controlLoop() {
-  int gPatternCount = 32; // FIXME
   Dmx.loop();
   if (Dmx.newFrame()) {
     EVERY_N_SECONDS( 2 ) {
@@ -67,6 +72,7 @@ void controlLoop() {
     pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
-
+    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
+    currentPalette = getPalette(pNumber);
   }
 }

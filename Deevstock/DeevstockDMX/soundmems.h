@@ -1,32 +1,20 @@
 #ifndef SOUNDMEMS_H
 #define SOUNDMEMS_H
 
-AudioInputI2S          audioInput;         // audio shield: mic or line-in
-AudioAnalyzeFFT256    fft;
-AudioConnection patchCord1(audioInput, 0, fft, 0);
+// all these libraries are required for the Teensy Audio Library
+#include <Audio.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
+
+AudioInputI2S audioInput;
+AudioAnalyzeFFT256 fft;
 AudioControlSGTL5000 audioShield;
+AudioConnection patchCord1(audioInput, 0, fft, 0);
 
-
-boolean fft_available;
-float fftData[8];
-
-
-void soundmems() {                                                              
-  fft_available = fft.available();
-if (fft_available) {                                                                                
-
-  fftData[0] = fft.read(2, 3);
-  fftData[1] = fft.read(4, 6);
-  fftData[2] = fft.read(7, 10);
-  fftData[3] = fft.read(11, 19);
-  fftData[4] = fft.read(20, 32);
-  fftData[5] = fft.read(33, 52);
-  fftData[6] = fft.read(53, 82);
-  fftData[7] = fft.read(83, 127);
-
-  // Here's where we capture sound. It provides an average, a current sample as well as a peak trigger.
-  // I tried some fancier math, but never came up with anything that really worked all that well. Must . . work. . harder.
-  
+void soundmems() {                                                              // Here's where we capture sound. It provides an average, a current sample as well as a peak trigger.
+if (fft.available()) {                                                                                // I tried some fancier math, but never came up with anything that really worked all that well. Must . . work. . harder.
 // Local definitions
 #define sensitivity 100                                                       // Define maximum cutoff of potentiometer for cutting off sounds.
 #define NSAMPLES 64                                                           // Creating an array of lots of samples for decent averaging.

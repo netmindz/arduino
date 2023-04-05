@@ -11,6 +11,7 @@
 #define FASTLED_ALLOW_INTERRUPTS   1 // setting 0 fixes flutter, causes crash
 //#define FASTLED_INTERRUPT_RETRY_COUNT 0
 
+#define MIC_PIN  A0
 const uint8_t kMatrixWidth = 50; // length of string
 const uint8_t kMatrixHeight = 16; // number of strings
 #define NUM_LEDS_PER_STRIP 100
@@ -40,17 +41,15 @@ TeensyDmx Dmx(Serial1);
 CRGB leds[NUM_LEDS];
 CRGB ledsAudio[NUM_AUDIO_LEDS];
 
+AudioControlSGTL5000 audioShield;
+AudioAnalyzeFFT1024    fft;
+
 // **********************************************************************************************************
 
 uint8_t STEPS = 125;
 uint8_t BRIGHTNESS = 255;
 uint8_t SPEEDO = 125;
 uint8_t FADE = 125;
-
-uint8_t RED = 0;
-uint8_t GREEN = 0;
-uint8_t BLUE = 0;
-
 
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
@@ -75,9 +74,6 @@ void shimmer();
 void sinwave_1();
 void snake();
 void dsnake();
-void DJLight();
-void FunkyPlank();
-void EQ();
 
 // ***********************
 // Audio values
@@ -138,9 +134,6 @@ typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList gPatterns = { 
   { autoRun, "auotrun"}, 
-  { FunkyPlank, "FunkyPlank"},
-  { DJLight, "DJLight"},
-  { EQ, "EQ"},
   { pixels,"pixels"},         // Long line of colours
   { fillnoise,"fillnoise"},      // Center to edges with base color and twinkle
   { jugglep,"jugglep"},        // Long line of sinewaves
@@ -172,21 +165,21 @@ PatternAndNameList gPatterns = {
 
 // shimmer, confetti, sinelon,
 PatternAndNameList gAutoPatterns = {
-//  { pixels, "pixels"},         // Long line of colours
-//  { fillnoise, "fillnoise"},      // Center to edges with base color and twinkle
-//  { jugglep, "jugglep"},        // Long line of sinewaves
-//  { ripple, "ripple"},         // Juggle with twinkles
-//  { pixel, "pixel"},          // Long line of colours
-//  { matrix, "matrix"},         // Start to end with twinkles
-//  { onesine, "onesine"},        // Long line of shortlines
-//  { noisefire, "noisefire"},      // Start to end
-//  { rainbowbit, "rainbowbit"},     // Long line of short lines with twinkles
-//  { noisefiretest, "noisefiretest"},  // Center to edges
-//  { rainbowg, "rainbowg"},       // Long line with flashes
-//  { noisewide, "noisewide"},      // Center to edges
-//  { plasma, "plasma"},         // Long line of short lines
-//  { besin, "besin"},          // center to edges with black
-//  { noisepal, "noisepal"},       // Long line
+  { pixels, "pixels"},         // Long line of colours
+  { fillnoise, "fillnoise"},      // Center to edges with base color and twinkle
+  { jugglep, "jugglep"},        // Long line of sinewaves
+  { ripple, "ripple"},         // Juggle with twinkles
+  { pixel, "pixel"},          // Long line of colours
+  { matrix, "matrix"},         // Start to end with twinkles
+  { onesine, "onesine"},        // Long line of shortlines
+  { noisefire, "noisefire"},      // Start to end
+  { rainbowbit, "rainbowbit"},     // Long line of short lines with twinkles
+  { noisefiretest, "noisefiretest"},  // Center to edges
+  { rainbowg, "rainbowg"},       // Long line with flashes
+  { noisewide, "noisewide"},      // Center to edges
+  { plasma, "plasma"},         // Long line of short lines
+  { besin, "besin"},          // center to edges with black
+  { noisepal, "noisepal"},       // Long line
   { rainbowSweep, "rainbowSweep"},
   { Rainbow, "Rainbow"},
   { dsnake, "dsnake"},
@@ -202,6 +195,7 @@ int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
 int paletteCount = ARRAY_SIZE(palettes);
 
+CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
 
 // **********************************************************************************************************
 // Setup

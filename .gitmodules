@@ -9,10 +9,10 @@
 	url = https://github.com/jimparis/DmxReceiver.git
 [submodule "libraries/E131"]
 	path = libraries/E131
-	url = https://github.com/netmindz/E131.git
+	url = git@github.com:forkineye/E131.git
 [submodule "libraries/ESPAsyncE131"]
 	path = libraries/ESPAsyncE131
-	url = https://github.com/netmindz/ESPAsyncE131.git
+	url = https://github.com/forkineye/ESPAsyncE131.git
 [submodule "libraries/ESPAsyncUDP"]
 	path = libraries/ESPAsyncUDP
 	url = https://github.com/me-no-dev/ESPAsyncUDP.git
@@ -68,6 +68,8 @@
 [submodule "libraries/NeoPixelBus"]
 	path = libraries/NeoPixelBus
 	url = https://github.com/Makuna/NeoPixelBus.git
+[submodule "ESPAsyncE131"]
+	url = https://github.com/forkineye/ESPAsyncE131.git
 [submodule "WLED-Audio"]
 	path = WLED-Audio
 	url = https://github.com/netmindz/WLED.git

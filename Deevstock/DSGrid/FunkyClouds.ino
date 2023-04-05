@@ -102,13 +102,30 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 void ReadAudio() {
   if(MSGEQ7read()) {
     for (int b = 0; b < 7; b++) {
-      left[b] = map(MSGEQ7get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
-      right[b] = map(MSGEQ7get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      left[b] = map(MSGEQ7.get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      right[b] = map(MSGEQ7.get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
     }
   }
 }
 
-
+/*
+-------------------------------------------------------------------
+ The main program
+ -------------------------------------------------------------------
+ */
+//void loop()
+//{
+//  AutoRunAudio();
+/////  AutoRun();
+//  // Comment AutoRun out and test examples seperately here
+//
+//// SlowMandala(); //    red slow
+//// Dots1(); //          2 arround one
+//// Dots2(); //          stacking sines
+//// SlowMandala2(); //   just nice and soft
+//// SlowMandala3(); //   just nice and soft
+//// Mandala8(); //       copy one triangle all over
+//}
 
 /*
 -------------------------------------------------------------------
@@ -471,7 +488,7 @@ void MSGEQtest2() {
   if (left[6]>200) {
     Pixel(5,0,200);
   }
-  SpiralStream((4 * blockWidth), (4 * blockWidth), (4 * blockWidth), (128 / blockWidth));
+  SpiralStream((4 * barWidth), (4 * barWidth), (4 * barWidth), 127);
   Caleidoscope1();
   ShowFrame();
 }
@@ -489,15 +506,17 @@ void MSGEQtest3() {
   VerticalStream(120);
 }
 
-// analyzer x 4 (as showed on youtube)
+// analyzer x 4
 void MSGEQtest4() {
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(7-i, 8-right[i]/128, i*10);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((7*barWidth)-i, (8*barWidth)-right[i]/(128/barWidth), i*15);
+    }
   } 
   Caleidoscope2();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // basedrum/snare linked to red/green emitters
@@ -545,12 +564,14 @@ void MSGEQtest7() {
   MoveOscillators();
   ReadAudio();
   for(int i = 0; i < 7; i++) {
-    Pixel(7-i, 8-right[i]/128, i*10+right[1]/8);
+    for(int w = 0; w < barWidth;  w++) {
+      Pixel((7 * barWidth) - (i * barWidth), (8*barWidth)-right[i]/(128/barWidth), i*10+right[1]/8);
+    }
   } 
   Caleidoscope5();
   Caleidoscope1();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // spectrum mandala, color linked to osci
@@ -563,7 +584,7 @@ void MSGEQtest8() {
   Caleidoscope5();
   Caleidoscope2();
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 // falling spectogram
@@ -669,7 +690,7 @@ void CaleidoTest1() {
   RotateTriangle();
   Caleidoscope2();  //copy + rotate
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 void CaleidoTest2() {
@@ -681,7 +702,7 @@ void CaleidoTest2() {
   MirrorTriangle();
   Caleidoscope1();  //mirror + rotate
   ShowFrame();
-  DimAll(240);
+  DimAll(map(FADE, 0, 255, 160, 250));
 }
 
 void Audio5() {
