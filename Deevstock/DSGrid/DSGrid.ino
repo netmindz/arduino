@@ -1,9 +1,15 @@
 #ifdef __IMXRT1062__ // Teensy 4
+  #pragma message "Use SMARTMATRIX"
   #define  SMARTMATRIX
   #define TEENSY4
-#else
+#elif defined(__MK20DX256__) // Teensy 3.2
+  #pragma message "Use APA1023030"
+  #undef SMARTMATRIX
   #define  APA1023030
-//  #define  WS1616
+#else
+  #pragma message "Use WS1616"
+  #undef SMARTMATRIX
+  #define  WS1616
 #endif
 
 #ifdef ESP32
