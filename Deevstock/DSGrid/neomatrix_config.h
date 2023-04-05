@@ -48,41 +48,41 @@ to use, set the define before you include the file.
 
 
 
-#if !defined(M24BY24) && !defined(M32BY8X3) && !defined(M16BY16T4) && !defined(M64BY64) && !defined(SMARTMATRIX) && !defined(SSD1331) && !defined(ST7735_128b128) && !defined(ST7735_128b160) && !defined(ILI9341) && !defined(ARDUINOONPC)
-    #ifdef ESP8266
-    //#define SSD1331
-    //#define SSD1331_ROTATE 1
-    // ESP8266 shirt with neopixel strips
-    #define M32BY8X3
-    //#define M16BY16T4
-    #endif
+// #if !defined(M24BY24) && !defined(M32BY8X3) && !defined(M16BY16T4) && !defined(M64BY64) && !defined(SMARTMATRIX) && !defined(SSD1331) && !defined(ST7735_128b128) && !defined(ST7735_128b160) && !defined(ILI9341) && !defined(ARDUINOONPC)
+//     #ifdef ESP8266
+//     //#define SSD1331
+//     //#define SSD1331_ROTATE 1
+//     // ESP8266 shirt with neopixel strips
+//     #define M32BY8X3
+//     //#define M16BY16T4
+//     #endif
 
-    #ifdef ESP32
-    //#define ILI9341
-    //#define ST7735_128b160
-    //#define ST7735_128b128
-    //#define SSD1331
-    //#define SSD1331_ROTATE 1
-    #define SMARTMATRIX
-    //#define M64BY64
-    #endif
+//     #ifdef ESP32
+//     //#define ILI9341
+//     //#define ST7735_128b160
+//     //#define ST7735_128b128
+//     //#define SSD1331
+//     //#define SSD1331_ROTATE 1
+//     // #define SMARTMATRIX
+//     //#define M64BY64
+//     #endif
 
-    // Teensy 3.6
-    #ifdef __MK66FX1M0__
-    #define ILI9341
-    #define ILI_ROTATE 1
-    // If instead you are using the old SmartMatrix V3, define those 2
-    //#define SMARTMATRIX3
-    // And with SmartMatrix (v4), only this define is needed.
-    //#define SMARTMATRIX
-    #endif
+//     // Teensy 3.6
+//     #ifdef __MK66FX1M0__
+//     #define ILI9341
+//     #define ILI_ROTATE 1
+//     // If instead you are using the old SmartMatrix V3, define those 2
+//     //#define SMARTMATRIX3
+//     // And with SmartMatrix (v4), only this define is needed.
+//     //#define SMARTMATRIX
+//     #endif
 
-    // Teensy v.4
-    #ifdef __IMXRT1062__
-    //#define SMARTMATRIX3
-    #define SMARTMATRIX
-    #endif
-#endif
+//     // Teensy v.4
+//     #ifdef __IMXRT1062__
+//     //#define SMARTMATRIX3
+//     // #define SMARTMATRIX
+//     #endif
+// #endif
 
 
 #include <Adafruit_GFX.h>
@@ -571,14 +571,14 @@ void matrix_setup(bool initserial=true, int reservemem = 40000) {
     #elif defined(APA1023030)
         #define COLOR_ORDER BGR
         FastLED.addLeds<APA102,7, 14, COLOR_ORDER, DATA_RATE_MHZ(8)>(matrixleds, NUMMATRIX).setCorrection(TypicalLEDStrip);
-        Serial.print("Neomatrix total LEDs: ");
+        Serial.print("Neomatrix total APA102 LEDs: ");
         Serial.print(NUMMATRIX);
         Serial.println();
     //============================================================================================
     #elif defined(WS1616)
         #define COLOR_ORDER BGR
-        FastLED.addLeds<WS2811,7, COLOR_ORDER>(matrixleds, NUMMATRIX).setCorrection(TypicalLEDStrip);
-        Serial.print("Neomatrix total LEDs: ");
+        FastLED.addLeds<WS2811,18, COLOR_ORDER>(matrixleds, NUMMATRIX).setCorrection(TypicalLEDStrip);
+        Serial.print("Neomatrix total WS2811 LEDs: ");
         Serial.print(NUMMATRIX);
         Serial.println();
    //============================================================================================
