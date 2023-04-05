@@ -73,6 +73,6 @@ void controlLoop() {
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
     int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
-    currentPalette = palettes[pNumber];
+    currentPalette = getPalette(pNumber);
   }
 }

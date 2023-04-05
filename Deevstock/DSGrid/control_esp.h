@@ -117,7 +117,8 @@ void readDMX() {
     pgm = getValue(packet, 2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(packet, 3, 0, 255); // speed = 3
     FADE = getValue(packet, 4, 0, 255);  // fade = 4
-
+    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
+    currentPalette = getPalette(pNumber);
   }
 }
 
