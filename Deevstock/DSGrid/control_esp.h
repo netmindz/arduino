@@ -54,7 +54,7 @@ ESPAsyncE131 e131(UNIVERSE_COUNT);
 
 WLEDSync sync;
 
-double fftResult[NUM_GEQ_CHANNELS];
+uint8_t fftResult[NUM_GEQ_CHANNELS];
 
 void controlSetup() {
   // Make sure you're in station mode
