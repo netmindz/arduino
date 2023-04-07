@@ -14,7 +14,7 @@ class Vortex {
     }
 
     void vortex() {
-      leds[ XY(x, y)]  = CHSV(hue, 255, 255);
+      leds[ XY(x, y)]  = ColorFromPalette(currentPalette, hue, 255, LINEARBLEND);
       // End of right
       if ((x >= (w - margin)) && (up == 0)) {
         up = 1;
