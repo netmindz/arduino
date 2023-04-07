@@ -31,7 +31,7 @@ class Star {
         }
       }
       if (v >= 1) v--;
-      leds[p]  = CHSV(hue, 255, v);
+      leds[p]  = ColorFromPalette(currentPalette, hue, v, LINEARBLEND);
     }
 };
 
