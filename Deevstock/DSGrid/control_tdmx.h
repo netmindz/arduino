@@ -72,7 +72,7 @@ void controlLoop() {
     pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
     SPEED = getValue(3, 0, 255); // speed = 3
     FADE = getValue(4, 0, 255);  // fade = 4
-    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // fade = 5
+    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // palette = 5
     currentPalette = getPalette(pNumber);
   }
 }
