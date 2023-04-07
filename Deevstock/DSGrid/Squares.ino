@@ -3,7 +3,7 @@ int hueOffset = 10;
 void squares() {
   FastLED.clear();
   for(int i = 0; i < (kMatrixWidth / 2); i++) {
-    square(i, CHSV((hue + (hueOffset * (i * 0.5))), 255, 155));
+    square(i, ColorFromPalette(currentPalette, (hue + (hueOffset * (i * 0.5))), 255, LINEARBLEND));
   }
   hue += 8;
   if(hue % 4 == 0) hueOffset += 1;
