@@ -215,6 +215,8 @@ int autoAudiopgm = 0;
 #include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
 #endif
 
+#include "qlc.h"
+
 void setup() {
   // enable debugging info output
   Serial.begin(115200);
@@ -246,6 +248,8 @@ void setup() {
 
   //AutoRunAudio();
   Serial.printf("There are %u patterns\n", gPatternCount);
+
+  qlcDumpDef();
 }
 
 void loop() {
