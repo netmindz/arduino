@@ -54,6 +54,9 @@ uint8_t FADE = 125;
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0; // rotating "base color" used by many of the patterns
 
+uint8_t RED, GREEN, BLUE = 0;
+
+
 CRGBPalette16 currentPalette;
 TBlendType currentBlending;
 

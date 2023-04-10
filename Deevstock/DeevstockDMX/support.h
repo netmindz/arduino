@@ -89,7 +89,7 @@ void showSegments() {
   for (int s = 0; s < NUM_STRIPS; s++) {
     for (int i = 0; i < NUM_AUDIO_LEDS; i++) {
       int p = (s * NUM_AUDIO_LEDS) + i;
-      leds[getPixel(p)] = ledsAudio[i];
+      leds[getPixel(p)] = blend(ledsAudio[i], CRGB(RED, GREEN, BLUE), 125);
     }
   }
   FastLED.show();
