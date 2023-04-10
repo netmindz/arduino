@@ -1,18 +1,3 @@
-boolean MSGEQ7read() {
-  return fft_available;
-}
-
-#define MSGEQ7_OUT_MAX 255
-
-int MSGEQ7get(int band, int channel) {
-  int value = map((fftData[band] * 1000), 0, 100, 0, MSGEQ7_OUT_MAX); // TODO: should be 100, but testing at home
-//  Serial.printf("Band: %u = %u\n", band, value);
-  return value;
-}
-
-int mapNoise(int value) {
-  return value; // TODO: fitler noise
-}
 
 
 void drawPixel(int x, int y, CRGB color) {
