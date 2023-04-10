@@ -74,6 +74,10 @@ void shimmer();
 void sinwave_1();
 void snake();
 void dsnake();
+void FunkyPlank();
+void EQ();
+void DJLight();
+void FFTDebug();
 
 // ***********************
 // Audio values
@@ -133,7 +137,10 @@ typedef struct {
 typedef PatternAndName PatternAndNameList[];
 
 PatternAndNameList gPatterns = { 
-  { autoRun, "auotrun"}, 
+  { autoRun, "auotrun"},
+  { FunkyPlank, "FunkyPlank"},
+  { DJLight, "DJLight"} ,
+  { EQ, "EQ"},  
   { pixels,"pixels"},         // Long line of colours
   { fillnoise,"fillnoise"},      // Center to edges with base color and twinkle
   { jugglep,"jugglep"},        // Long line of sinewaves
