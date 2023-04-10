@@ -238,6 +238,14 @@ void setup() {
   delay(1000);
   Serial.printf("There are %u palettes\n,", paletteCount);
 //    ledtest();
+
+}
+
+CRGBPalette16 getPalette(int pNumber) {
+  if(pNumber >= 1 && pNumber < 4) {
+    return getAudioPalette(pNumber);    
+  }
+  return palettes[pNumber];
 }
 
 int led = 0;
@@ -267,7 +275,7 @@ void loop()
     int p = Dmx.getBuffer()[4]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
     pNumber = map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1)); // channel 6
-    currentPalette = palettes[pNumber];
+    currentPalette = getPalette(pNumber);
 
     RED = Dmx.getBuffer()[6];
     GREEN = Dmx.getBuffer()[7];
