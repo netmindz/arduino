@@ -283,6 +283,7 @@ void loop() {
   ShowFrame();
 }
 
+int autoPalette = 0;
 void autoRun() {
   EVERY_N_SECONDS(90) {
     autopgm = random(2, (gPatternCount - 1));
@@ -290,6 +291,14 @@ void autoRun() {
     if (autopgm >= gPatternCount) autopgm = 1;
     Serial.print("Next Auto pattern: ");
     Serial.println(gPatterns[autopgm].name);
+  }
+
+  EVERY_N_SECONDS(145) {
+    autoPalette = random(0, (gPaletteCount - 1));
+    // autoPalette++;
+    if (autoPalette > (gPaletteCount - 1)) autoPalette = 0;
+    Serial.println("Next Auto pallette");
+    currentPalette = palettes[autoPalette];
   }
 
   gPatterns[autopgm].pattern();
