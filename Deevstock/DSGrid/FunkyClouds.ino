@@ -102,8 +102,8 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 void ReadAudio() {
   if(MSGEQ7read()) {
     for (int b = 0; b < 7; b++) {
-      left[b] = map(MSGEQ7.get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
-      right[b] = map(MSGEQ7.get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      left[b] = map(MSGEQ7get(b, 0), 0, MSGEQ7_OUT_MAX, 0, 1023);
+      right[b] = map(MSGEQ7get(b, 1), 0, MSGEQ7_OUT_MAX, 0, 1023);
     }
   }
 }
