@@ -195,8 +195,6 @@ PatternAndNameList gAudioPatterns = {
 };
 
 #include "colours.h"
-CRGBPalette16 palettes[] = {RainbowColors_p, audio_responsive_gp, audio_responsive_gp, audio_responsive_gp, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p, aqua_flash_gp, Sunset_Real_gp  };
-
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 int gPatternCount = ARRAY_SIZE(gPatterns);
@@ -205,15 +203,26 @@ int gPaletteCount = ARRAY_SIZE(palettes);
 int autopgm = random(1, (gPatternCount - 1));
 int autoAudiopgm = 0;
 
+
 #if defined(CORE_TEENSY)
 #ifdef TEENSY4
 #include "control_null.h" // Teensy 4.0 - no input
 #else 
-#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+//#include "control_tdmx.h" // DMX and MSGEQ7 with Teensy 3.2
+#include "control_tdmx_audio.h" // DMX inc audio with Teensy 3.2
 #endif
 #else
 #include "control_esp.h" // ESP32/ESP8266 - E1.31 and audio from WLED sender
 #endif
+
+#include "audio-palettes.h"
+
+CRGBPalette16 getPalette(int pNumber) {
+  if(pNumber >= 1 && pNumber < 4) {
+    return getAudioPalette(pNumber);    
+  }
+  return palettes[pNumber];
+}
 
 #include "qlc.h"
 
