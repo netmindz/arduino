@@ -221,6 +221,7 @@ CRGBPalette16 getPalette(int pNumber) {
   if(pNumber >= 1 && pNumber < 4) {
     return getAudioPalette(pNumber);    
   }
+  if(pNumber > (gPaletteCount - 1)) pNumber = 0;
   return palettes[pNumber].palette;
 }
 
@@ -259,7 +260,7 @@ void setup() {
   Serial.printf("There are %u patterns\n", gPatternCount);
   Serial.printf("There are %u palettes\n", gPaletteCount);
 
-  qlcDumpDef(gPatterns, palettes);
+  qlcDumpDef();
 }
 
 void loop() {

@@ -64,15 +64,14 @@ void controlLoop() {
     }
     led = !led;
     digitalWrite(LED_BUILTIN, led);
-    int b =  getValue(1, 0, 255); // brightness = 1
+    int b =  getValue(1); // brightness = 1
     if (b != BRIGHTNESS) {
       BRIGHTNESS = b;
       FastLED.setBrightness(BRIGHTNESS);
     }
-    pgm = getValue(2, 0, (gPatternCount - 1)); // FIXME // pattern = 2
-    SPEED = getValue(3, 0, 255); // speed = 3
-    FADE = getValue(4, 0, 255);  // fade = 4
-    int pNumber = getValue(5, 0, (gPaletteCount - 1));  // palette = 5
-    currentPalette = getPalette(pNumber);
+    pgm = getValue(2, 0, (gPatternCount - 1)); // pattern = 2
+    SPEED = getValue(3); // speed = 3
+    FADE = getValue(4);  // fade = 4
+    currentPalette = getPalette(getValue(5)); // palette = 5
   }
 }

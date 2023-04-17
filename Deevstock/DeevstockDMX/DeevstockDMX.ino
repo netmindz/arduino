@@ -273,7 +273,7 @@ void loop()
     FADE = Dmx.getBuffer()[3]; // fade = 4
     int p = Dmx.getBuffer()[4]; // pattern = 5
     pattern = map(p, 0, 255, 0, (gPatternCount - 1));
-    pNumber = map(Dmx.getBuffer()[5], 0, 255, 0, (paletteCount - 1)); // channel 6
+    pNumber = Dmx.getBuffer()[5]; // channel 6
     currentPalette = getPalette(pNumber);
 
     RED = Dmx.getBuffer()[6];
