@@ -204,8 +204,7 @@ PatternAndNameList gAutoPatterns = {
 int gPatternCount = ARRAY_SIZE(gPatterns);
 int gAutoPatternCount = ARRAY_SIZE(gAutoPatterns);
 int paletteCount = ARRAY_SIZE(palettes);
-
-CRGBPalette16 palettes[] = {RainbowColors_p, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p };
+#include "qlc.h"
 
 // **********************************************************************************************************
 // Setup
@@ -337,8 +336,8 @@ void autoRun() {
     autoPalette = random(0, (paletteCount - 1));
     //  autoPalette++;
     if (autoPalette >= paletteCount) autoPalette = 0;
-    Serial.println("Next Auto pallette");
-    currentPalette = palettes[autoPalette];
+    Serial.println("Next Auto palette " + palettes[autoPalette].name);
+    currentPalette = palettes[autoPalette].palette;
   }
 
 }

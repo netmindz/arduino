@@ -920,9 +920,15 @@ CRGBPalette16 getAudioPalette(int pal) {
   xyz[13] = rgb.r;
   xyz[14] = rgb.g;
   xyz[15] = rgb.b;
-  
+
   CRGBPalette16 p;
   return p.loadDynamicGradientPalette(xyz);
 }
 
-CRGBPalette16 palettes[] = {RainbowColors_p, audio_responsive_gp, audio_responsive_gp, audio_responsive_gp, RainbowStripeColors_p, CloudColors_p, PartyColors_p, pinks_p, pinkPurple_p, greenBlue_p, greenBlueYellow_p};
+typedef struct {
+  CRGBPalette16 palette;
+  String name;
+} PaletteAndName;
+typedef PaletteAndName PaletteAndNameList[];
+
+PaletteAndNameList palettes = { {RainbowColors_p, "RainbowColors_p"}, {audio_responsive_gp, "audio_responsive_gp"}, {audio_responsive_gp, "audio_responsive_gp"}, {audio_responsive_gp, "audio_responsive_gp"}, {RainbowStripeColors_p, "RainbowStripeColors_p"}, {CloudColors_p, "CloudColors_p"}, {PartyColors_p, "PartyColors_p"}, {pinks_p, "pinks_p"}, {pinkPurple_p, "pinkPurple_p"}, {greenBlue_p, "greenBlue_p"}, {greenBlueYellow_p, "greenBlueYellow_p"}, {ib_jul01_gp, "ib_jul01_gp"}, {es_vintage_57_gp, "es_vintage_57_gp"}, {es_vintage_01_gp, "es_vintage_01_gp"}, {es_rivendell_15_gp, "es_rivendell_15_gp"}, {rgi_15_gp, "rgi_15_gp"}, {retro2_16_gp, "retro2_16_gp"}, {Analogous_1_gp, "Analogous_1_gp"}, {es_pinksplash_08_gp, "es_pinksplash_08_gp"}, {es_ocean_breeze_036_gp, "es_ocean_breeze_036_gp"}, {departure_gp, "departure_gp"}, {es_landscape_64_gp, "es_landscape_64_gp"}, {es_landscape_33_gp, "es_landscape_33_gp"}, {rainbowsherbet_gp, "rainbowsherbet_gp"}, {gr65_hult_gp, "gr65_hult_gp"}, {gr64_hult_gp, "gr64_hult_gp"}, {GMT_drywet_gp, "GMT_drywet_gp"}, {ib15_gp, "ib15_gp"}, {Tertiary_01_gp, "Tertiary_01_gp"}, {lava_gp, "lava_gp"}, {fierce_ice_gp, "fierce_ice_gp"}, {Colorfull_gp, "Colorfull_gp"}, {Pink_Purple_gp, "Pink_Purple_gp"}, {Sunset_Real_gp, "Sunset_Real_gp"}, {Sunset_Yellow_gp, "Sunset_Yellow_gp"}, {Beech_gp, "Beech_gp"}, {Another_Sunset_gp, "Another_Sunset_gp"}, {es_autumn_19_gp, "es_autumn_19_gp"}, {BlacK_Blue_Magenta_White_gp, "BlacK_Blue_Magenta_White_gp"}, {BlacK_Magenta_Red_gp, "BlacK_Magenta_Red_gp"}, {BlacK_Red_Magenta_Yellow_gp, "BlacK_Red_Magenta_Yellow_gp"}, {Blue_Cyan_Yellow_gp, "Blue_Cyan_Yellow_gp"}, {Orange_Teal_gp, "Orange_Teal_gp"}, {Tiamat_gp, "Tiamat_gp"}, {April_Night_gp, "April_Night_gp"}, {Orangery_gp, "Orangery_gp"}, {C9_gp, "C9_gp"}, {Sakura_gp, "Sakura_gp"}, {Aurora_gp, "Aurora_gp"}, {Atlantica_gp, "Atlantica_gp"}, {C9_2_gp, "C9_2_gp"}, {C9_new_gp, "C9_new_gp"}, {temperature_gp, "temperature_gp"}, {Aurora2_gp, "Aurora2_gp"}, {retro_clown_gp, "retro_clown_gp"}, {candy_gp, "candy_gp"}, {toxy_reaf_gp, "toxy_reaf_gp"}, {fairy_reaf_gp, "fairy_reaf_gp"}, {semi_blue_gp, "semi_blue_gp"}, {pink_candy_gp, "pink_candy_gp"}, {red_reaf_gp, "red_reaf_gp"}, {aqua_flash_gp, "aqua_flash_gp"}, {yelblu_hot_gp, "yelblu_hot_gp"}, {lite_light_gp, "lite_light_gp"}, {red_flash_gp, "red_flash_gp"}, {blink_red_gp, "blink_red_gp"}, {red_shift_gp, "red_shift_gp"}, {red_tide_gp, "red_tide_gp"}, {candy2_gp, "candy2_gp"} };

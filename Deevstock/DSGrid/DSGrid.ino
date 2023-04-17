@@ -221,7 +221,7 @@ CRGBPalette16 getPalette(int pNumber) {
   if(pNumber >= 1 && pNumber < 4) {
     return getAudioPalette(pNumber);    
   }
-  return palettes[pNumber];
+  return palettes[pNumber].palette;
 }
 
 #include "qlc.h"
@@ -257,6 +257,7 @@ void setup() {
 
   //AutoRunAudio();
   Serial.printf("There are %u patterns\n", gPatternCount);
+  Serial.printf("There are %u palettes\n", gPaletteCount);
 
   qlcDumpDef();
 }
@@ -297,8 +298,8 @@ void autoRun() {
     autoPalette = random(0, (gPaletteCount - 1));
     // autoPalette++;
     if (autoPalette > (gPaletteCount - 1)) autoPalette = 0;
-    Serial.println("Next Auto pallette");
-    currentPalette = palettes[autoPalette];
+    Serial.println("Next Auto palette " + palettes[autoPalette].name);
+    currentPalette = palettes[autoPalette].palette;
   }
 
   gPatterns[autopgm].pattern();
