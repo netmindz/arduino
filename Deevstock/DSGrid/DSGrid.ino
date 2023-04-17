@@ -259,7 +259,7 @@ void setup() {
   Serial.printf("There are %u patterns\n", gPatternCount);
   Serial.printf("There are %u palettes\n", gPaletteCount);
 
-  qlcDumpDef();
+  qlcDumpDef(gPatterns, palettes);
 }
 
 void loop() {
