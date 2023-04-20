@@ -111,17 +111,17 @@ int getTotal(int input) {
 void VU() {
   CRGB color;
 
-  const boolean gay = false;
+  const boolean gay = true;
 
   bool newReading = MSGEQ7read();
 
   // Led strip output
   if (newReading) {
-Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
+// Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
     int displayPeakL = map(MSGEQ7get(MSGEQ7_MID, 0), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
     int displayPeakR = map(MSGEQ7get(MSGEQ7_LOW, 1), 0, MSGEQ7_OUT_MAX, 0, round(HEIGHT / 2));
-    Serial.print("Display peak: ");
-    Serial.println(displayPeakL);
+    // Serial.print("Display peak: ");
+    // Serial.println(displayPeakL);
 
     moveUp();
     int offset = round(HEIGHT / 2);
@@ -137,7 +137,7 @@ Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
 
     for (int i = 1; i <= displayPeakL; i++) {
       if (gay) {
-        color = CHSV(map(i, 1, (HEIGHT / 2), 0, 230), 255, 255);
+        color = ColorFromPalette(currentPalette, map(i, 1, (HEIGHT / 2), 230, 0), 255, LINEARBLEND);
       }
       else {
         unsigned int g = map(i, 1, HEIGHT, 254, 0);
@@ -147,7 +147,7 @@ Serial.printf("max = %u, value=%u\n", MSGEQ7_OUT_MAX, MSGEQ7get(MSGEQ7_MID, 0));
     }
     for (int i = 1; i <= displayPeakR; i++) {
       if (gay) {
-        color = CHSV(map(i, 1, (HEIGHT / 2), 230, 0), 255, 255);
+        color = ColorFromPalette(currentPalette, map(i, 1, (HEIGHT / 2), 230, 0), 255, LINEARBLEND);
       }
       else {
         unsigned int g = map(i, 1, (HEIGHT / 2), 254, 0);
