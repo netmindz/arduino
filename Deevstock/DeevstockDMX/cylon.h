@@ -30,7 +30,18 @@ void cylon() {
     // Wait a little bit before we loop around and do it again
     FastLED.delay(map(SPEEDO, 0, 255, 100, 0));
   
-
+  // Now go in the other direction.  
+	for(int i = (NUM_AUDIO_LEDS)-1; i >= 0; i--) {
+		// Set the i'th led to red 
+    ledsAudio[i] = ColorFromPalette(currentPalette, hue, 255, currentBlending);
+		// Show the leds
+    showSegments();
+		// now that we've shown the leds, reset the i'th led to black
+		// leds[i] = CRGB::Black;
+		fadeall();
+		// Wait a little bit before we loop around and do it again
+    FastLED.delay(map(SPEEDO, 0, 255, 100, 0));
+	}
 
 }
 
